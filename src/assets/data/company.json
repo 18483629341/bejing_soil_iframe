@@ -1,0 +1,44 @@
+{
+    "baseInfo": {
+        "title": "企业基本信息",
+        "info": {
+            "enterpriseName": "中国石化润滑油有限公司北京分公司",
+            "administrativeDivision": "北京市门头沟区",
+            "detailedAddress": "北京市门头沟区国安路123号",
+            "industryCategory": "制造业",
+            "supervisoryEnterprises": "是",
+            "report": "0",
+            "contaminatedPlots": "3"
+        }
+    },
+    "monitoring": {
+        "title": "企业自行监测",
+        "info": {
+            "reportName": "2019年土壤环境企业自行监测报告",
+            "reportTime": "2019.03.14",
+            "openTime": "2019.03.20",
+            "publicAddress": "http://www.smebj.cn/ncms/",
+            "reportFile": "下载",
+            "monitoringSites": "10"
+        }
+    },
+    "area1": {
+        "title": "地块1",
+        "info": {
+            "blockType": "污染地块",
+            "Stage": "风险管控",
+            "riskLevel": "中风险",
+            "plotArea": "30000平方米",
+            "plotAddress": "北京市门头沟区",
+            "Reporting": "初步调查报告"
+        }
+    },
+    "area2": {
+        "title": "地块2",
+        "info": {
+            "blockType": "非污染地块块",
+            "plotArea": "20000平方米",
+            "plotAddress": "北京市门头沟区"
+        }
+    }
+}

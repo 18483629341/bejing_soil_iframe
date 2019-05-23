@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="ios-arrow-back" mode='ios'></ion-back-button>
+    </ion-buttons>
+    <ion-title>督察记录详情</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- 下拉刷新组件 -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="ios-arrow-down" refreshingSpinner="lines" mode='ios'>
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ion-grid class="detail_table" *ngIf="dataFlag">
+    <ion-row justify-content-around>
+      <ion-col class="left-text">监督管理标题：</ion-col>
+      <ion-col class="right-text">{{inspecterDetail.TITLE|| '--'}}</ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">监督管理单位：</ion-col>
+      <ion-col class="right-text">{{inspecterDetail.DEPTNAME || '--'}}</ion-col>
+    </ion-row>
+
+    <ion-row justify-content-around>
+      <ion-col class="left-text">效果评估报告附件：</ion-col>
+      <ion-col class="right-text" >
+        <ion-list *ngIf="censusFileArr.length>0">
+          <ion-item *ngFor="let item of censusFileArr" lines="none">
+            <p class="down-line" size="small" color="tertiary" (click)="downFile(item)"> {{item.FILENAME}}</p>
+          </ion-item>
+        </ion-list>
+        <p class="nofile" *ngIf="censusFileArr.length==0">暂无附件</p>
+      </ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">监督管理时间：</ion-col>
+      <ion-col class="right-text">{{inspecterDetail.CREATE_DATE==="- -"?"- -":inspecterDetail.CREATE_DATE| date:'yyyy-MM-dd'}}</ion-col>
+    </ion-row>
+
+    <ion-row justify-content-around>
+      <ion-col class="left-text">督察情况：</ion-col>
+      <ion-col class="right-text">{{inspecterDetail.SUGGEST || '--'}}</ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">监测方案附件：</ion-col>
+      <ion-col class="right-text">已安装</ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div *ngIf="!dataFlag" class="nodata">暂无数据，请稍后再试！</div>
+</ion-content>

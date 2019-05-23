@@ -1,0 +1,119 @@
+<ion-header>
+  <ion-toolbar [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="ios-arrow-back" mode='ios'></ion-back-button>
+    </ion-buttons>
+    <ion-title>地块信息</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="download-btn" (click)="presentSheet()">
+        <ion-icon name="download"></ion-icon>
+      </ion-button>
+      <span slot="end" [ngClass]="{collect:!isCollected,collected:isCollected}" (click)="doCollection()"></span>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- 下拉刷新组件 -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="ios-arrow-down" refreshingSpinner="lines" mode='ios'>
+    </ion-refresher-content>
+  </ion-refresher>
+  <div *ngIf="baseinfoDataFlag">
+    <div class="splitArea"></div>
+    <!-- <p class="p-title margin-10">地块信息</p> -->
+    <ion-grid class="dec-list">
+      <ion-row align-items-center>
+        <ion-col class="left-text" size="4">地块名称：</ion-col>
+        <ion-col class="right-text" size="8">{{baseInfo.LANDNAME||'- -'}}</ion-col>
+      </ion-row>
+      <ion-row align-items-center>
+        <ion-col class="left-text" size="5">行政区划：</ion-col>
+        <ion-col class="right-text" size="7">{{baseInfo.CODE_REGION||'- -'}}</ion-col>
+      </ion-row>
+      <ion-row align-items-center>
+        <ion-col class="left-text" size="5">地块管理模式：</ion-col>
+        <ion-col class="right-text" size="7">{{baseInfo.CODE_LANDMGMODEL||'- -'}}</ion-col>
+      </ion-row>
+      <ion-row align-items-center>
+        <ion-col class="left-text" size="5">行业类别：</ion-col>
+        <ion-col class="right-text" size="7">{{baseInfo.CODE_TRADE||'- -'}}</ion-col>
+      </ion-row>
+      <ion-row align-items-center>
+        <ion-col class="left-text" size="5">地块类型：</ion-col>
+        <ion-col class="right-text" size="7">{{baseInfo.CODE_LANDTYPE||'- -'}}</ion-col>
+      </ion-row>
+      <ion-row align-items-center>
+        <ion-col class="left-text" size="5">风险等级：</ion-col>
+        <ion-col class="right-text" size="7">{{baseInfo.CODE_RISKGRADE||'- -'}}</ion-col>
+      </ion-row>
+      <ion-row align-items-center>
+        <ion-col class="left-text" size="5">所处阶段：</ion-col>
+        <ion-col class="right-text" size="7">{{baseInfo.CODE_FLOWSTATUS||'- -'}}</ion-col>
+      </ion-row>
+    </ion-grid>
+    <div class="splitArea"></div>
+  </div>
+
+  <ion-list>
+    <ion-item lines="full" router-direction="forward" (click)="tranTo('baseInfo')" *ngIf="plot.baseInfo">
+      <ion-label>
+        <p class="p-title">地块基本信息</p>
+      </ion-label>
+      <ion-icon mode='ios' name="arrow-forward" slot='end'></ion-icon>
+    </ion-item>
+    <ion-item lines="full" router-direction="forward" (click)="tranTo('priResearch')" *ngIf="plot.firstCensusInfo">
+
+      <ion-label>
+        <p class="p-title">初步调查</p>
+      </ion-label>
+      <ion-icon mode='ios' name="arrow-forward" slot='end'></ion-icon>
+    </ion-item>
+    <ion-item lines="full" router-direction="forward" (click)="tranTo('detailResearch')" *ngIf="plot.detailCensusInfo">
+      <ion-label>
+        <p class="p-title">详细调查</p>
+      </ion-label>
+      <ion-icon mode='ios' name="arrow-forward" slot='end'></ion-icon>
+    </ion-item>
+    <ion-item lines="full" router-direction="forward" (click)="tranTo('riskAssess')" *ngIf="plot.riskAssessmentInfo">
+      <ion-label>
+        <p class="p-title">风险评估</p>
+      </ion-label>
+      <ion-icon mode='ios' name="arrow-forward" slot='end'></ion-icon>
+    </ion-item>
+    <ion-item lines="full" router-direction="forward" (click)="tranTo('riskManage')" *ngIf="plot.riskControlInfo">
+      <ion-label>
+        <p class="p-title">风险管控</p>
+      </ion-label>
+      <ion-icon mode='ios' name="arrow-forward" slot='end'></ion-icon>
+    </ion-item>
+    <ion-item lines="full" router-direction="forward" (click)="tranTo('gover')" *ngIf="plot.repairInfo">
+      <ion-label>
+        <p class="p-title">治理与修复</p>
+      </ion-label>
+      <ion-icon mode='ios' name="arrow-forward" slot='end'></ion-icon>
+    </ion-item>
+    <ion-item lines="full" router-direction="forward" (click)="tranTo('effectEval')" *ngIf="plot.effectEvaluateInfo">
+      <ion-label>
+        <p class="p-title">效果评估</p>
+      </ion-label>
+      <ion-icon mode='ios' name="arrow-forward" slot='end'></ion-icon>
+    </ion-item>
+    <ion-item lines="full" router-direction="forward" (click)="tranTo('lateSupervise')" *ngIf="monitorLength>0">
+      <ion-label>
+        <p class="p-title">后期监管</p>
+      </ion-label>
+      <ion-icon mode='ios' name="arrow-forward" slot='end'></ion-icon>
+    </ion-item>
+    <ion-item lines="full" router-direction="forward" (click)="tranTo('liveInspectionRecord')" *ngIf="inspectionDataFlag">
+      <ion-label>
+        <p class="p-title">现场督察记录(
+          <span style="color:#20A4EC;">{{inspectionLength}}</span>)</p>
+      </ion-label>
+      <ion-icon mode='ios' name="arrow-forward" slot='end'></ion-icon>
+    </ion-item>
+  </ion-list>
+
+
+  <div *ngIf="!dataFlag" class="nodata">暂无数据，请稍后再试！</div>
+</ion-content>

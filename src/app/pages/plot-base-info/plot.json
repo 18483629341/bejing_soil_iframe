@@ -1,0 +1,12 @@
+
+{
+    "plot": {
+        "LANDNAME": "北京市门头沟1号污染地块",
+        "CODE_REGION": "北京市门头沟区",
+        "CODE_LANDMGMODEL": "国控",
+        "CODE_TRADE": "制造业",
+        "plotType": "关闭搬迁",
+        "CODE_RISKGRADE": "中风险",
+        "CODE_FLOWSTATUS": "后期监管"
+    }
+}

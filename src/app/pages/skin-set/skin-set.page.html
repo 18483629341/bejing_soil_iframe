@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="ios-arrow-back" mode='ios'></ion-back-button>
+    </ion-buttons>
+    <ion-title>皮肤设置</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-radio-group>
+      <ion-item>
+        <ion-label>
+          <span class="square blue-square"></span>蓝色</ion-label>
+        <ion-radio mode="ios" slot="end" value="blue" [checked]="skinName==='blue'" (ionSelect)="select($event)"></ion-radio>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <span class="square green-square"></span>绿色</ion-label>
+        <ion-radio mode="ios" slot="end" value="green" [checked]="skinName==='green'" (ionSelect)="select($event)"></ion-radio>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <span class="square orange-square"></span>橙色</ion-label>
+        <ion-radio mode="ios" slot="end" value="orange" [checked]="skinName==='orange'" (ionSelect)="select($event)"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+</ion-content>

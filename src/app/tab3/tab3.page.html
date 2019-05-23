@@ -1,0 +1,38 @@
+<ion-content>
+  <div class="header-bg" [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
+    <img class="bg_img" src="../../../assets/img/dot_bg.png">
+    <div class="header-con">
+      <img src="../../../assets/img/people.png">
+      <p class="user-name">admin</p>
+    </div>
+  </div>
+  <ion-list>
+    <ion-item (click)="goFavorites()">
+      <i class="icon iconfont margin-right-10 icon-xingxing"></i>
+      <ion-label>收藏夹</ion-label>
+      <ion-icon name="arrow-forward" slot="end" mode="ios"></ion-icon>
+    </ion-item>
+    <ion-item (click)="goDownloaded()" *ngIf="false">
+      <i class="icon iconfont margin-right-10 icon-xiazai"></i>
+      <ion-label>已经下载地块</ion-label>
+      <ion-icon name="arrow-forward" slot="end" mode="ios"></ion-icon>
+    </ion-item>
+    <ion-item (click)="goSetUp()">
+      <i class="icon iconfont margin-right-10 icon-shezhi"></i>
+      <ion-label>设置</ion-label>
+      <ion-icon name="arrow-forward" slot="end" mode="ios"></ion-icon>
+    </ion-item>
+  </ion-list>
+  
+  <ion-virtual-scroll [items]="items" approxItemHeight="320px">
+      <ion-card *virtualItem="let item; let itemBounds = bounds;">
+        <div>
+          <img [src]="item.imgSrc" [height]="item.imgHeight" [alt]="item.name">
+        </div>
+      <ion-card-header>
+        <ion-card-title>{{ item.name }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>{{ item.content }}</ion-card-content>
+      </ion-card>
+    </ion-virtual-scroll>
+</ion-content>

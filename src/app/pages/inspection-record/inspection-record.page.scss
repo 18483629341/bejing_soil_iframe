@@ -1,0 +1,82 @@
+/* 详情列表通用样式 start*/
+.dec-list{
+    background: #fff;
+    padding:10px 0 10px 13px;
+
+
+    ion-row{
+        line-height: 25px;
+        border-bottom: .55px solid #ebebeb;
+        min-height: 50px;
+        padding-right: 10px;
+    }
+    .left-text{
+        color: #666;   
+        font-size: 16px;
+    }
+    .right-text{  
+        font-size: 16px;
+        text-align: right;
+        color:#333;
+    }
+}
+.upLoadBtn{
+    display: inline-block;
+    width: 80px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    background-color: #169BD5;
+    border-radius: 8px;
+    color: #fff;
+}
+.sc-ion-textarea-md-h{
+         --padding-top: 0; 
+        // --padding-end: 0;
+         --padding-bottom: 24px; 
+        // --padding-start: 0; 
+         margin-top: 0;
+}
+.fixedBox{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+.btnBox{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    span{
+        width: 50%;
+        height: 44px;
+        line-height: 44px;
+        text-align: center;
+        
+        // border-radius: 8px;
+    }
+}
+.btnBox span:nth-of-type(1){
+    background-color: #ccc;
+}
+.btnBox span:nth-of-type(2){
+
+    background-color: #169BD5;
+}
+.padding-10{
+    padding-left: 10px;
+}
+.arrow{
+    display: inline-block;
+    margin-top: 5px;
+    font-size: 24px;
+
+}
+.textBox{
+    border: 1px solid #e2e2e2;
+}
+.remark{
+    padding: 5px;
+    color: #666;  
+}

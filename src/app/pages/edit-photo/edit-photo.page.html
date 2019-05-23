@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="ios-arrow-back" mode='ios'></ion-back-button>
+    </ion-buttons>
+    <ion-title>editPhoto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <img [src]="imgPath" alt="">
+  <ion-grid class="dec-list">
+    <ion-row align-items-center>
+      <ion-col class="left-text" size="5">日期：</ion-col>
+      <ion-col class="right-text" size="7">
+        <ion-input [(ngModel)]="imgDate" maxlength=30></ion-input>
+        <!-- <ion-textarea maxlength=30 [(ngModel)]="checkTitle" placeholder='请输入标题'></ion-textarea> -->
+      </ion-col>
+    </ion-row>
+    <ion-row align-items-center>
+      <ion-col class="left-text" size="5">照片名称：</ion-col>
+      <ion-col class="right-text" size="7">
+        <ion-input [(ngModel)]="imgName" placeholder='请输入照片名称' maxlength=30></ion-input>
+        <!-- <ion-textarea maxlength=30 [(ngModel)]="checkUnit" placeholder='请输入管理单位'></ion-textarea> -->
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

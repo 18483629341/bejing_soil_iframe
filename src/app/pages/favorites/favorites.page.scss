@@ -1,0 +1,19 @@
+.list-box{
+    padding: 0;
+    .item{
+        color: #333;
+        font-size: 14px;
+        --inner-border-width: 0 0 0.55px 0;
+        --border-color: #f4f4f4;
+        height: auto;
+        line-height: 1.6;
+    }
+    p{
+        color: #222;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    span{
+        color: #aaa;
+    }
+}

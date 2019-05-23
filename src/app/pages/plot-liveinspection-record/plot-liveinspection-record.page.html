@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="ios-arrow-back" mode='ios'></ion-back-button>
+    </ion-buttons>
+    <ion-title>现场监督记录</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- 下拉刷新组件 -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content pullingIcon="ios-arrow-down" refreshingSpinner="lines" mode='ios'>
+      </ion-refresher-content>
+    </ion-refresher>
+  <ion-list *ngIf="dataFlag">
+    <ion-item *ngFor="let item of inspectorList" (click)="goNext(item.SUPERVISE_ID)">
+      <!-- <ion-note slot="start">1</ion-note> -->
+      <ion-label text-wrap>
+        <ion-text>
+          <b>{{item.TITLE||"- -"}}</b>
+        </ion-text>
+
+        <ion-text>
+          <p>监督管理时间&nbsp;&nbsp;{{item.MODIFY_DATE===null?"- -":item.MODIFY_DATE| date:'yyyy-MM-dd'}} </p>
+          <p>监督管理单位&nbsp;&nbsp;{{item.DEPTNAME||"- -"}}</p>
+        </ion-text>
+      </ion-label>
+      <ion-icon mode='ios' name="arrow-forward" slot='end'></ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="!dataFlag" class="nodata">暂无数据，请稍后再试！</div>
+</ion-content>

@@ -1,0 +1,44 @@
+.flex-block{
+    display: flex;
+    display: -webkit-flex;
+    display: -moz-flex;
+}
+.flex1{
+    flex: 1;
+}
+span{
+    display: inline-block;
+}
+
+.square{
+    width: 16px;
+    height:16px;
+    margin-right:16px;
+}
+.blue-square{
+    background: #20A4EC;
+}
+
+.green-square{
+    background: #00c393;
+}
+
+.orange-square{
+    background: #FFA500;
+}
+ion-radio{
+    // --color:transparent;
+    --color:red;
+}
+
+ion-radio[value="blue"]{
+    --color-checked:#20A4EC;
+}
+
+ion-radio[value="green"]{
+    --color-checked:#00c393;
+}
+
+ion-radio[value="orange"]{
+    --color-checked:#FFA500;
+}

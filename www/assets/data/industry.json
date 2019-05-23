@@ -1,0 +1,32 @@
+{
+    "data": [
+        {
+            "industryName": "行业1",
+            "industryCode": "5102"
+        },
+        {
+            "industryName": "行业2",
+            "industryCode": "5102"
+        },
+        {
+            "industryName": "行业3",
+            "industryCode": "5102"
+        },
+        {
+            "industryName": "行业4",
+            "industryCode": "5102"
+        },
+        {
+            "industryName": "行业5",
+            "industryCode": "5102"
+        },
+        {
+            "industryName": "行业6",
+            "industryCode": "5102"
+        },
+        {
+            "industryName": "行业7",
+            "industryCode": "5102"
+        }
+    ]
+}

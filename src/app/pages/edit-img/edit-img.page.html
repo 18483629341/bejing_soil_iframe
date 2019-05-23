@@ -1,0 +1,62 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="ios-arrow-back" mode='ios'></ion-back-button>
+    </ion-buttons>
+    <ion-title>添加附件</ion-title>
+    <ion-buttons slot="primary" (click)="publishEvents()">
+      <ion-button >
+          提交
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header> -->
+<ion-header mode='ios'>
+  <ion-toolbar mode='ios' [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="ios-arrow-back" mode='ios'></ion-back-button>
+    </ion-buttons>
+    <ion-title>添加附件</ion-title>
+    <ion-buttons slot="primary" (click)="publishEvents()">
+      <ion-button>
+        保存
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="top_head" [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
+    <ion-segment id="top_tab">
+      <ion-segment-button checked=true class="top_tab_item" [ngClass]="{'active': item==0?true:false}" (click)='OnitemClick(0)'>
+        照片
+      </ion-segment-button>
+      <ion-segment-button class="top_tab_item" [ngClass]="{'active': item==1?true:false}" (click)='OnitemClick(1)'>
+        视频
+      </ion-segment-button>
+      <ion-segment-button class="top_tab_item" [ngClass]="{'active': item==2?true:false}" (click)='OnitemClick(2)'>
+        文件
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+  <div [style.display]="item==0?'block':'none'">
+    <div class="imgBox">
+      <img [src]="item" *ngFor="let item of imgArr" [ngStyle]="{'width': imgWidth,'height':imgWidth}" (click)="goEdit(item)">
+      <img src="../../../assets/img/tj.png" (click)="addCamera()" [ngStyle]="{'width': imgWidth,'height':imgWidth}">
+    </div>
+  </div>
+  <div [style.display]="item==1?'block':'none'">
+    <video [src]="video" class="video"  *ngIf="video"  type="video/mp4" controls="controls"></video>
+    <img src="../../../assets/img/tj.png" (click)="addVideo()" [ngStyle]="{'width': imgWidth,'height':imgWidth}" *ngIf="isShow">
+  </div>
+  <div [style.display]="item==2?'block':'none'">
+    <ion-list *ngIf="filesArr.length>0">
+      <ion-item *ngFor="let item of filesArr">
+        <ion-label>
+          {{item}}
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <img src="../../../assets/img/tj.png" (click)="addFiles()" [ngStyle]="{'width': imgWidth,'height':imgWidth}">
+  </div>
+</ion-content>

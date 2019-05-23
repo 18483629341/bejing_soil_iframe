@@ -1,0 +1,7 @@
+{
+  "name": "BJWRAPP",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

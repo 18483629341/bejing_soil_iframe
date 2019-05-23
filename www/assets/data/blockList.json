@@ -1,0 +1,24 @@
+{
+    "data": [
+        {
+            "regionName": "地块1",
+            "regionCode": "5101"
+        },
+        {
+            "regionName": "地块2",
+            "regionCode": "5102"
+        },
+        {
+            "regionName": "地块3",
+            "regionCode": "5101"
+        },
+        {
+            "regionName": "地块4",
+            "regionCode": "5102"
+        },
+        {
+            "regionName": "地块5",
+            "regionCode": "5102"
+        }
+    ]
+}

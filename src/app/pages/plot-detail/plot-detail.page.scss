@@ -1,0 +1,101 @@
+/*公用样式*/
+
+ion-buttons{
+    width: 75px;
+}
+
+ion-back-button{
+    --color:#fff;
+}
+
+.download-btn{
+    --color:#fff;
+    font-size: 20px;
+    --padding-start:5px;
+    --padding-end:5px;
+}
+.p-title {
+    color:#111;
+    font-size: 16px;
+    font-weight: bold;
+    position: relative;
+    text-indent: 13px;
+    padding-left: 0 !important;
+}
+.p-title::before {
+    position: absolute;
+    top: 3px;
+    left: 0px;
+    width: 3px;
+    height: 16px;
+    background: #20A4EC;
+    border-radius: 15px;
+    content: '';
+}
+.margin-10{
+    margin-left: 10px;
+}
+
+/* 详情列表通用样式 start*/
+.dec-list{
+    background: #fff;
+    padding: 0 10px 10px 10px;
+    margin-bottom: 0px;
+    ion-row{
+        line-height: 25px;
+        border-bottom: .55px solid #ebebeb;
+        min-height: 50px;
+        padding-right: 10px;
+    }
+    ion-row:last-child{
+        border: none;
+    }
+    .left-text{
+        color: #9d9fa7;   
+        font-size: 14px;
+    }
+    .right-text{  
+        font-size: 14px;
+        text-align: right;
+        color:#333;
+    }
+}
+
+/* 详情列表通用样式 end*/
+
+.splitArea{
+    height:12px;
+    background:rgb(239,239,239); 
+}
+.nodata{
+    line-height: 50px;
+    font-size: 16px;
+    text-align: center;
+}
+
+ion-item{
+    --padding-start: 10px;
+    --border-color:#ebebeb;
+    ion-label{
+        .p-title{
+            font-weight: 500;
+        }
+    }
+}
+
+.collect,.collected{
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    // margin-right: 10px;
+}
+
+.collect{
+    background: url("../../../assets/img/sc_off.png") no-repeat center;
+    background-size: 24px;
+}
+
+.collected{
+    background: url("../../../assets/img/sc_on.png") no-repeat center;
+    background-size: 24px;
+}

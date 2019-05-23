@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="ios-arrow-back" mode='ios'></ion-back-button>
+    </ion-buttons>
+    <ion-title>设置</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngIf="isShow">
+      <ion-label>指纹密码</ion-label>
+      <ion-toggle [(ngModel)]="isToggle" (ionChange)="notify($event)"></ion-toggle>
+    </ion-item>
+    <ion-item (click)="goSkin()">
+      <ion-label>系统皮肤设置</ion-label>
+    </ion-item>
+  </ion-list>
+  <button class="login-btn" (click)="quit()">退出登录</button>
+</ion-content>

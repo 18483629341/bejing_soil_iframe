@@ -1,0 +1,95 @@
+<ion-header>
+  <ion-toolbar [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="ios-arrow-back" mode='ios'></ion-back-button>
+    </ion-buttons>
+    <ion-title>后期监管记录</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- 下拉刷新组件 -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="ios-arrow-down" refreshingSpinner="lines" mode='ios'>
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <!-- 年份选择 -->
+  <ion-list mode="ios"  *ngIf="dataFlag">
+    <ion-item>
+      <ion-label>选择监管年份：</ion-label>
+      <ion-datetime [min]="minYear" [max]="maxYear" [value]="maxYear" (ionChange)="ionChange($event)" display-format="YYYY" done-text="确认"
+        cancel-text="取消">
+      </ion-datetime>
+    </ion-item>
+  </ion-list>
+
+  <!-- 信息表格 -->
+  <ion-grid class="detail_table" *ngIf="dataFlag">
+    <ion-row justify-content-around>
+      <ion-col class="left-text">申报时间：</ion-col>
+      <ion-col class="right-text">{{laterMonitorDetail.APPLY_DATE===null?"- -":laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd'}}</ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">监测时间：</ion-col>
+      <ion-col class="right-text">{{laterMonitorDetail.MONITOR_DATE===null?"- -":laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd'}}</ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">监测状态：</ion-col>
+      <ion-col class="right-text">{{laterMonitorDetail.STATUS||"- -"}}</ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">土壤环境监测结论：</ion-col>
+      <ion-col class="right-text">{{laterMonitorDetail.SOIL_ENVIRON_VERDICT||"- -"}}</ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">地下水环境监测结论：</ion-col>
+      <ion-col class="right-text">{{laterMonitorDetail.GROUNDWATER_VERDICT||"- -"}}</ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">地表水环境监测结论：</ion-col>
+      <ion-col class="right-text">{{laterMonitorDetail.SURFACE_WATER_VERDICT||"- -"}}</ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">空气环境监测结论：</ion-col>
+      <ion-col class="right-text">{{laterMonitorDetail.AIR_ENVIRON_VERDICT||"- -"}}</ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">监测方案附件：</ion-col>
+      <ion-col class="right-text">
+        <ion-list *ngIf="censusFileArr.length>0">
+          <ion-item *ngFor="let item of censusFileArr" lines="none">
+            <p class="down-line" size="small" color="tertiary" (click)="downFile(item)"> {{item.FILENAME}}</p>
+          </ion-item>
+        </ion-list>
+        <p class="nofile" *ngIf="censusFileArr.length==0">暂无附件</p>
+      </ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">监测结果附件：</ion-col>
+      <ion-col class="right-text">
+        <ion-list *ngIf="surveyFileArr.length>0">
+          <ion-item *ngFor="let item of surveyFileArr" lines="none">
+            <p class="down-line" size="small" color="tertiary" (click)="downFile(item)"> {{item.FILENAME}}</p>
+          </ion-item>
+        </ion-list>
+        <p class="nofile" *ngIf="surveyFileArr.length==0">暂无附件</p>
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-around>
+      <ion-col class="left-text">公示网址：</ion-col>
+      <ion-col class="right-text">
+        <div *ngIf="laterMonitorDetail.CENSUS_PUBLIC_TYPE===1">新增项目:
+          <p class="down-line" (click)="openBrower(laterMonitorDetail.CENSUS_PUBLIC_URL)">{{laterMonitorDetail.CENSUS_PUBLIC_URL}}</p>
+        </div>
+        <div *ngIf="laterMonitorDetail.CENSUS_PUBLIC_TYPE===0">
+          <p class="down-line" *ngFor="let item of historyEvilFileArr" size="small" color="tertiary" (click)="downFile(item)">
+            {{item.FILENAME}}</p>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div *ngIf="!dataFlag" class="nodata">暂无数据，请稍后再试！</div>
+</ion-content>

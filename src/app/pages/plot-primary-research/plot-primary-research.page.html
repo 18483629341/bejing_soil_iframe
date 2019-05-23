@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="ios-arrow-back" mode='ios'></ion-back-button>
+    </ion-buttons>
+    <ion-title>初步调查</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- 下拉刷新组件 -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" >
+    <ion-refresher-content pullingIcon="ios-arrow-down" refreshingSpinner="lines" mode='ios'>
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ion-grid  class="detail_table" *ngIf="dataFlag">
+    <ion-row justify-content-around>
+      <ion-col class="left-text">初步调查标题：</ion-col>
+      <ion-col class="right-text" style=" line-height: 22px;">{{firstCensusInfo.CENSUS_TITLE||"- -"}}</ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">初步调查报告编制单位：</ion-col>
+      <ion-col class="right-text">{{firstCensusInfo.CENSUS_UNIT||"- -"}}</ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">初步调查完成时间：</ion-col>
+      <ion-col class="right-text">{{firstCensusInfo.CENSUS_END_TIME===null?"- -":firstCensusInfo.CENSUS_END_TIME| date:'yyyy-MM-dd'}}</ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">初步调查报告附件：</ion-col>
+      <ion-col class="right-text" >
+        <ion-list *ngIf="censusFileArr.length>0">
+          <ion-item *ngFor="let item of censusFileArr" lines="none" slot="end">
+            <p class="down-line" size="small" color="tertiary" (click)="downFile(item)"> {{item.FILENAME}}</p>
+          </ion-item>
+        </ion-list>
+        <p class="nofile" *ngIf="censusFileArr.length==0">暂无附件</p>
+      </ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">检测报告附件：</ion-col>
+      <ion-col class="right-text" >
+        <ion-list *ngIf="surveyFileArr.length>0">
+          <ion-item *ngFor="let item of surveyFileArr" lines="none" slot="end">
+            <p class="down-line" size="small" color="tertiary" (click)="downFile(item)"> {{item.FILENAME}}</p>
+          </ion-item>
+        </ion-list>
+        <p class="nofile" *ngIf="surveyFileArr.length==0">暂无附件</p>
+      </ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">是否为污染地块：</ion-col>
+      <ion-col class="right-text">{{firstCensusInfo.ISPOLLUTELAND===1?"污染":"否"}}；<span *ngIf="evidenceFileArr.length>0">证明材料：</span>
+        <ion-list *ngIf="evidenceFileArr.length>0" style="line-height:22px;">
+          <ion-item *ngFor="let item of evidenceFileArr" lines="none" slot="end">
+            <p class="down-line" size="small" color="tertiary" (click)="downFile(item)"> {{item.FILENAME}}</p>
+          </ion-item>
+        </ion-list>
+        <p class="nofile" *ngIf="evidenceFileArr.length==0"  >暂无附件</p>
+      </ion-col>
+    </ion-row>
+    <ion-row justify-content-around>
+      <ion-col class="left-text">公示网址：</ion-col>
+      <ion-col class="right-text" >
+        <div *ngIf="firstCensusInfo.CENSUS_PUBLIC_TYPE===1">新增项目:
+          <p class="down-line" (click)="openBrower(firstCensusInfo.CENSUS_PUBLIC_URL)">{{firstCensusInfo.CENSUS_PUBLIC_URL}}</p>
+        </div>
+        <div *ngIf="firstCensusInfo.CENSUS_PUBLIC_TYPE===0">
+          <p class="down-line" *ngFor="let item of historyEvilFileArr" size="small" color="tertiary" (click)="downFile(item)">
+          {{item.FILENAME}}</p>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  
+  <div *ngIf="!dataFlag" class="nodata">暂无数据，请稍后再试！</div>
+</ion-content>

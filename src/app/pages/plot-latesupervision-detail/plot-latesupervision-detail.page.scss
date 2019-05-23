@@ -1,0 +1,70 @@
+
+.button-div{
+    height: 45px;
+    padding-right: 3px;
+    margin-top: 9px;
+    ion-button{
+        float: right;
+        --padding-start:16px;
+        --padding-end:16px;
+        --padding-top:0;
+        --padding-bottom:0;
+        cursor: pointer;
+    }
+}
+/*table-grid的公共样式 start */
+ion-content{
+    --padding-start:10px;
+    --padding-end:10px;
+}
+ion-grid{
+    margin-top:12px;
+    ion-row{
+        line-height: 48px;
+        min-height: 40px;
+        --ion-grid-column-padding-xs: 0;
+        overflow: hidden;
+        ion-col{
+            border: .55px solid #dfdfdf;
+            border-bottom:none;
+            border-right:none ;
+        }
+        ion-col:last-child{
+            border-right:.55px solid #dfdfdf;
+        }
+        ion-button{
+            position: relative;
+            top:-4px;
+        }
+    }
+   
+    ion-row:last-child{
+        ion-col{
+            border-bottom:.55px solid #dfdfdf;
+        }
+        
+    }
+    
+    .left-text{
+        text-align: right; 
+        font-weight: 700;
+        font-size: 13px;
+        background: #efefef; 
+        padding:4px 0 4px 0!important;
+    }
+    .right-text{
+        text-align: center;
+        color:#343434;
+        background: #fff;
+        font-size: 14px;
+        padding:4px 20px 4px 20px!important;
+    }
+}
+/*table-grid的公共样式 end */
+
+ion-list{
+    margin-bottom: 0px;
+}
+ion-grid{
+    // margin-top:0px;
+}

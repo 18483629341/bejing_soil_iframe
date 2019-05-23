@@ -1,0 +1,136 @@
+// http://ionicframework.com/docs/theming/
+@import '~@ionic/angular/css/core.css';
+@import '~@ionic/angular/css/normalize.css';
+@import '~@ionic/angular/css/structure.css';
+@import '~@ionic/angular/css/typography.css';
+@import '~@ionic/angular/css/display.css';
+@import '~@ionic/angular/css/padding.css';
+@import '~@ionic/angular/css/float-elements.css';
+@import '~@ionic/angular/css/text-alignment.css';
+@import '~@ionic/angular/css/text-transformation.css';
+@import '~@ionic/angular/css/flex-utils.css';
+
+//头部样式
+ion-toolbar{
+     --background:#20A4EC;
+    ion-title{
+        text-align: center;
+        --color: #fff;
+    }
+    ion-back-button {
+        --color:#fff !important;
+    }
+}
+.header-md:after{
+    background-image: none;
+}
+ion-toolbar.blue{
+    --background: #20A4EC;
+}
+
+ion-toolbar.green{
+    --background: #00c393;
+}
+
+ion-toolbar.orange{
+    --background: #FFA500;
+}
+.top_head.blue,.header-bg.blue{
+    background-color: #20A4EC;
+}
+
+.top_head.green,.header-bg.green{
+    background-color:#00c393;
+}
+.top_head.orange,.header-bg.orange{
+    background-color:#FFA500;
+}
+
+//detail_table公共样式
+.detail_table{
+    margin-top:12px;
+    ion-row{
+        line-height: 48px;
+        min-height: 40px;
+        --ion-grid-column-padding-xs: 0;
+        overflow: hidden;
+        ion-col{
+            border: .55px solid #dfdfdf;
+            border-bottom:none;
+            border-right:none ;
+        }
+        ion-col:last-child{
+            border-right:.55px solid #dfdfdf;
+        }
+        ion-button{
+            position: relative;
+            top:-4px;
+        }
+    }
+   
+    ion-row:last-child{
+        ion-col{
+            border-bottom:.55px solid #dfdfdf;
+        }
+        
+    }
+    
+    .left-text{
+        text-align: left; 
+        font-weight: 700;
+        font-size: 13px;
+        background: #efefef; 
+        padding:4px 5px 4px 5px!important;
+    }
+    .right-text{
+        text-align: right;
+        color:#343434;
+        background: #fff;
+        font-size: 14px;
+        padding:4px 5px 4px 5px!important;
+        p{
+            width: 100%;
+            text-align: right;
+        }
+        
+    }
+    .list-md {
+        padding-top: 0;
+        padding-bottom:0;
+    }
+    ion-item{
+        --padding-end:0;
+        --padding-start:0;
+        --padding-top:0;
+        --padding-bottom:0;
+    }
+}
+.down-line{
+    line-height: 16px;
+    color:#082ac4;
+    text-decoration: #082ac4;
+}
+.nofile{ 
+    line-height: 48px;
+}
+
+//列表样式
+.nodata{
+    text-align: center;
+    padding: 10px;
+    color:#343434;
+}
+
+ion-icon[name=arrow-forward]{
+    color:grey;
+}
+.SheetClass{
+    justify-content: center !important;
+}
+.action-sheet-button-inner.sc-ion-action-sheet-md{
+    justify-content: center !important;
+}
+
+.file-alert{
+    
+}
