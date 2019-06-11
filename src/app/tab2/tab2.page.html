@@ -4,20 +4,20 @@
     <img src="../../assets/img/search.png" (click)="goSearch()">
   </div>
   <ion-grid>
-    <ion-row class="col-shadow">
-      <ion-col (click)="showOption(1)" size='4'>
-        <span class="text-ellipsis" [ngClass]="{'color-blue': isShowOptions && currentOptionTabIndex === 1}">区域</span>
-        <ion-icon mode='md' [ngClass]="{'color-blue': isShowOptions && currentOptionTabIndex === 1}" class="domn-arr"
+    <ion-row class="col-shadow" [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
+      <ion-col (click)="showOption(1)" size='4' [ngClass]="{'skin': isShowOptions && currentOptionTabIndex === 1}">
+        <span class="text-ellipsis" >区域</span>
+        <ion-icon mode='md'  class="domn-arr"
           name="arrow-dropdown"></ion-icon>
       </ion-col>
-      <ion-col (click)="showOption(2)" size='4'>
-        <span class="text-ellipsis" [ngClass]="{'color-blue': isShowOptions && currentOptionTabIndex === 2}">行业</span>
-        <ion-icon mode='md' [ngClass]="{'color-blue': isShowOptions && currentOptionTabIndex === 2}" class="domn-arr"
+      <ion-col (click)="showOption(2)" size='4' [ngClass]="{'skin': isShowOptions && currentOptionTabIndex === 2}">
+        <span class="text-ellipsis" >行业</span>
+        <ion-icon mode='md' class="domn-arr"
           name="arrow-dropdown"></ion-icon>
       </ion-col>
-      <ion-col (click)="showOption(3)" size='4'>
-        <span class="text-ellipsis" [ngClass]="{'color-blue': isShowOptions && currentOptionTabIndex === 3}">地块类型</span>
-        <ion-icon mode='md' [ngClass]="{'color-blue': isShowOptions && currentOptionTabIndex === 3}" class="domn-arr"
+      <ion-col (click)="showOption(3)" size='4' [ngClass]="{'skin': isShowOptions && currentOptionTabIndex === 3}">
+        <span class="text-ellipsis" >地块类型</span>
+        <ion-icon mode='md'  class="domn-arr"
           name="arrow-dropdown"></ion-icon>
       </ion-col>
     </ion-row>
@@ -66,14 +66,14 @@
 
 <ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content pullingIcon="ios-arrow-down" refreshingSpinner="lines">
+    <ion-refresher-content pullingIcon="arrow-dropdown" refreshingSpinner="lines" mode='ios'>
     </ion-refresher-content>
   </ion-refresher>
   <!-- 遮罩层 -->
   <div class="layer" (click)="closePotionSelectWindow();" *ngIf="isShowOptions"></div>
   
   <!-- 污染列表 -->
-  <ion-list lines="inset" class="list-box" *ngIf="type==='pollute'">
+  <ion-list lines="inset" class="list-box" *ngIf="!showRecords">
     <ion-item *ngFor="let item of dataList" (click)="goNextPage(item.SEEMINFO_ID)">
       <ion-label>
         <p>{{item.LANDNAME?item.LANDNAME:nodata}}</p>
@@ -83,15 +83,15 @@
   </ion-list>
 
   <!-- 督察记录列表 -->
-  <ion-list lines="inset" class="list-box" *ngIf="type==='inspection'">
+  <ion-list lines="inset" class="list-box" *ngIf="showRecords">
     <ion-item *ngFor="let item of dataList" (click)="goNextPage(item.SEEMINFO_ID)">
       <ion-label>
-        <p>{{item.TITLE?item.TITLE:nodata}}</p>
-        <div>
+        <p>{{item.LANDNAME?item.LANDNAME:nodata}}</p>
+        <div *ngIf="item.SUPERVISENUM">
           <span>最新督查时间：</span>{{(item.CREATE_DATE | date:"yyyy-MM-dd")?(item.CREATE_DATE | date:"yyyy-MM-dd"):nodata}}
         </div>
         <div>
-          <span>督察次数：</span>{{item.NUM?item.NUM:nodata}}
+          <span>督察次数：</span>{{item.SUPERVISENUM}}
         </div>
       </ion-label>
       <ion-icon name="arrow-forward" slot="end" mode="ios"></ion-icon>
@@ -99,7 +99,7 @@
   </ion-list>
 
   <div *ngIf="dataList.length===0" class="nodata">暂无数据，请稍后再试！</div>
-  <ion-infinite-scroll threshold="-5%" (ionInfinite)="loadData($event)" [disabled]='isLoaded'>
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)" >
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="努力加载中...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>

@@ -16,11 +16,16 @@ export class SkinSetPage implements OnInit {
 
   ngOnInit() {
   }
+
   ionViewWillEnter() {
     //设置头部皮肤
     this.skinName = localStorage.getItem('skinName') || 'blue';
     this.skinRgb = localStorage.getItem( 'skinRgb') || '20A4EC';
   }
+  /**
+   * 皮肤设置单选的选中
+   * @param event 事件对象
+   */
   select(event) {
     this.skinName = event.target.getAttribute('value');
     switch (this.skinName) {

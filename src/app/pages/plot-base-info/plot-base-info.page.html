@@ -35,23 +35,23 @@
   <ion-grid class="dec-list">
     <ion-row align-items-center>
       <ion-col class="left-text" size="5">地块地址：</ion-col>
-      <ion-col class="right-text" size="7">{{baseInfo.ADDRESS||"- -"}}</ion-col>
+      <ion-col class="right-text" size="7">{{baseInfo.ADDRESS||"--"}}</ion-col>
     </ion-row>
     <ion-row align-items-center>
       <ion-col class="left-text" size="5">地块中心经纬度：</ion-col>
-      <ion-col class="right-text" size="7">{{baseInfo.LONGITUDE_str||"- -"}}，{{baseInfo.LATITUDE_str||"- -"}} <span ><img (click)="goMap()"  class="icon-img" src="../../../assets/img/index_location.png"/></span> </ion-col>
+      <ion-col class="right-text" size="7">{{baseInfo.LONGITUDE|genPositionStr}}，{{baseInfo.LATITUDE|genPositionStr}} <span ><img (click)="goMap()"  class="icon-img" src="../../../assets/img/index_location.png"/></span> </ion-col>
     </ion-row>
     <ion-row align-items-center>
       <ion-col class="left-text" size="5">坐标系说明：</ion-col>
-      <ion-col class="right-text" size="7">{{baseInfo.COORDINATESYSTEM||"- -"}}</ion-col>
+      <ion-col class="right-text" size="7">{{baseInfo.COORDINATESYSTEM||"--"}}</ion-col>
     </ion-row>
     <ion-row align-items-center>
       <ion-col class="left-text" size="5">地块类型：</ion-col>
-      <ion-col class="right-text" size="7">{{baseInfo.CODE_LANDTYPE||"- -"}}</ion-col>
+      <ion-col class="right-text" size="7">{{baseInfo.landType||"--"}}</ion-col>
     </ion-row>
     <ion-row align-items-center>
       <ion-col class="left-text" size="4">地块四至范围：</ion-col>
-      <ion-col class="right-text" size="8" style="font-size:14px;">{{baseInfo.RANGE||"- -"}}</ion-col>
+      <ion-col class="right-text" size="8" style="font-size:14px;">{{baseInfo.RANGE||"--"}}</ion-col>
     </ion-row>
   </ion-grid>
 
@@ -59,27 +59,27 @@
   <ion-grid class="dec-list">
     <ion-row align-items-center>
       <ion-col class="left-text" size="5">法定代表人</ion-col>
-      <ion-col class="right-text" size="7">{{baseInfo.LEGALPERSON||"- -"}}</ion-col>
+      <ion-col class="right-text" size="7">{{baseInfo.LEGALPERSON||"--"}}</ion-col>
     </ion-row>
     <ion-row align-items-center>
       <ion-col class="left-text" size="5">联系人：</ion-col>
-      <ion-col class="right-text" size="7">{{baseInfo.CONTACT||"- -"}}</ion-col>
+      <ion-col class="right-text" size="7">{{baseInfo.CONTACT||"--"}}</ion-col>
     </ion-row>
     <ion-row align-items-center>
       <ion-col class="left-text" size="5">电话：</ion-col>
-      <ion-col class="right-text" size="7">{{baseInfo.PHONE||"- -"}}</ion-col>
+      <ion-col class="right-text" size="7">{{baseInfo.PHONE||"--"}}</ion-col>
     </ion-row>
     <ion-row align-items-center>
       <ion-col class="left-text" size="5">手机：</ion-col>
-      <ion-col class="right-text" size="7">{{baseInfo.MOBILE||"- -"}}</ion-col>
+      <ion-col class="right-text" size="7">{{baseInfo.MOBILE||"--"}}</ion-col>
     </ion-row>
     <ion-row align-items-center>
       <ion-col class="left-text" size="5">E-mail：</ion-col>
-      <ion-col class="right-text" size="7">{{baseInfo.EMAIL||"- -"}}</ion-col>
+      <ion-col class="right-text" size="7">{{baseInfo.EMAIL||"--"}}</ion-col>
     </ion-row>
     <ion-row align-items-center>
       <ion-col class="left-text" size="5">传真：</ion-col>
-      <ion-col class="right-text" size="7">{{baseInfo.FAX||"- -"}}</ion-col>
+      <ion-col class="right-text" size="7">{{baseInfo.FAX||"--"}}</ion-col>
     </ion-row>
   </ion-grid>
 
@@ -87,11 +87,11 @@
   <ion-grid class="dec-list">
     <ion-row align-items-center>
       <ion-col class="left-text" size="6">地块管理模式：</ion-col>
-      <ion-col class="right-text" size="6">{{baseInfo.CODE_LANDMGMODEL||"- -"}}</ion-col>
+      <ion-col class="right-text" size="6">{{baseInfo.landMgmodel||"--"}}</ion-col>
     </ion-row>
     <ion-row align-items-center>
       <ion-col class="left-text" size="6">国控编码：</ion-col>
-      <ion-col class="right-text" size="6">{{baseInfo.NATIONAL_CONTROL_CODE||"- -"}}</ion-col>
+      <ion-col class="right-text" size="6">{{baseInfo.NATIONAL_CONTROL_CODE||"--"}}</ion-col>
     </ion-row>
     <ion-row align-items-center>
       <ion-col class="left-text" size="6">是否开发利用：</ion-col>

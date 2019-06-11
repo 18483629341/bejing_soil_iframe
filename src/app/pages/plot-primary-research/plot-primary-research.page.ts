@@ -55,7 +55,9 @@ export class PlotPrimaryResearchPage implements OnInit {
     }
   }
 
-  //初始化页面数据
+  /** 
+   * 初始化页面数据
+   */
   init() {
     this.data = this.global.plotDetailData;
     if (JSON.stringify(this.data) !== "{}") {
@@ -136,8 +138,8 @@ export class PlotPrimaryResearchPage implements OnInit {
     this.init();
     //获取所有的附件的数组
     this.getAllFileArr(false);
-    setTimeout(() => {
+    //setTimeout(() => {
       event.target.complete();
-    }, 1000);
+    //}, 1000);
   }
 }

@@ -1,16 +1,4 @@
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button text="" icon="ios-arrow-back" mode='ios'></ion-back-button>
-    </ion-buttons>
-    <ion-title>添加附件</ion-title>
-    <ion-buttons slot="primary" (click)="publishEvents()">
-      <ion-button >
-          提交
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header> -->
+
 <ion-header mode='ios'>
   <ion-toolbar mode='ios' [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
     <ion-buttons slot="start">
@@ -18,7 +6,7 @@
     </ion-buttons>
     <ion-title>添加附件</ion-title>
     <ion-buttons slot="primary" (click)="publishEvents()">
-      <ion-button>
+      <ion-button class="size">
         保存
       </ion-button>
     </ion-buttons>
@@ -39,17 +27,17 @@
       </ion-segment-button>
     </ion-segment>
   </div>
-  <div [style.display]="item==0?'block':'none'">
+  <div [style.display]="item==0?'block':'none'" class="media-box">
     <div class="imgBox">
       <img [src]="item" *ngFor="let item of imgArr" [ngStyle]="{'width': imgWidth,'height':imgWidth}" (click)="goEdit(item)">
       <img src="../../../assets/img/tj.png" (click)="addCamera()" [ngStyle]="{'width': imgWidth,'height':imgWidth}">
     </div>
   </div>
-  <div [style.display]="item==1?'block':'none'">
+  <div [style.display]="item==1?'block':'none'" class="media-box">
     <video [src]="video" class="video"  *ngIf="video"  type="video/mp4" controls="controls"></video>
     <img src="../../../assets/img/tj.png" (click)="addVideo()" [ngStyle]="{'width': imgWidth,'height':imgWidth}" *ngIf="isShow">
   </div>
-  <div [style.display]="item==2?'block':'none'">
+  <div [style.display]="item==2?'block':'none'" class="media-box">
     <ion-list *ngIf="filesArr.length>0">
       <ion-item *ngFor="let item of filesArr">
         <ion-label>

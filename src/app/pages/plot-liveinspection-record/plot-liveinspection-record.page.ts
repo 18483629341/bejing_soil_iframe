@@ -30,7 +30,9 @@ export class PlotLiveinspectionRecordPage implements OnInit {
     this.skinName = localStorage.getItem('skinName') || 'blue';
   }
 
-  //初始化页面数据
+  /** 
+   * 初始化页面数据
+   */
   init() {
     if (this.global.plotInspectorList.length > 0) {
       this.inspectorList = this.global.plotInspectorList;

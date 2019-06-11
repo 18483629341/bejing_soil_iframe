@@ -1,6 +1,7 @@
-.color-blue {
-    color: #5871de;
-  }
+
+.rotate{
+    transform: rotateX(180deg);
+}
 .col-shadow ion-col{
     padding-top: 7px;
     height: 42px;
@@ -10,8 +11,9 @@
     //    background-color: #E4E4E4;
     .domn-arr {
         font-size: 20px;
-      }
+    }
 }
+
 .md.hydrated{
     padding: 0 !important;
 }
@@ -43,8 +45,8 @@
         position: absolute;
         right: 18px;
         top: 16px;
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
      }
      .expand{
         position: absolute;
@@ -78,7 +80,7 @@
       margin-top:-3px; 
     }
     .area-new{
-        max-height: 298px; 
+        max-height: 309px; 
         overflow-y: auto;
     }
 }
@@ -193,4 +195,42 @@
 .dataBox{
     text-align: center;
     margin-top: 10px;
+}
+
+
+ion-item{
+    font-size: 14px;
+    line-height: 43.55px;
+}
+
+// 皮肤相关
+.col-shadow.blue{
+    .skin{
+        .text-ellipsis,.domn-arr{
+            color:#20A4EC;
+        }
+        .domn-arr {
+            transform:rotateX(180deg);
+        }
+    }   
+}
+.col-shadow.green{
+    .skin{
+        .text-ellipsis,.domn-arr{
+            color:#00c393;
+        }
+        .domn-arr {
+            transform:rotateX(180deg);
+        }
+    }
+}
+.col-shadow.orange{
+    .skin{
+        .text-ellipsis,.domn-arr{
+            color:#FFA500;
+        }
+        .domn-arr {
+            transform:rotateX(180deg);
+        }
+    }
 }

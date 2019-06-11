@@ -9,22 +9,9 @@
       <ion-item *ngFor="let item of plotList" (click)="selectPlot(item)">{{item.title}}</ion-item>
     </ion-list>
 
-    <!-- <ion-list lines="inset" *ngIf="type=='qyxx'" class="list-box">
-      <ion-item *ngFor="let item of plotList" (click)="goNextPage(item.SEEMINFO_ID)">
-        <ion-label>
-          <p>{{item.TITLE?item.TITLE:nodata}}</p>
-          <p>
-            <span>最新督查时间：{{(item.CREATE_DATE | date:"yyyy-MM-dd")?(item.CREATE_DATE | date:"yyyy-MM-dd"):nodata}}</span>
-            <span>督察次数：{{item.NUM?item.NUM:nodata}}</span>
-          </p>
-        </ion-label>
-        <ion-icon name="arrow-forward" slot="end" mode="ios"></ion-icon>
-      </ion-item>
-    </ion-list> -->
-
     <div *ngIf="type=='qyxx'">
       <!-- 污染列表 -->
-      <ion-list lines="inset" class="listBox" *ngIf="dataType==='pollute'">
+      <ion-list lines="inset" class="list-box" *ngIf="dataType==='pollute'">
         <ion-item *ngFor="let item of dataList" (click)="goNextPage(item.SEEMINFO_ID)">
           <ion-label>
             <p>{{item.LANDNAME?item.LANDNAME:nodata}}</p>
@@ -34,18 +21,16 @@
       </ion-list>
 
       <!-- 督察记录列表 -->
-      <ion-list lines="inset" class="listBox" *ngIf="dataType==='inspection'">
+      <ion-list lines="inset" class="list-box" *ngIf="dataType==='inspection'">
         <ion-item *ngFor="let item of dataList" (click)="goNextPage(item.SEEMINFO_ID)">
           <ion-label>
-            <p>{{item.TITLE?item.TITLE:nodata}}</p>
-            <p>
-              <span>最新督查时间：
-                <span class="colorSpan">{{(item.CREATE_DATE | date:"yyyy-MM-dd")?(item.CREATE_DATE | date:"yyyy-MM-dd"):nodata}}</span>
-              </span>
-              <span>督察次数：
-                <span class="colorSpan">{{item.NUM?item.NUM:nodata}}</span>
-              </span>
-            </p>
+            <p>{{item.LANDNAME?item.LANDNAME:'--'}}</p>
+            <div *ngIf="item.SUPERVISENUM">
+              <span>最新督查时间：</span>{{(item.CREATE_DATE | date:"yyyy-MM-dd")?(item.CREATE_DATE | date:"yyyy-MM-dd"):'--'}}
+            </div>
+            <div>
+              <span>督察次数：</span>{{item.SUPERVISENUM}}
+            </div>
           </ion-label>
           <ion-icon name="arrow-forward" slot="end" mode="ios"></ion-icon>
         </ion-item>

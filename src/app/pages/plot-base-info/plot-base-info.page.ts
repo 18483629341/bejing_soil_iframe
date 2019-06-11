@@ -64,35 +64,20 @@ export class PlotBaseInfoPage implements OnInit {
    */
   tranAllToString() {
     
-    this.baseInfo['CODE_LANDMGMODEL'] = this.appUpdateService.tranToString(this.global.dectionary['PL_LANDMGMODEL'], this.baseInfo['CODE_LANDMGMODEL']);
-    this.baseInfo['CODE_TRADE'] = this.appUpdateService.tranToString(this.global.dectionary['PL_TRADE'], this.baseInfo['CODE_TRADE']);
-    this.baseInfo['CODE_LANDTYPE'] = this.appUpdateService.tranToString(this.global.dectionary['PL_LANDTYPE'], this.baseInfo['CODE_LANDTYPE']);
-    this.baseInfo['CODE_RISKGRADE'] = this.appUpdateService.tranToString(this.global.dectionary['PL_RISKGRADE'], this.baseInfo['CODE_RISKGRADE']);
-    this.baseInfo['CODE_FLOWSTATUS'] = this.appUpdateService.tranToString(this.global.dectionary['PL_FLOWSTATUS'], this.baseInfo['CODE_FLOWSTATUS']);
+    this.baseInfo['landMgmodel'] = this.appUpdateService.tranToString(this.global.dectionary['PL_LANDMGMODEL'], this.baseInfo['CODE_LANDMGMODEL']);
+    this.baseInfo['trade'] = this.appUpdateService.tranToString(this.global.dectionary['PL_TRADE'], this.baseInfo['CODE_TRADE']);
+    this.baseInfo['landType'] = this.appUpdateService.tranToString(this.global.dectionary['PL_LANDTYPE'], this.baseInfo['CODE_LANDTYPE']);
+    this.baseInfo['riskGrade'] = this.appUpdateService.tranToString(this.global.dectionary['PL_RISKGRADE'], this.baseInfo['CODE_RISKGRADE']);
+    this.baseInfo['flowStatus'] = this.appUpdateService.tranToString(this.global.dectionary['PL_FLOWSTATUS'], this.baseInfo['CODE_FLOWSTATUS']);
     //转化区域code为区域名称
     this.global.AreaList.map((item) => {
       if (item['REGIONCODE'] === this.baseInfo['CODE_REGION']) {
-        this.baseInfo['CODE_REGION']=item['REGIONNAME'];
+        this.baseInfo['regionName']=item['REGIONNAME'];
       }
     })
-    this.baseInfo['LONGITUDE_str']=this.transStr( this.baseInfo['LONGITUDE']);
-    this.baseInfo['LATITUDE_str']=this.transStr( this.baseInfo['LATITUDE']);
-    //console.log(this.baseInfo);
   }
   
-  /**
-   * 将地理位置格式转化为度分秒
-   * @param value float 地理位置
-   */
-  transStr(value) {
-    const getNum=Math.floor(value) ;//得到度
-    this.getS=( value - getNum ) * 3600 ;
-    this.getS=Math.round( this.getS );//取证
-   
-    let second= Math.round((this.getS) % 60)//求余
-    const minute=Math.round((this.getS - second ) / 60);//求商
-    return getNum+'°'+minute+'\''+second+'\"';
-  }
+
   
   /**
    * 下拉刷新事件

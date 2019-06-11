@@ -24,13 +24,13 @@ import { AppMinimize } from '@ionic-native/app-minimize/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { StreamingMedia, StreamingVideoOptions } from '@ionic-native/streaming-media/ngx';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
-import { HttpReqInterceptorService } from '../app/services/public/http-req-interceptor.service';//拦截器
+import { HttpReqInterceptor } from '../app/services/public/http-req-interceptor.service';//拦截器
 import { FingerprintAIO } from '@ionic-native/fingerprint-aio/ngx';
-import { GenPositionStrPipe } from './pipe/gen-position-str.pipe';
+//import { GenPositionStrPipe } from './pipe/gen-position-str.pipe';
 //import { ThsMapComponent } from '../components/ths-map/ths-map';
 
 @NgModule({
-  declarations: [AppComponent, GenPositionStrPipe],
+  declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpModule, HttpClientModule],
   providers: [
@@ -51,7 +51,7 @@ import { GenPositionStrPipe } from './pipe/gen-position-str.pipe';
     WebView,
     StreamingMedia,
     Keyboard,
-    HttpReqInterceptorService,
+    HttpReqInterceptor,
     FingerprintAIO,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

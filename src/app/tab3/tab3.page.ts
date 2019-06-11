@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   styleUrls: ['tab3.page.scss']
 })
 export class Tab3Page {
-  newSkinName: string; // 获取新的皮肤名称
+ 
   skinName: string; // 皮肤名称
   items: any[] = [];
   constructor(public alertController: AlertController, public nav: NavController, private router: Router, ) {
@@ -15,12 +15,9 @@ export class Tab3Page {
     this.skinName = localStorage.getItem('skinName') || 'blue';
   }
 
-  //此钩子函数会每隔几秒时间执行一次 ,与ngAfterContentChecked ()为一对钩子函数
-  ngDoCheck() {
-    this.newSkinName = localStorage.getItem('skinName') || 'blue';
-    if (this.newSkinName !== this.skinName) {
-      this.skinName = this.newSkinName;
-    }
+  ionViewWillEnter() {
+    //设置头部皮肤
+    this.skinName = localStorage.getItem('skinName') || 'blue';
   }
   goFavorites() {
     this.router.navigate(['favorites'], { queryParams: {} });

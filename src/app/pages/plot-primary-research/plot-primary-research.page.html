@@ -17,15 +17,15 @@
   <ion-grid  class="detail_table" *ngIf="dataFlag">
     <ion-row justify-content-around>
       <ion-col class="left-text">初步调查标题：</ion-col>
-      <ion-col class="right-text" style=" line-height: 22px;">{{firstCensusInfo.CENSUS_TITLE||"- -"}}</ion-col>
+      <ion-col class="right-text" style=" line-height: 22px;">{{firstCensusInfo.CENSUS_TITLE||"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
       <ion-col class="left-text">初步调查报告编制单位：</ion-col>
-      <ion-col class="right-text">{{firstCensusInfo.CENSUS_UNIT||"- -"}}</ion-col>
+      <ion-col class="right-text">{{firstCensusInfo.CENSUS_UNIT||"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
       <ion-col class="left-text">初步调查完成时间：</ion-col>
-      <ion-col class="right-text">{{firstCensusInfo.CENSUS_END_TIME===null?"- -":firstCensusInfo.CENSUS_END_TIME| date:'yyyy-MM-dd'}}</ion-col>
+      <ion-col class="right-text">{{(firstCensusInfo.CENSUS_END_TIME | date:"yyyy-MM-dd")?(firstCensusInfo.CENSUS_END_TIME | date:"yyyy-MM-dd"):"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
       <ion-col class="left-text">初步调查报告附件：</ion-col>
@@ -35,7 +35,7 @@
             <p class="down-line" size="small" color="tertiary" (click)="downFile(item)"> {{item.FILENAME}}</p>
           </ion-item>
         </ion-list>
-        <p class="nofile" *ngIf="censusFileArr.length==0">暂无附件</p>
+        <p class="nofile" *ngIf="censusFileArr.length===0">暂无附件</p>
       </ion-col>
     </ion-row>
     <ion-row justify-content-around>
@@ -46,7 +46,7 @@
             <p class="down-line" size="small" color="tertiary" (click)="downFile(item)"> {{item.FILENAME}}</p>
           </ion-item>
         </ion-list>
-        <p class="nofile" *ngIf="surveyFileArr.length==0">暂无附件</p>
+        <p class="nofile" *ngIf="surveyFileArr.length===0">暂无附件</p>
       </ion-col>
     </ion-row>
     <ion-row justify-content-around>
@@ -57,7 +57,7 @@
             <p class="down-line" size="small" color="tertiary" (click)="downFile(item)"> {{item.FILENAME}}</p>
           </ion-item>
         </ion-list>
-        <p class="nofile" *ngIf="evidenceFileArr.length==0"  >暂无附件</p>
+        <p class="nofile" *ngIf="evidenceFileArr.length===0"  >暂无附件</p>
       </ion-col>
     </ion-row>
     <ion-row justify-content-around>

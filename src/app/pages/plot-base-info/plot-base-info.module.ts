@@ -6,7 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { PlotBaseInfoPage } from './plot-base-info.page';
-
+import { GenPositionStrPipe } from "src/app/pipe/gen-position-str.pipe";
 
 
 const routes: Routes = [
@@ -23,6 +23,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [PlotBaseInfoPage]
+  declarations: [PlotBaseInfoPage,GenPositionStrPipe],
+  exports:[GenPositionStrPipe]
 })
 export class PlotBaseInfoPageModule {}

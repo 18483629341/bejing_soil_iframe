@@ -12,11 +12,11 @@ export class ConfigService {
   constructor(public httpUtils: HttpUtilsService, public global: GlobalService) { }
 
   /**
-    * 获取app版本信息
-    * @param params  调用方法传过来的参数
-    * @param showloading 是否显示数据加载框
-    * @param callback 回调函数
-  */
+   * 获取app版本信息
+   * @param params  调用方法传过来的参数
+   * @param showloading 是否显示数据加载框
+   * @param callback 回调函数
+   */
   getAppVersion(params, showloading, callback) {
     return this.httpUtils.get(this.global.versionUrl, params, showloading, callback);
   }
@@ -28,7 +28,6 @@ export class ConfigService {
     * @param callback 回调函数
     */
   login(params, showloading, callback) {
-    console.log(params);
     const url = `${this.global.hostUrl}${this.global.login}?loginName=${params.loginName}&password=${params.password}`;
     return this.httpUtils.post(url, {}, showloading, callback);
   }
@@ -89,7 +88,7 @@ export class ConfigService {
     const url = `${this.global.hostUrl}${this.global.plotDetailUrl}?id=${params.id}&sessionId=${params.sessionId}`;
     return this.httpUtils.post(url, params, showloading, callback);
   }
- 
+
   /**
    * 收藏/取消收藏
    * @param params  调用方法传过来的参数，根据城市代码查询进行获取
@@ -98,35 +97,34 @@ export class ConfigService {
    */
   doCollection(params, showloading, callback) {
     const url = `${this.global.hostUrl}${this.global.doCollectionUrl}?seeminfoId=${params.seeminfoId}&sessionId=${params.sessionId}`;
-    console.log(url);
     return this.httpUtils.post(url, params, showloading, callback);
   }
 
-   /**
-   * 获取地块督察记录列表信息
-   * @param params  调用方法传过来的参数，根据城市代码查询进行获取
-   * @param showloading 是否显示数据加载框
-   * @param callback 回调函数
-   */
+  /**
+  * 获取地块督察记录列表信息
+  * @param params  调用方法传过来的参数，根据城市代码查询进行获取
+  * @param showloading 是否显示数据加载框
+  * @param callback 回调函数
+  */
   getPlotInspectorList(params, showloading, callback) {
     // return this.httpUtils.get('../../../assets/data/inspecter-list.json', params, showloading, callback);
     const url = `${this.global.hostUrl}${this.global.plotInspectorListUrl}?id=${params.id}&sessionId=${params.sessionId}`;
     return this.httpUtils.post(url, params, showloading, callback);
   }
 
-   /**
-   * 获取地块后期监督记录列表信息
-   * @param params  调用方法传过来的参数，根据城市代码查询进行获取
-   * @param showloading 是否显示数据加载框
-   * @param callback 回调函数
-   */
+  /**
+  * 获取地块后期监督记录列表信息
+  * @param params  调用方法传过来的参数，根据城市代码查询进行获取
+  * @param showloading 是否显示数据加载框
+  * @param callback 回调函数
+  */
   getPlotLaterMonitor(params, showloading, callback) {
     // return this.httpUtils.get('../../../assets/data/later-monitor.json', params, showloading, callback);
     const url = `${this.global.hostUrl}${this.global.plotLaterMonitorUrl}?id=${params.id}&sessionId=${params.sessionId}&year=${params.year}`;
-     return this.httpUtils.post(url, params, showloading, callback);
+    return this.httpUtils.post(url, params, showloading, callback);
   }
- 
-    /**
+
+  /**
    * 获取地块相关附件信息
    * @param params  调用方法传过来的参数，根据城市代码查询进行获取
    * @param showloading 是否显示数据加载框
@@ -136,23 +134,23 @@ export class ConfigService {
     const url = `${this.global.hostUrl}${this.global.fileUrl}?ids=${params.ids}&sessionId=${params.sessionId}`;
     return this.httpUtils.post(url, params, showloading, callback);
   }
- 
-    /**
-   * 督察列表提交暂存
-   * @param params  调用方法传过来的参数，根据城市代码查询进行获取
-   * @param showloading 是否显示数据加载框
-   * @param callback 回调函数
-   */
+
+  /**
+ * 督察列表提交暂存
+ * @param params  调用方法传过来的参数，根据城市代码查询进行获取
+ * @param showloading 是否显示数据加载框
+ * @param callback 回调函数
+ */
   supervisesave(params, showloading, callback) {
     return this.httpUtils.get(this.global.hostUrl + this.global.supervisesave, params, showloading, callback);
   }
 
-   /**
-   * 获取可编辑的督查记录
-   * @param params  调用方法传过来的参数，根据城市代码查询进行获取
-   * @param showloading 是否显示数据加载框
-   * @param callback 回调函数
-   */
+  /**
+  * 获取可编辑的督查记录
+  * @param params  调用方法传过来的参数，根据城市代码查询进行获取
+  * @param showloading 是否显示数据加载框
+  * @param callback 回调函数
+  */
   getUpdatedSuperviseByLand(params, showloading, callback) {
     return this.httpUtils.get(this.global.hostUrl + this.global.getUpdatedSuperviseByLand, params, showloading, callback);
   }

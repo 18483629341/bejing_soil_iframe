@@ -39,10 +39,11 @@ export class AppUpdateService {
   */
   checkVersion() {
     this.config.getAppVersion({}, false, res => {
-      if (res && res !== 'error' && res.data && res.data.length > 0) {
-        const obj = res.data[0];
-        this.updateInfo = obj.UPDATEINFO;
-        this.upDateVerison(obj.VER_ANDROID, obj.ANDROIDURL, obj.APKNAME);
+      if (res && res !== 'error') {
+        const obj = res;
+        this.updateInfo = "最新的版本号为："+obj.verAndroid;
+        alert(obj.downUrl);
+        this.upDateVerison(obj.verAndroid, obj.downUrl, obj.apkName);
       } else {
         this.httpUtils.thsToast('更新失败!');
       }
@@ -147,10 +148,10 @@ export class AppUpdateService {
    */
   async downFile(url, application, name, filesize?, callback?) {
    
-    this.fileIsExited(url, this.file.externalCacheDirectory + name, (res) => {
-     // alert(res);
+    // this.fileIsExited(url, this.file.externalCacheDirectory + name, (res) => {
+    // alert(res);
       
-    })
+    // })
     application = this.getFileMimeType(application);
 
     const fileTransfer: FileTransferObject = this.transfer.create();

@@ -28,31 +28,31 @@
   <ion-grid class="detail_table" *ngIf="dataFlag">
     <ion-row justify-content-around>
       <ion-col class="left-text">申报时间：</ion-col>
-      <ion-col class="right-text">{{laterMonitorDetail.APPLY_DATE===null?"- -":laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd'}}</ion-col>
+      <ion-col class="right-text">{{(laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd')?(laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd'):"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
       <ion-col class="left-text">监测时间：</ion-col>
-      <ion-col class="right-text">{{laterMonitorDetail.MONITOR_DATE===null?"- -":laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd'}}</ion-col>
+      <ion-col class="right-text">{{(laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd')?(laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd'):"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
       <ion-col class="left-text">监测状态：</ion-col>
-      <ion-col class="right-text">{{laterMonitorDetail.STATUS||"- -"}}</ion-col>
+      <ion-col class="right-text">{{laterMonitorDetail.STATUS||"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
       <ion-col class="left-text">土壤环境监测结论：</ion-col>
-      <ion-col class="right-text">{{laterMonitorDetail.SOIL_ENVIRON_VERDICT||"- -"}}</ion-col>
+      <ion-col class="right-text">{{laterMonitorDetail.SOIL_ENVIRON_VERDICT||"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
       <ion-col class="left-text">地下水环境监测结论：</ion-col>
-      <ion-col class="right-text">{{laterMonitorDetail.GROUNDWATER_VERDICT||"- -"}}</ion-col>
+      <ion-col class="right-text">{{laterMonitorDetail.GROUNDWATER_VERDICT||"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
       <ion-col class="left-text">地表水环境监测结论：</ion-col>
-      <ion-col class="right-text">{{laterMonitorDetail.SURFACE_WATER_VERDICT||"- -"}}</ion-col>
+      <ion-col class="right-text">{{laterMonitorDetail.SURFACE_WATER_VERDICT||"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
       <ion-col class="left-text">空气环境监测结论：</ion-col>
-      <ion-col class="right-text">{{laterMonitorDetail.AIR_ENVIRON_VERDICT||"- -"}}</ion-col>
+      <ion-col class="right-text">{{laterMonitorDetail.AIR_ENVIRON_VERDICT||"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
       <ion-col class="left-text">监测方案附件：</ion-col>

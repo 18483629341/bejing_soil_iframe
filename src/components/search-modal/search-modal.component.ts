@@ -53,8 +53,7 @@ export class SearchModalComponent implements OnInit {
   */
   getSuperviseList(loadType,flag) {
     this.config.getListSupervise({LANDNAME: this.plotName,sessionId:this.global.sessionId,pageCount:1,pageSize:10}, flag,res => {
-      console.log('PolluteList');
-      console.log(res);
+      // console.log(res);
       if (res !== 'error') {
         this.totalPage = res.total;
         if (loadType === 1) {
@@ -70,7 +69,7 @@ export class SearchModalComponent implements OnInit {
    * 输入地块名称进行关联搜索
    */
   searchPlot() {
-    console.log(1);
+   
     if (this.plotName) {
       setTimeout(() => {
         this.plotListShow = true;

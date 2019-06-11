@@ -81,7 +81,7 @@ export class LoginPage implements OnInit {
       return false;
     }
     this.configService.login({ 'loginName': this.loginInfo.userName, 'password': this.loginInfo.password }, true, res => {
-      console.log(res);
+      // console.log(res);
       if (res !== 'error') {
         if (res.status === '1') {
           localStorage.setItem('user', JSON.stringify({
@@ -125,13 +125,19 @@ export class LoginPage implements OnInit {
       });
     }
   }
-  // 记住用户
+
+  /** 
+   * 记住用户
+   */
   isRememberName() {
     if (!this.loginInfo.isRemName) {// 取消记住用户名，同时操作取消记住密码
       this.loginInfo.isRemPwd = false;
     }
   }
-  // 记住密码
+ 
+  /** 
+   * 记住密码
+   */
   isRememberPwd() {
     if (this.loginInfo.isRemPwd) {// 记住密码同时记住用户名
       this.loginInfo.isRemName = true;

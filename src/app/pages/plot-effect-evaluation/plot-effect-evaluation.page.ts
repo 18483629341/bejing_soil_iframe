@@ -27,7 +27,7 @@ export class PlotEffectEvaluationPage implements OnInit {
     public appUpdate: AppUpdateService,
     public httpUtils: HttpUtilsService
   ) {
-    
+
   }
 
   ngOnInit() {
@@ -53,7 +53,10 @@ export class PlotEffectEvaluationPage implements OnInit {
     }
   }
 
-  //初始化页面数据
+
+  /** 
+   * 初始化页面数据
+   */
   init() {
     this.data = this.global.plotDetailData;
     if (JSON.stringify(this.data) !== "{}") {
@@ -70,7 +73,7 @@ export class PlotEffectEvaluationPage implements OnInit {
    * 获取所有的附件的数组
    * @param flag? boolean  默认为true ,表示是否显示loading 遮罩
    */
-  getAllFileArr(flag=true) {
+  getAllFileArr(flag = true) {
 
     //let CENSUS = '58625234-0b18-4e39-9bef-c4515beb9617,a212f803-1af8-45d1-a0d6-a7cf669b85a6';
     //获取检查调查报告数组
@@ -109,10 +112,10 @@ export class PlotEffectEvaluationPage implements OnInit {
   }
 
 
-   /**
-   *下载资料
-   * @param item 对象
-   */
+  /**
+  *下载资料
+  * @param item 对象
+  */
   downFile(item) {
     if (item.FILENAME) {
       //获取后缀名
@@ -125,7 +128,11 @@ export class PlotEffectEvaluationPage implements OnInit {
 
   }
 
-  // 下拉刷新事件
+ 
+  /**
+   *下拉刷新事件
+   * @param event 事件
+   */
   doRefresh(event) {
     //初始化页面数据
     this.init();

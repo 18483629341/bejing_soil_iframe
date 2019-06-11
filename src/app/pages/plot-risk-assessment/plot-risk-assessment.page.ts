@@ -51,7 +51,10 @@ export class PlotRiskAssessmentPage implements OnInit {
     }
   }
 
-  //初始化页面数据
+  
+  /** 
+   * 初始化页面数据
+   */
   init() {
     this.data = this.global.plotDetailData;
     if (JSON.stringify(this.data) !== "{}") {

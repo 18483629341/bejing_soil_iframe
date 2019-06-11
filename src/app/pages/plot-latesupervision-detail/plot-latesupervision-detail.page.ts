@@ -35,8 +35,10 @@ export class PlotLatesupervisionDetailPage implements OnInit {
     
 
     this.activatedRouted.queryParams.subscribe(params => {
-      this.plotId = params.id;
-      this.plotId = '7c43c589-70bb-4acb-b53e-bbf7cc6ba594';
+      if(params&&params.id){
+        this.plotId = params.id;
+      }
+      
     });
 
   }
@@ -65,7 +67,9 @@ export class PlotLatesupervisionDetailPage implements OnInit {
     }
   }
 
-  //初始化页面数据
+  /** 
+   * 初始化页面数据
+   */
   init(){
     this.arr = this.global.plotDetailData['laterMonitorList'];
     if (JSON.stringify(this.arr) !== "[]") {
@@ -142,8 +146,10 @@ export class PlotLatesupervisionDetailPage implements OnInit {
      })
   }
 
+  /** 
+   * 生成后期监管年份的最大值和最小值
+   */
   getYears(){
-    //console.log(this.global.laterMonitorList);
     this.global.laterMonitorList.map((item)=>{
       this.yearList.push(item['MONITOR_DATE'])
     })
@@ -151,7 +157,10 @@ export class PlotLatesupervisionDetailPage implements OnInit {
     this.minYear=this.yearList[this.yearList.length - 1];
   }
 
-  // 下拉刷新事件
+  /**
+   *下拉刷新事件
+   * @param event 事件
+   */
   doRefresh(event) {
     this.getYears();
     //初始化页面数据

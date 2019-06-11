@@ -37,7 +37,7 @@
     </ion-row>
     <ion-row justify-content-around>
       <ion-col class="left-text">监督管理时间：</ion-col>
-      <ion-col class="right-text">{{inspecterDetail.CREATE_DATE==="- -"?"- -":inspecterDetail.CREATE_DATE| date:'yyyy-MM-dd'}}</ion-col>
+      <ion-col class="right-text">{{(inspecterDetail.CREATE_DATE | date:"yyyy-MM-dd")?(inspecterDetail.CREATE_DATE | date:"yyyy-MM-dd"):"--"}}</ion-col>
     </ion-row>
 
     <ion-row justify-content-around>

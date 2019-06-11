@@ -7,7 +7,7 @@ import { GlobalService } from '../../services/public/global.service';
 import { HttpUtilsService } from '../../services/public/http-utils.service';
 import { AppUpdateService } from './../../services/public/app-update.service';
 import { FileTransferService } from '../../services/plot-files/file-transfer.service';
-import { async } from 'q';
+// import { async } from 'q';
 
 @Component({
   selector: 'app-plot-detail',
@@ -41,7 +41,11 @@ export class PlotDetailPage implements OnInit {
     public activatedRouted: ActivatedRoute
   ) {
     this.activatedRouted.queryParams.subscribe(params => {
-      this.plotId = params.id;
+      console.log(params , params.id);
+      if (params && params.id) {
+        this.plotId = params.id;
+      }
+      
       //this.plotId = '7c43c589-70bb-4acb-b53e-bbf7cc6ba594';
     });
   }
@@ -58,6 +62,7 @@ export class PlotDetailPage implements OnInit {
     //设置头部皮肤
     this.skinName = localStorage.getItem('skinName') || 'blue';
   }
+
   /**
    * 获取地块的数据data
    * @param plotId string 地块ID
@@ -68,7 +73,7 @@ export class PlotDetailPage implements OnInit {
       // console.log(res);
       if (res !== 'error') {
         this.global.plotDetailData = res;
-        this.isCollected = res['isCollection'] == 1 ? true : false;
+        this.isCollected = res['isCollection'] === 1 ? true : false;
         this.global.laterMonitorList = res['laterMonitorList'];
         this.plot = this.global.plotDetailData;
         this.baseInfo = this.global.plotDetailData['baseInfo'];
@@ -99,16 +104,16 @@ export class PlotDetailPage implements OnInit {
    * @param codeNum 对应codeNum
    */
   tranAllToString() {
-
-    this.baseInfo['CODE_LANDMGMODEL'] = this.appUpdateService.tranToString(this.global.dectionary['PL_LANDMGMODEL'], this.baseInfo['CODE_LANDMGMODEL']);
-    this.baseInfo['CODE_TRADE'] = this.appUpdateService.tranToString(this.global.dectionary['PL_TRADE'], this.baseInfo['CODE_TRADE']);
-    this.baseInfo['CODE_LANDTYPE'] = this.appUpdateService.tranToString(this.global.dectionary['PL_LANDTYPE'], this.baseInfo['CODE_LANDTYPE']);
-    this.baseInfo['CODE_RISKGRADE'] = this.appUpdateService.tranToString(this.global.dectionary['PL_RISKGRADE'], this.baseInfo['CODE_RISKGRADE']);
-    this.baseInfo['CODE_FLOWSTATUS'] = this.appUpdateService.tranToString(this.global.dectionary['PL_FLOWSTATUS'], this.baseInfo['CODE_FLOWSTATUS']);
+    console.log(this.global.dectionary['PL_FLOWSTATUS'], this.baseInfo['CODE_FLOWSTATUS']);
+    this.baseInfo['landMgmodel'] = this.appUpdateService.tranToString(this.global.dectionary['PL_LANDMGMODEL'], this.baseInfo['CODE_LANDMGMODEL']);
+    this.baseInfo['trade'] = this.appUpdateService.tranToString(this.global.dectionary['PL_TRADE'], this.baseInfo['CODE_TRADE']);
+    this.baseInfo['landType'] = this.appUpdateService.tranToString(this.global.dectionary['PL_LANDTYPE'], this.baseInfo['CODE_LANDTYPE']);
+    this.baseInfo['riskGrade'] = this.appUpdateService.tranToString(this.global.dectionary['PL_RISKGRADE'], this.baseInfo['CODE_RISKGRADE']);
+    this.baseInfo['flowStatus'] = this.appUpdateService.tranToString(this.global.dectionary['PL_FLOWSTATUS'], this.baseInfo['CODE_FLOWSTATUS'] + '');
     //转化区域code为区域名称
     this.global.AreaList.map((item) => {
       if (item['REGIONCODE'] === this.baseInfo['CODE_REGION']) {
-        this.baseInfo['CODE_REGION'] = item['REGIONNAME'];
+        this.baseInfo['regionName'] = item['REGIONNAME'];
       }
     })
     //console.log(this.baseInfo);
@@ -121,7 +126,7 @@ export class PlotDetailPage implements OnInit {
    */
   getPlotInspection(plotId, flag = true) {
     this.configService.getPlotInspectorList({ 'sessionId': this.global.sessionId, 'id': plotId }, flag, res => {
-      // console.log(res);
+      console.log(res);
       if (res !== 'error') {
         this.global.plotInspectorList = res;
         this.inspection = this.global.plotInspectorList;
@@ -139,7 +144,9 @@ export class PlotDetailPage implements OnInit {
     });
   }
 
-  //点击收藏按钮
+  /** 
+   * 点击收藏按钮
+   */
   doCollection() {
 
     this.configService.doCollection({ 'sessionId': this.global.sessionId, 'seeminfoId': this.plotId }, true, res => {
@@ -192,12 +199,6 @@ export class PlotDetailPage implements OnInit {
     }
   }
 
-  //经纬度转化为度分秒，比如113.211--> 113°12'39.6"
-  /** */
-  tranFormAngle(angle) {
-    
-  }
-
   /**
    * 下拉刷新事件
    * @param event 
@@ -209,6 +210,7 @@ export class PlotDetailPage implements OnInit {
     this.getPlotInspection(this.plotId, false);
     this.dataFlag = this.baseinfoDataFlag || this.inspectionDataFlag;
     setTimeout(() => {
+
       event.target.complete();
     }, 1000);
   }
@@ -225,7 +227,7 @@ export class PlotDetailPage implements OnInit {
       buttons: [{
         text: '取消',
         handler: () => {
-          console.log('cancle clicked');
+          // console.log('cancle clicked');
         }
       }, {
         text: '确定',

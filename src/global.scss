@@ -45,7 +45,10 @@ ion-toolbar.orange{
 .top_head.orange,.header-bg.orange{
     background-color:#FFA500;
 }
-
+.ion-back-button{
+    width:95%;
+    height:95%;
+}
 //detail_table公共样式
 .detail_table{
     margin-top:12px;
@@ -131,6 +134,10 @@ ion-icon[name=arrow-forward]{
     justify-content: center !important;
 }
 
-.file-alert{
-    
+ion-icon[name=arrow-forward]{
+    color:#d4d4d4;
+    width: 20px;
+}
+.sc-ion-back-button-ios-h {
+    font-size: 15px;
 }

@@ -1,1 +1,16 @@
+ion-icon,ion-label{
+    color:#cbc8cc;
+}
+.tab-selected{
+    ion-icon.blue,ion-label.blue{
+        color: #20A4EC;
+    }
 
+    ion-icon.green,ion-label.green{
+        color: #00c393;
+    }
+
+    ion-icon.orange,ion-label.orange{
+        color: #FFA500;
+    }
+}

@@ -81,8 +81,7 @@ export class InspectionRecordPage implements OnInit {
       id: this.global.SEEMINFO_ID,
     }, true, res => {
       if (res !== 'error' && res.data !== null) {
-        // alert(JSON.stringify(res));
-        console.log(res);
+        // console.log(res);
         this.global.SUPERVISE_ID = res.data.SUPERVISE_ID;
         this.global.filesID = res.data.FILEIDS;
         this.checkTitle = res.data.TITLE;
@@ -107,8 +106,9 @@ export class InspectionRecordPage implements OnInit {
     });
   }
 
-
-  // 获取当前时间
+  /** 
+   * 获取当前时间
+   */
   getNowFormatDate() {
     const date: any = new Date();
     const seperator1: any = '-';
@@ -134,7 +134,11 @@ export class InspectionRecordPage implements OnInit {
       + seperator2 + seconds;
     return currentdate;
   }
-  // 时间转换
+ 
+  /**
+   * 时间转换
+   * @param now number 时间戳
+   */
   formatDate(now) {
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
@@ -144,7 +148,11 @@ export class InspectionRecordPage implements OnInit {
     const second = now.getSeconds();
     return year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second;
   }
-  // 提示框
+ 
+  /**
+   * 提示框
+   * @param msg str 信息内容
+   */
   async presentToastWithOptions(msg) {
     const toast = await this.toastController.create({
       message: msg,
@@ -162,10 +170,11 @@ export class InspectionRecordPage implements OnInit {
   goEdit() {
     this.router.navigate(['edit-img']);
   }
+
   /**
-    * 上传到服务器
-    * @param path 文件路径
-    */
+   * 上传到服务器
+   * @param path 文件路径
+   */
   async upload(path, index, type) {
     if (path === '') {
       return;
@@ -228,15 +237,26 @@ export class InspectionRecordPage implements OnInit {
     });
   }
 
-  // 根据url获取文件类型
+  /**
+   * 根据url获取文件类型
+   * @param fileUrl  string  文件url
+   */
   getFileType(fileUrl: string): string {
     return fileUrl.substring(fileUrl.lastIndexOf('.') + 1, fileUrl.length).toLowerCase();
   }
-  // 根据url获取文件名(包含文件类型)
+ 
+  /**
+   * 根据url获取文件名(包含文件类型)
+   * @param fileUrl  string  文件url
+   */
   getFileName(fileUrl: string): string {
     return fileUrl.substring(fileUrl.lastIndexOf('/') + 1, fileUrl.length).toLowerCase();
   }
-  // 根据文件类型获取文件的mimeType
+   
+  /**
+   * 根据文件类型获取文件的mimeType
+   * @param fileUrl  string  文件url
+   */
   getFileMimeType(fileType: string): string {
     let mimeType: any = '';
     switch (fileType) {
@@ -310,6 +330,7 @@ export class InspectionRecordPage implements OnInit {
   //   this.alertControl.dismiss();
   //   this.alertControl = null;
   // }
+
   /**
   * showloading服务
   * @param template 展示内容(选传)
@@ -323,6 +344,7 @@ export class InspectionRecordPage implements OnInit {
     return loader;
 
   }
+
   /**
   * 关闭loading
   * @param  loader 创建的loading对象
@@ -331,7 +353,10 @@ export class InspectionRecordPage implements OnInit {
     loader.dismiss();
   }
 
-  // 暂存数据
+ 
+  /** 
+   * 暂存数据
+   */
   saveData() {
     // 清空fileid
     this.fileID = '';
@@ -354,7 +379,7 @@ export class InspectionRecordPage implements OnInit {
         'form[SAVESTATUS]': '0',
         'form[SUPERVISE_ID]': this.global.SUPERVISE_ID,
       }, true, res => {
-        console.log(res);
+        // console.log(res);
         if (res !== 'error') {
           if (res.status === 'success') {
             this.presentToastWithOptions('暂存成功');
@@ -363,6 +388,10 @@ export class InspectionRecordPage implements OnInit {
       });
     }
   }
+  
+  /** 
+   * 下载
+   */
   upLoad() {
     // 清空fileid
     this.fileID = '';
@@ -386,7 +415,7 @@ export class InspectionRecordPage implements OnInit {
         'form[SAVESTATUS]': '1',
         'form[SUPERVISE_ID]': this.global.SUPERVISE_ID,
       }, true, res => {
-        console.log(res);
+        // console.log(res);
         if (res !== 'error') {
           if (res.status === 'success') {
             this.presentToastWithOptions('提交成功');

@@ -49,10 +49,11 @@ export class Tab2Page {
   CODE_LANDTYPE = ''; // 地块类型
   type: any;
   pageCount = 1; // 列表请求页数
-  totalPage: number; // 列表总条数
-  isLoaded = false; // 默认上拉加载
+  totalSize: number; // 列表总条数
+  isloadMore = true; // 默认上拉加载
   baseInfo: any;//选中地块的基本信息
   distance: any;
+  showRecords =false; //显示tab1，还是tab2,对应得内容
   constructor(
     public statusBar: StatusBar,
     public router: Router,
@@ -73,7 +74,6 @@ export class Tab2Page {
     this.getDectionary();
     this.getListSupervise(1);
     // this.getBlockList();
-    console.log(this.global.sessionId);
   }
 
   ionViewWillEnter() {
@@ -85,9 +85,11 @@ export class Tab2Page {
       this.title = '污染地块';
       this.global.type = "pollute";
       this.type = "pollute";
+      this.showRecords = false;
       this.expand = true;
     } else {
       this.title = '现场督察';
+      this.showRecords = true;
       this.expand = false;
       this.global.type = "inspection";
       this.type = "inspection";
@@ -100,7 +102,7 @@ export class Tab2Page {
    */
   getDectionary() {
     this.configService.getDectionary({ sessionId: this.global.sessionId }, false, res => {
-      console.log('dectionary', res);
+      // console.log('dectionary', res);
       if (res !== 'error') {
         this.global.dectionary = res;
       }
@@ -133,14 +135,14 @@ export class Tab2Page {
    * @param item  object 对象
    */
   selectArea(num, item) {
-    console.log(item);
+    // console.log(item);
     this.active = num;
     this.isShowOptions = false;
     this.Area = item.REGIONNAME;
     this.CODE_REGION = item.REGIONCODE;
     this.showArea = true;
     this.pageCount = 1;
-    this.isLoaded = false;
+    
     this.getListSupervise(1);
 
   }
@@ -151,28 +153,28 @@ export class Tab2Page {
    * @param item  object 对象
    */
   selectIndustry(num, item) {
-    console.log(item);
+    // console.log(item);
     this.active2 = num;
     this.isShowOptions = false;
     this.industry = item.dictionary_name;
     this.CODE_TRADE = item.dictionary_code;
     this.showIndustry = true;
     this.pageCount = 1;
-    this.isLoaded = false;
+    
     this.getListSupervise(1);
 
   }
 
   //  选中地块类型
   selectBlockType(num, item) {
-    console.log(item);
+    // console.log(item);
     this.active3 = num;
     this.isShowOptions = false;
     this.blockType = item.dictionary_name;
     this.CODE_LANDTYPE = item.dictionary_code;
     this.showBlockType = true;
     this.pageCount = 1;
-    this.isLoaded = false;
+    
     this.getListSupervise(1);
 
   }
@@ -183,7 +185,7 @@ export class Tab2Page {
     this.active = -1;
     this.CODE_REGION = '';
     this.pageCount = 1;
-    this.isLoaded = false;
+    
     this.getListSupervise(1);
 
   }
@@ -194,7 +196,7 @@ export class Tab2Page {
     this.active2 = -1;
     this.CODE_TRADE = '';
     this.pageCount = 1;
-    this.isLoaded = false;
+    
     this.getListSupervise(1);
 
   }
@@ -205,7 +207,7 @@ export class Tab2Page {
     this.active3 = -1;
     this.CODE_LANDTYPE = '';
     this.pageCount = 1;
-    this.isLoaded = false;
+    
     this.getListSupervise(1);
 
   }
@@ -216,7 +218,8 @@ export class Tab2Page {
       // tab1跳转
       this.router.navigate(['plot-detail'], { queryParams: { id: SEEMINFO_ID } });
     } else {
-      this.isInlive(SEEMINFO_ID,false);
+      // this.isInlive(SEEMINFO_ID,false);
+      this.router.navigate(['inspection-record']);
     }
   }
 
@@ -228,17 +231,18 @@ export class Tab2Page {
    */
   isInlive(SEEMINFO_ID, flag = true) {
     this.configService.getPlotDetail({ 'sessionId': this.global.sessionId, 'id': SEEMINFO_ID }, flag, res => {
-      console.log(res);
+      // console.log(res);
       if (res !== 'error') {
         this.baseInfo = res['baseInfo'];
       }
     })
     this.thsLocation.startLocation().then(res => {
       this.global.location = res;
-      //this.distance=this.thsLocation.distance(res.latitude,res.longitude,this.baseInfo.LATITUDE,this.baseInfo.LONGITUDE);
-      this.distance = this.thsLocation.distance(39.900198, 116.400012, 39.45555,116.4); //调试用
-     // this.distance = this.thsLocation.distance(39.900198, 116.400012, 0,0); //调试用
-      if (this.distance > 1000) {
+      this.distance=this.thsLocation.distance(res.latitude,res.longitude,this.baseInfo.LATITUDE,this.baseInfo.LONGITUDE);
+      // this.distance = this.thsLocation.distance(39.900198, 116.400012, 39.45555,116.4); //调试用
+      //  this.distance = this.thsLocation.distance(39.900198, 116.400012, 0,0); //调试用
+      //this.global.minLiveDistance 最大允许现场监督检查的距离
+      if (this.distance > this.global.minLiveDistance) {
         this.httpUtilsService.thsToast("您需在离该地块1km以内，才能进行现场督察编辑！");
       } else {
         this.router.navigate(['inspection-record']);
@@ -252,7 +256,7 @@ export class Tab2Page {
   // 获取区域列表
   getAreaList(flag = true) {
     this.configService.getAreaList({ sessionId: this.global.sessionId }, flag, res => {
-      console.log(res);
+      // console.log(res);
       if (res !== 'error') {
         this.AreaList = res;
         this.global.AreaList = res;
@@ -262,8 +266,7 @@ export class Tab2Page {
   // 获取行业列表和地块类型
   getIndustryList(flag = true) {
     this.configService.getIndustryList({ sessionId: this.global.sessionId }, flag, res => {
-      // console.log(res.PL_TRADE);
-      // console.log(res.PL_LANDTYPE);
+      // console.log(res);
       if (res !== 'error') {
         this.industryList = res.PL_TRADE;
         this.blockTypeList = res.PL_LANDTYPE;
@@ -272,7 +275,7 @@ export class Tab2Page {
   }
 
   // 获取督察列表全部数据
-  getListSupervise(dataType, flag = true) {
+  getListSupervise(dataType, flag = true,event?) {
     // console.log(this.pageCount);
     this.configService.getListSupervise({
       sessionId: this.global.sessionId,
@@ -282,15 +285,35 @@ export class Tab2Page {
       pageCount: this.pageCount,
       pageSize: 10,
     }, flag, res => {
-      console.log('Superviselist');
       console.log(res);
       if (res !== 'error') {
-        this.totalPage = res.total;
-        if (dataType === 1) {
+       
+        this.totalSize = res.total;
+        
+        if (dataType === 1) { // 刷新
           this.dataList = res.list;
-        } else {
-          this.dataList = this.dataList.concat(res.list);
+        } else { // 向上加载时
+          if(this.dataList.length === this.totalSize){
+            console.log(this.isloadMore);
+            this.httpUtilsService.thsToast('没有更多了');
+          }else{
+            console.log(this.isloadMore);
+            this.dataList = [...this.dataList, ...res.data];
+          }
+          
         }
+        
+        // 执行加载
+        if(event){
+          event.target.complete();
+        }
+        //判定是否还需加载
+        if(this.dataList.length < this.totalSize){
+          this.isloadMore = true;
+        }else{
+          this.isloadMore = false;
+        }
+        console.log(this.isloadMore);
       }
     });
   }
@@ -316,15 +339,7 @@ export class Tab2Page {
    */
   doRefresh(event) {
     this.pageCount = 1;
-    this.getAreaList(false); // 加载区域列表
-    this.getIndustryList(false); // 加载行业列表
-    this.getListSupervise(1, false); // 加载督察列表
-
-    //  this.getBlockList(false); // 加载地块列表
-    setTimeout(() => {
-      this.isLoaded = false;
-      event.target.complete();
-    }, 1000);
+    this.getListSupervise(1, false, event); // 加载督察列表
   }
 
   /**
@@ -333,17 +348,7 @@ export class Tab2Page {
   */
   loadData(event) {
     this.pageCount++;
-    this.getListSupervise(2, false);
-
-    setTimeout(() => {
-      // App logic to determine if all data is loaded
-      // and disable the infinite scroll
-      if (this.dataList.length === this.totalPage) {
-        // event.target.disabled = true;
-        this.isLoaded = true;
-        this.httpUtilsService.thsToast('没有更多了');
-      }
-      event.target.complete();
-    }, 500);
+    this.getListSupervise(2, false, event);
+    
   }
 }

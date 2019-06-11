@@ -25,12 +25,42 @@
 }
 .active{
     background-color: #fff;
-    color: #20A4EC;
 }
 .top_tab_item{
-    min-height: 28px;
-    // line-height: 28px;
+    min-height: 34px;
 }
+.top_head.blue{
+    .active{
+        ion-segment-button{
+            color:#20A4EC;
+        }  
+    }   
+}
+.top_head.green{
+    .active{
+        .top_tab_item{
+            color:#00c393;
+        }
+    }
+}
+.top_head.orange{
+    .active{
+        color:#FFA500;
+    }
+}
+
+.top_head.green{
+    .active{
+        color:#00c393;
+    }
+}
+
+.top_head.orange{
+    .active{
+        color:#FFA500;
+    }
+}
+
 ion-segment-button{
     border: 0.55px solid #fff;
 }
@@ -45,6 +75,10 @@ ion-segment-button:last-child{
     border-left: none;
     border-top-right-radius:5px;
     border-bottom-right-radius:5px;
+}
+
+.media-box{
+    padding: 10px ;
 }
 .imgBox{
     display: flex;
@@ -69,9 +103,12 @@ ion-header {
     }
     ion-button{
         color: #fff;
-        font-size: 16px;
+        font-size: 14px;
     }
     ion-title{
         font-weight: normal;
     }
+}
+.size{
+    font-size: 14px;
 }

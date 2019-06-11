@@ -29,7 +29,10 @@ export class PlotLiveinspectionDetailPage implements OnInit {
     public activatedRouted: ActivatedRoute
   ) {
     this.activatedRouted.queryParams.subscribe(params => {
-      this.SUPERVISE_ID = params.SUPERVISE_ID;
+      if(params&&params.SUPERVISE_ID){
+        this.SUPERVISE_ID = params.SUPERVISE_ID;
+      }
+      
     });
   }
 
@@ -55,7 +58,9 @@ export class PlotLiveinspectionDetailPage implements OnInit {
     }
   }
 
-  //初始化页面数据
+  /** 
+   * 初始化页面数据
+   */
   init() {
     this.global.plotInspectorList.map((item) => {
       if (item.SUPERVISE_ID === this.SUPERVISE_ID) {

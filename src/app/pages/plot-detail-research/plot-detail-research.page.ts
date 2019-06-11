@@ -53,7 +53,9 @@ export class PlotDetailResearchPage implements OnInit {
     }
   }
  
-  //初始化页面数据
+  /** 
+   * 初始化页面数据
+   */
   init(){
     this.data = this.global.plotDetailData;
     if (JSON.stringify(this.data) !== "{}") {
@@ -101,9 +103,9 @@ export class PlotDetailResearchPage implements OnInit {
   }
 
   /**
-    *下载资料
-    * @param item 对象
-    */
+   *下载资料
+   * @param item 对象
+   */
   downFile(item) {
     if (item.FILENAME) {
       //获取后缀名

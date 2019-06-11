@@ -67,7 +67,7 @@ export class EditImgPage implements OnInit {
           // const imgPath = this.hostUrl + arr[0] + '%' + arr[1].toUpperCase();
           // console.log(imgPath);
           // this.imgArr.push(imgPath);
-          if (key.FILETYPE.indexOf('image') !== -1 ) {
+          if (key.FILETYPE.indexOf('image') !== -1) {
             //console.log(`${this.hostUrl}sessionId=${this.globalService.sessionId}&fileid=${key.FILEID}`);
             const imgPath = `${this.hostUrl}sessionId=${this.globalService.sessionId}&fileid=${key.FILEID}`;
             this.imgArr.push(imgPath);
@@ -85,23 +85,39 @@ export class EditImgPage implements OnInit {
   ionViewWillEnter() {
     this.skinName = localStorage.getItem('skinName') || 'blue';
   }
-  // 选中切换
+
+  /**
+   * 选中切换
+   * @param num 下标
+   */
   OnitemClick(num) {
     this.item = num;
   }
-  // 选择照相
+
+  /** 
+   * 选择照相
+   */
   addCamera() {
     this.presentCamera();
   }
-  // 选择视频拍摄
+
+  /** 
+   * 选择视频拍摄
+   */
   addVideo() {
     this.presentVideo();
   }
-  // 选择文件
+
+  /** 
+   * 选择文件
+   */
   addFiles() {
     this.presentFiles();
   }
-  // 弹出层相机
+ 
+  /** 
+   * 弹出层相机
+   */
   async presentCamera() {
     const actionSheet = await this.actionSheetController.create({
       buttons: [{
@@ -128,7 +144,10 @@ export class EditImgPage implements OnInit {
     });
     await actionSheet.present();
   }
-  // 弹出层摄像
+ 
+  /** 
+   * 弹出层摄像
+   */
   async presentVideo() {
     const actionSheet = await this.actionSheetController.create({
       buttons: [{
@@ -149,7 +168,10 @@ export class EditImgPage implements OnInit {
     });
     await actionSheet.present();
   }
-  // 弹出层文件
+
+  /** 
+   * 弹出层文件
+   */
   async presentFiles() {
     const actionSheet = await this.actionSheetController.create({
       buttons: [{
@@ -219,7 +241,10 @@ export class EditImgPage implements OnInit {
         // alert(JSON.stringify(err));
       });
   }
-  // 选择文件
+ 
+  /**
+   * 选择文件
+   */
   chooseFile() {
     this.fileChooser.open()
       .then(uri => {
@@ -230,7 +255,7 @@ export class EditImgPage implements OnInit {
       })
       .catch(e => console.log(e));
   }
-  
+
   /**
    * 跳转照片编辑
    * @param item 对象
@@ -238,13 +263,15 @@ export class EditImgPage implements OnInit {
   goEdit(item) {
     this.router.navigate(['edit-photo'], { queryParams: { imgPath: item } });
   }
-  // 根据url获取文件名(包含文件类型)
+
+  /**
+   * 根据url获取文件名(包含文件类型)
+   * @param fileUrl 文件路径
+   */
   getFileName(fileUrl: string): string {
     return fileUrl.substring(fileUrl.lastIndexOf('/') + 1, fileUrl.length).toLowerCase();
   }
-
-
-
+  
   /**
    * 播放视频
    */

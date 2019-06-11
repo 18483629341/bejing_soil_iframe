@@ -17,12 +17,12 @@
     <ion-item-sliding *ngFor="let item of dataList" (click)="goNextPage(item.SEEMINFO_ID)">
       <ion-item>
         <ion-label>
-          <p>{{item.TITLE?item.TITLE:nodata}}</p>
-          <div>
-            <span>最新督查时间：</span>{{(item.CREATE_DATE | date:"yyyy-MM-dd")?(item.CREATE_DATE | date:"yyyy-MM-dd"):nodata}}
+          <p>{{item.LANDNAME?item.LANDNAME:nodata}}</p>
+          <div *ngIf="item.SUPERVISENUM">
+            <span>最新督查时间：</span>{{(item.CREATE_DATE | date:"yyyy-MM-dd")?(item.CREATE_DATE | date:"yyyy-MM-dd"):"--"}}
           </div>
           <div>
-            <span>督察次数：</span>{{item.NUM?item.NUM:nodata}}
+            <span>督察次数：</span>{{item.SUPERVISENUM}}
           </div>
         </ion-label>
         <ion-icon name="arrow-forward" slot="end" mode="ios"></ion-icon>

@@ -18,12 +18,12 @@
       <!-- <ion-note slot="start">1</ion-note> -->
       <ion-label text-wrap>
         <ion-text>
-          <b>{{item.TITLE||"- -"}}</b>
+          <b>{{item.TITLE||"--"}}</b>
         </ion-text>
 
         <ion-text>
-          <p>监督管理时间&nbsp;&nbsp;{{item.MODIFY_DATE===null?"- -":item.MODIFY_DATE| date:'yyyy-MM-dd'}} </p>
-          <p>监督管理单位&nbsp;&nbsp;{{item.DEPTNAME||"- -"}}</p>
+          <p>监督管理时间&nbsp;&nbsp;{{(item.CREATE_DATE | date:"yyyy-MM-dd")?(item.CREATE_DATE | date:"yyyy-MM-dd"):"--"}} </p>
+          <p>监督管理单位&nbsp;&nbsp;{{item.DEPTNAME||"--"}}</p>
         </ion-text>
       </ion-label>
       <ion-icon mode='ios' name="arrow-forward" slot='end'></ion-icon>

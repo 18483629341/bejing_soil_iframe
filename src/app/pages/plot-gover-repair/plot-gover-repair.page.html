@@ -17,15 +17,15 @@
   <ion-grid class="detail_table" *ngIf="dataFlag">
       <ion-row justify-content-around>
         <ion-col class="left-text">报告标题：</ion-col>
-        <ion-col class="right-text" style=" line-height: 22px;">{{repairInfo.CENSUS_TITLE||"- -"}}</ion-col>
+        <ion-col class="right-text" style=" line-height: 22px;">{{repairInfo.CENSUS_TITLE||"--"}}</ion-col>
       </ion-row>
       <ion-row justify-content-around>
         <ion-col class="left-text">报告编制单位：</ion-col>
-        <ion-col class="right-text">{{repairInfo.CENSUS_UNIT||"- -"}}</ion-col>
+        <ion-col class="right-text">{{repairInfo.CENSUS_UNIT||"--"}}</ion-col>
       </ion-row>
       <ion-row justify-content-around>
         <ion-col class="left-text">完成时间：</ion-col>
-        <ion-col class="right-text">{{repairInfo.CENSUS_END_TIMEE===null?"- -":(repairInfo.CENSUS_END_TIME| date:'yyyy-MM-dd')}}</ion-col>
+        <ion-col class="right-text">{{(repairInfo.CENSUS_END_TIME| date:'yyyy-MM-dd')?(repairInfo.CENSUS_END_TIME| date:'yyyy-MM-dd'):"--"}}</ion-col>
       </ion-row>
       <ion-row justify-content-around>
         <ion-col class="left-text">治理与修复报告附件：</ion-col>

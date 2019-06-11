@@ -9,11 +9,13 @@ ion-back-button{
 }
 
 .download-btn{
+    width:67%;
     --color:#fff;
     font-size: 20px;
     --padding-start:5px;
     --padding-end:5px;
 }
+
 .p-title {
     color:#111;
     font-size: 16px;
@@ -85,17 +87,17 @@ ion-item{
 
 .collect,.collected{
     display: inline-block;
-    width: 35px;
-    height: 35px;
+    width: 22px;
+    height: 22px;
     // margin-right: 10px;
 }
 
 .collect{
     background: url("../../../assets/img/sc_off.png") no-repeat center;
-    background-size: 24px;
+    background-size:100%;
 }
 
 .collected{
     background: url("../../../assets/img/sc_on.png") no-repeat center;
-    background-size: 24px;
+    background-size: 100%;
 }

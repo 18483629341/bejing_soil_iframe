@@ -8,7 +8,7 @@
       <ion-button class="download-btn" (click)="presentSheet()">
         <ion-icon name="download"></ion-icon>
       </ion-button>
-      <span slot="end" [ngClass]="{collect:!isCollected,collected:isCollected}" (click)="doCollection()"></span>
+      <span slot="end"  [ngClass]="{'collect':!isCollected,'collected':isCollected}" (click)="doCollection()"></span>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -25,31 +25,31 @@
     <ion-grid class="dec-list">
       <ion-row align-items-center>
         <ion-col class="left-text" size="4">地块名称：</ion-col>
-        <ion-col class="right-text" size="8">{{baseInfo.LANDNAME||'- -'}}</ion-col>
+        <ion-col class="right-text" size="8">{{baseInfo.LANDNAME||'--'}}</ion-col>
       </ion-row>
       <ion-row align-items-center>
         <ion-col class="left-text" size="5">行政区划：</ion-col>
-        <ion-col class="right-text" size="7">{{baseInfo.CODE_REGION||'- -'}}</ion-col>
+        <ion-col class="right-text" size="7">{{baseInfo.regionName||'--'}}</ion-col>
       </ion-row>
       <ion-row align-items-center>
         <ion-col class="left-text" size="5">地块管理模式：</ion-col>
-        <ion-col class="right-text" size="7">{{baseInfo.CODE_LANDMGMODEL||'- -'}}</ion-col>
+        <ion-col class="right-text" size="7">{{baseInfo.landMgmodel||'--'}}</ion-col>
       </ion-row>
       <ion-row align-items-center>
         <ion-col class="left-text" size="5">行业类别：</ion-col>
-        <ion-col class="right-text" size="7">{{baseInfo.CODE_TRADE||'- -'}}</ion-col>
+        <ion-col class="right-text" size="7">{{baseInfo.trade||'--'}}</ion-col>
       </ion-row>
       <ion-row align-items-center>
         <ion-col class="left-text" size="5">地块类型：</ion-col>
-        <ion-col class="right-text" size="7">{{baseInfo.CODE_LANDTYPE||'- -'}}</ion-col>
+        <ion-col class="right-text" size="7">{{baseInfo.landType||'--'}}</ion-col>
       </ion-row>
       <ion-row align-items-center>
         <ion-col class="left-text" size="5">风险等级：</ion-col>
-        <ion-col class="right-text" size="7">{{baseInfo.CODE_RISKGRADE||'- -'}}</ion-col>
+        <ion-col class="right-text" size="7">{{baseInfo.riskGrade||'--'}}</ion-col>
       </ion-row>
       <ion-row align-items-center>
         <ion-col class="left-text" size="5">所处阶段：</ion-col>
-        <ion-col class="right-text" size="7">{{baseInfo.CODE_FLOWSTATUS||'- -'}}</ion-col>
+        <ion-col class="right-text" size="7">{{baseInfo.flowStatus||'--'}}</ion-col>
       </ion-row>
     </ion-grid>
     <div class="splitArea"></div>

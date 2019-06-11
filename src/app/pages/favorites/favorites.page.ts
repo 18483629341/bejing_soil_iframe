@@ -12,7 +12,7 @@ import { HttpUtilsService } from '../../services/public/http-utils.service';
 export class FavoritesPage implements OnInit {
   public dataList: any = []; // 列表数据
   skinName: any;
-  nodata:'- -';
+ 
   constructor(
     public configService: ConfigService,
     public global: GlobalService,
@@ -30,7 +30,7 @@ export class FavoritesPage implements OnInit {
     //设置头部皮肤
     this.skinName = localStorage.getItem('skinName') || 'blue';
   }
-  
+
   /**
    * 加载收藏的督察列表
    * @param flag?  boolean  是否显示loading
@@ -49,25 +49,28 @@ export class FavoritesPage implements OnInit {
     });
   }
 
- 
+
   /**
    * 点击列表跳转
-   * @param SEEMINFO_ID  地块ID
+   * @param SEEMINFO_ID  string  地块ID
    */
   goNextPage(SEEMINFO_ID) {
     this.router.navigate(['plot-detail'], { queryParams: { id: SEEMINFO_ID } });
   }
 
-   //点击收藏按钮
-   cancel(plotId) {
+  /**
+  * 点击收藏按钮
+  * @param plotId string  地块ID
+  */
+  cancel(plotId) {
     this.configService.doCollection({ 'sessionId': this.global.sessionId, 'seeminfoId': plotId }, false, res => {
       if (res.data !== 'error') {
         this.httpUtils.thsToast("取消收藏成功");
-      }else{
+      } else {
         this.httpUtils.thsToast("取消收藏失败");
       }
     });
-    //重新加载
+    
     this.getListSupervise(true);
   }
 

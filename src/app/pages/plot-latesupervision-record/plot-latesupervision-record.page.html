@@ -1,28 +1,32 @@
 <ion-header>
-  <ion-toolbar >
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="ios-arrow-back" mode='ios'></ion-back-button>
+    </ion-buttons>
     <ion-title>后期监管记录</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
- <!-- 下拉刷新组件 -->
- <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+  <!-- 下拉刷新组件 -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content pullingIcon="ios-arrow-down" refreshingSpinner="lines" mode='ios'>
     </ion-refresher-content>
   </ion-refresher>
-<ion-list>
-  <ion-item *ngFor="let item of laterMonitorList" (click)="goNext(item.LATE_ID)">
-    <!-- <ion-note slot="start">1</ion-note> -->
-    <ion-label text-wrap>
-      <ion-text>
-        <b>监管年度&nbsp;&nbsp;{{item.MONITOR_DATE===null?"- -":item.MONITOR_DATE| date:'yyyy'}}</b>
-      </ion-text>
+  <ion-list>
+    <ion-item *ngFor="let item of laterMonitorList" (click)="goNext(item.LATE_ID)">
+      <!-- <ion-note slot="start">1</ion-note> -->
+      <ion-label text-wrap>
+        <ion-text>
+          <b>监管年度&nbsp;&nbsp;{{(item.MONITOR_DATE| date:'yyyy')?(item.MONITOR_DATE| date:'yyyy'):"--"}}</b>
+        </ion-text>
 
-      <ion-text>
-        <p>申报时间&nbsp;&nbsp;{{item.APPLY_DATE===null?"- -":item.APPLY_DATE| date:'yyyy-mm-dd'}}</p>
-      </ion-text>
-    </ion-label>
-    <ion-icon mode='ios' name="arrow-forward" slot='end'></ion-icon>
-  </ion-item>
-</ion-list>
+        <ion-text>
+          <p>申报时间&nbsp;&nbsp;{{(item.APPLY_DATE | date:"yyyy-MM-dd")?(item.APPLY_DATE | date:"yyyy-MM-dd"):"--"}}
+          </p>
+        </ion-text>
+      </ion-label>
+      <ion-icon mode='ios' name="arrow-forward" slot='end'></ion-icon>
+    </ion-item>
+  </ion-list>
 </ion-content>

@@ -3,16 +3,15 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError, timeout } from 'rxjs/operators';
 import { ToastController } from '@ionic/angular';
-import { HttpUtilsService } from '../public/http-utils.service';
-
+import { HttpUtilsService } from './http-utils.service';
 /*
   请求拦截器，设置了默认超时时间以及提示信息，也可以在这里进行接口公共参数或者数据的处理.
 */
 @Injectable()
-export class HttpReqInterceptorService implements HttpInterceptor {
+export class HttpReqInterceptor implements HttpInterceptor {
   public constructor(
     public toastController: ToastController,
-    public httpUtils: HttpUtilsService
+    public publicService: HttpUtilsService
   ) { }
 
   defaultTimeout = 8000; // 默认设置超时时间
@@ -28,7 +27,7 @@ export class HttpReqInterceptorService implements HttpInterceptor {
       timeout(timevalue),
       catchError(e => {
         if (e.name === 'TimeoutError') {// 可根据业务需求，修改提示文字
-          this.httpUtils.thsToast('请求超时');
+          this.publicService.thsToast('请求超时');
         }
         return throwError(e);
       }));
@@ -48,6 +47,6 @@ export class HttpReqInterceptorService implements HttpInterceptor {
 
 export const HttpReqInterceptorProvider = {
   provide: HTTP_INTERCEPTORS,
-  useClass: HttpReqInterceptorService,
+  useClass: HttpReqInterceptor,
   multi: true
 };

@@ -18,12 +18,18 @@ export class SetUpPage implements OnInit {
     public nav: NavController,
     private router: Router,
     public fingerprintAIO: FingerprintAIO,
-    ) {
-     
+  ) {
+
   }
   ngOnInit() {
     this.decideShowToggle();
   }
+
+  ionViewWillEnter() {
+    //设置头部皮肤
+    this.skinName = localStorage.getItem('skinName') || 'blue';
+  }
+
   decideShowToggle() {
     this.fingerprintAIO.isAvailable().then((result) => { // 手机不支持指纹功能则隐藏按钮
       // 指纹可以使用(android上result=OK,ios上result=Available)
@@ -48,7 +54,11 @@ export class SetUpPage implements OnInit {
       this.isToggle = false;
     }
   }
-  // 按钮的切换
+
+  /** 
+   * 按钮的切换
+   * @param e object 事件对象
+   */
   public notify(e) {
     // console.log(this.info.fingerprint);
     if (this.isToggle) { // 确保开启指纹功能时用户手机中有录入指纹
@@ -70,21 +80,24 @@ export class SetUpPage implements OnInit {
     }
   }
 
-  ionViewWillEnter() {
-    //设置头部皮肤
-    this.skinName = localStorage.getItem('skinName') || 'blue';
-  }
-
-  // 退出登录
+  /** 
+   * 退出登录
+   */
   quit() {
     this.presentAlertConfirm('确定退出登录');
   }
 
-  // 跳转皮肤设置
+  /** 
+   * 跳转皮肤设置
+   */
   goSkin() {
     this.router.navigate(['skin-set']);
   }
   
+  /**
+   * 弹出消息弹窗
+   * @param val str 弹窗信息
+   */
   async presentAlertConfirm(val) {
     const alert = await this.alertController.create({
       message: val,

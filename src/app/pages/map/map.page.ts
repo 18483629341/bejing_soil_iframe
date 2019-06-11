@@ -36,9 +36,10 @@ export class MapPage implements OnInit {
     public activatedRouted:ActivatedRoute
   ) {
     this.activatedRouted.queryParams.subscribe(params => {
-      this.longitude = params.longitude;
-      this.latitude = params.latitude;
-      //this.plotId = '7c43c589-70bb-4acb-b53e-bbf7cc6ba594';
+      if(params&&params.longitude){
+        this.longitude = params.longitude;
+        this.latitude = params.latitude;
+      }
     });
   }
 
@@ -72,7 +73,7 @@ export class MapPage implements OnInit {
 
         this.graphicData = e.graphic.attributes;//获取点的数据
         
-        if (this.graphicData.pointType == '1') {
+        if (this.graphicData.pointType === '1') {
           this.monitorPopShow = true;
           this.landPopShow = false;
         } else {
