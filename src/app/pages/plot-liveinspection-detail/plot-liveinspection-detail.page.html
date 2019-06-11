@@ -16,17 +16,17 @@
 
   <ion-grid class="detail_table" *ngIf="dataFlag">
     <ion-row justify-content-around>
-      <ion-col class="left-text">监督管理标题：</ion-col>
-      <ion-col class="right-text">{{inspecterDetail.TITLE|| '--'}}</ion-col>
+      <ion-col class="left-text" size="6">监督管理标题：</ion-col>
+      <ion-col class="right-text"  size="6">{{inspecterDetail.TITLE|| '--'}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">监督管理单位：</ion-col>
-      <ion-col class="right-text">{{inspecterDetail.DEPTNAME || '--'}}</ion-col>
+      <ion-col class="left-text" size="6">监督管理单位：</ion-col>
+      <ion-col class="right-text"  size="6">{{inspecterDetail.DEPTNAME || '--'}}</ion-col>
     </ion-row>
 
     <ion-row justify-content-around>
-      <ion-col class="left-text">效果评估报告附件：</ion-col>
-      <ion-col class="right-text" >
+      <ion-col class="left-text" size="6">效果评估报告附件：</ion-col>
+      <ion-col class="right-text" style=" line-height: 22px;"  size="6">
         <ion-list *ngIf="censusFileArr.length>0">
           <ion-item *ngFor="let item of censusFileArr" lines="none">
             <p class="down-line" size="small" color="tertiary" (click)="downFile(item)"> {{item.FILENAME}}</p>
@@ -36,17 +36,17 @@
       </ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">监督管理时间：</ion-col>
-      <ion-col class="right-text">{{(inspecterDetail.CREATE_DATE | date:"yyyy-MM-dd")?(inspecterDetail.CREATE_DATE | date:"yyyy-MM-dd"):"--"}}</ion-col>
+      <ion-col class="left-text" size="6">监督管理时间：</ion-col>
+      <ion-col class="right-text"  size="6">{{(inspecterDetail.CREATE_DATE | date:"yyyy-MM-dd")?(inspecterDetail.CREATE_DATE | date:"yyyy-MM-dd"):"--"}}</ion-col>
     </ion-row>
 
     <ion-row justify-content-around>
-      <ion-col class="left-text">督察情况：</ion-col>
-      <ion-col class="right-text">{{inspecterDetail.SUGGEST || '--'}}</ion-col>
+      <ion-col class="left-text" size="6">督察情况：</ion-col>
+      <ion-col class="right-text"  size="6">{{inspecterDetail.SUGGEST || '--'}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">监测方案附件：</ion-col>
-      <ion-col class="right-text">已安装</ion-col>
+      <ion-col class="left-text" size="6">监测方案附件：</ion-col>
+      <ion-col class="right-text"  size="6">已安装</ion-col>
     </ion-row>
   </ion-grid>
 

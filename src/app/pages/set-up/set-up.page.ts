@@ -12,21 +12,23 @@ export class SetUpPage implements OnInit {
   isShow = false; // 没有指纹功能则不显示
   isToggle = true; // 切换按钮
   skinName: string;
-  newSkinName: string;
   constructor(
     public alertController: AlertController,
     public nav: NavController,
     private router: Router,
     public fingerprintAIO: FingerprintAIO,
   ) {
-
+     // 设置头部皮肤
+     this.skinName = localStorage.getItem('skinName') || 'blue';
   }
+
   ngOnInit() {
     this.decideShowToggle();
   }
 
-  ionViewWillEnter() {
-    //设置头部皮肤
+  ionViewWillEnter( ) {
+    console.log(localStorage.getItem('skinName'));
+    // 设置头部皮肤
     this.skinName = localStorage.getItem('skinName') || 'blue';
   }
 
@@ -55,7 +57,7 @@ export class SetUpPage implements OnInit {
     }
   }
 
-  /** 
+  /**
    * 按钮的切换
    * @param e object 事件对象
    */
@@ -80,20 +82,20 @@ export class SetUpPage implements OnInit {
     }
   }
 
-  /** 
+  /**
    * 退出登录
    */
   quit() {
     this.presentAlertConfirm('确定退出登录');
   }
 
-  /** 
+  /**
    * 跳转皮肤设置
    */
   goSkin() {
     this.router.navigate(['skin-set']);
   }
-  
+
   /**
    * 弹出消息弹窗
    * @param val str 弹窗信息

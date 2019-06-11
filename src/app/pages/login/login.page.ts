@@ -34,7 +34,7 @@ export class LoginPage implements OnInit {
     public global: GlobalService,
     private faio: FingerprintAIO
   ) {
-    //this.skinName = localStorage.getItem('skinName') || 'blue';
+    // this.skinName = localStorage.getItem('skinName') || 'blue';
   }
   /**
    *
@@ -66,7 +66,7 @@ export class LoginPage implements OnInit {
   ionViewWillEnter() {
     this.fingerRecognition();
   }
-  
+
   /**
    * 登录点击事件
    */
@@ -80,8 +80,8 @@ export class LoginPage implements OnInit {
       this.presentToastWithOptions('密码不能为空');
       return false;
     }
-    this.configService.login({ 'loginName': this.loginInfo.userName, 'password': this.loginInfo.password }, true, res => {
-      // console.log(res);
+    this.configService.login({ loginName: this.loginInfo.userName, password: this.loginInfo.password }, true, res => {
+      console.log(res);
       if (res !== 'error') {
         if (res.status === '1') {
           localStorage.setItem('user', JSON.stringify({

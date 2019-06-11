@@ -16,20 +16,20 @@
 
   <ion-grid class="detail_table" *ngIf="dataFlag">
       <ion-row justify-content-around>
-        <ion-col class="left-text">报告标题：</ion-col>
-        <ion-col class="right-text" style=" line-height: 22px;">{{repairInfo.CENSUS_TITLE||"--"}}</ion-col>
+        <ion-col class="left-text" size="6">报告标题：</ion-col>
+        <ion-col class="right-text" style=" line-height: 22px;" size="6">{{repairInfo.CENSUS_TITLE||"--"}}</ion-col>
       </ion-row>
       <ion-row justify-content-around>
-        <ion-col class="left-text">报告编制单位：</ion-col>
-        <ion-col class="right-text">{{repairInfo.CENSUS_UNIT||"--"}}</ion-col>
+        <ion-col class="left-text" size="6">报告编制单位：</ion-col>
+        <ion-col class="right-text"  size="6">{{repairInfo.CENSUS_UNIT||"--"}}</ion-col>
       </ion-row>
       <ion-row justify-content-around>
-        <ion-col class="left-text">完成时间：</ion-col>
-        <ion-col class="right-text">{{(repairInfo.CENSUS_END_TIME| date:'yyyy-MM-dd')?(repairInfo.CENSUS_END_TIME| date:'yyyy-MM-dd'):"--"}}</ion-col>
+        <ion-col class="left-text" size="6">完成时间：</ion-col>
+        <ion-col class="right-text"  size="6">{{(repairInfo.CENSUS_END_TIME| date:'yyyy-MM-dd')?(repairInfo.CENSUS_END_TIME| date:'yyyy-MM-dd'):"--"}}</ion-col>
       </ion-row>
       <ion-row justify-content-around>
-        <ion-col class="left-text">治理与修复报告附件：</ion-col>
-        <ion-col class="right-text" >
+        <ion-col class="left-text" size="6">治理与修复报告附件：</ion-col>
+        <ion-col class="right-text" size="6" style=" line-height: 22px;">
             <ion-list *ngIf="censusFileArr.length>0">
               <ion-item *ngFor="let item of censusFileArr" lines="none">
                 <p class="down-line" size="small" color="tertiary" (click)="downFile(item)"> {{item.FILENAME}}</p>
@@ -39,8 +39,8 @@
           </ion-col>
       </ion-row>
       <ion-row justify-content-around>
-        <ion-col class="left-text">公示网址：</ion-col>
-        <ion-col class="right-text">
+        <ion-col class="left-text" size="6">公示网址：</ion-col>
+        <ion-col class="right-text"  size="6" style=" line-height: 22px;">
             <div *ngIf="repairInfo.CENSUS_PUBLIC_TYPE===1">新增项目:
               <p class="down-line" (click)="openBrower(repairInfo.CENSUS_PUBLIC_URL)">{{repairInfo.CENSUS_PUBLIC_URL}}</p>
             </div>

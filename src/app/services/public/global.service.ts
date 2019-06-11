@@ -7,6 +7,7 @@ export class GlobalService {
 
   public hostUrl = 'http://223.223.179.203:1012/bjsoilapi/'; // 服务器地址
   public versionUrl = 'publicservice/getPolluteAppVersion'; // 版本更新version.txt的服务器地址
+  public checkFlag = true; // 是否需要版本检查
   public curVersion = '1.0.0'; // 当前版本号
 
   public baiduAK = 'idh0uCR7rcC1sGclhscaxy2A5YIUPBUN'; // 安装插件时百度ak值
@@ -23,11 +24,6 @@ export class GlobalService {
   public industryList: any = []; // 行业列表
   public blockTypeList: any = []; // 地块类型列表
 
-  // 字典
-  public dectionary: any = {};
-  // 地区列表
-  public AreaList: any = [];
-  public plotDetailData = {};
   // 收藏地块列表
   public collectedPlots = [];
   public laterMonitorList = [];
@@ -35,6 +31,9 @@ export class GlobalService {
   public plotInspectorList = [];
   public inspecterDetail = {};
   public minLiveDistance = 1000; // 最大允许现场监督检查的距离
+  public editName = ''; // edit图片名称
+  public editTime = ''; // edit图片时间
+
   constructor() {
 
   }
@@ -79,4 +78,29 @@ export class GlobalService {
   // 收藏/取消收藏
   public doCollectionUrl = 'polluteland/doCollection.vm';
 
+  // 比较大的对象
+  // 字典
+  public dectionary: any = {
+    PL_LANDMGMODEL: null,
+    PL_TRADE: null,
+    PL_LANDTYPE: null,
+    PL_RISKGRADE: null,
+    PL_FLOWSTATUS: null
+  };
+  // 地区列表
+  public AreaList: any = [
+    {
+      REGIONCODE: null,
+      REGIONNAME: null
+    }
+  ];
+  public plotDetailData = {
+    baseInfo: null,
+    repairInfo: null,
+    detailCensusInfo: null,
+    laterMonitorList: null,
+    firstCensusInfo: null,
+    riskAssessmentInfo: null,
+    riskControlInfo: null
+  };
 }

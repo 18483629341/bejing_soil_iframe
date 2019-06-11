@@ -11,14 +11,13 @@ export class SkinSetPage implements OnInit {
   skinName: string;
   skinRgb: any;
   constructor(private statusBar: StatusBar) {
-    
   }
 
   ngOnInit() {
   }
 
   ionViewWillEnter() {
-    //设置头部皮肤
+    // 设置头部皮肤
     this.skinName = localStorage.getItem('skinName') || 'blue';
     this.skinRgb = localStorage.getItem( 'skinRgb') || '20A4EC';
   }
@@ -44,7 +43,7 @@ export class SkinSetPage implements OnInit {
     localStorage.setItem( 'skinName' , this.skinName);
     localStorage.setItem( 'skinRgb' , this.skinRgb);
     // let status bar overlay webview
-    //this.statusBar.overlaysWebView(true);
+    // this.statusBar.overlaysWebView(true);
 
     // set status bar to white
     this.statusBar.backgroundColorByHexString(this.skinRgb);

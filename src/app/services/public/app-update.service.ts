@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer/ngx';
-import { File,LocalFileSystem } from '@ionic-native/file/ngx'; // 附件
+import { File, LocalFileSystem } from '@ionic-native/file/ngx'; // 附件
 // 打开文件插件
 import { FileOpener } from '@ionic-native/file-opener/ngx'; // 打开附件
 import { Platform, AlertController } from '@ionic/angular';
@@ -32,17 +32,17 @@ export class AppUpdateService {
   ) { }
 
   /**版本更新检测
-  * nowVserion 当前版本信息
-  * url  服务器地址
-  * androidUrl android下载地址
-  * iosUrl ios下载地址
-  */
+   * nowVserion 当前版本信息
+   * url  服务器地址
+   * androidUrl android下载地址
+   * iosUrl ios下载地址
+   */
   checkVersion() {
     this.config.getAppVersion({}, false, res => {
       if (res && res !== 'error') {
         const obj = res;
-        this.updateInfo = "最新的版本号为："+obj.verAndroid;
-        alert(obj.downUrl);
+        this.updateInfo = '最新的版本号为：' + obj.verAndroid;
+        // alert(obj.downUrl);
         this.upDateVerison(obj.verAndroid, obj.downUrl, obj.apkName);
       } else {
         this.httpUtils.thsToast('更新失败!');
@@ -66,7 +66,7 @@ export class AppUpdateService {
         // }
       } else if (this.platform.is('android')) {
         this.appVersion.getVersionNumber().then(res => {
-          console.log(res, nowVserion);
+          // console.log(res, nowVserion);
           if (this.handleVersion(res) < this.handleVersion(nowVserion)) {
             this.presentAlert(res, nowVserion, this.updateInfo, androidUrl, apkName);
           }
@@ -107,8 +107,9 @@ export class AppUpdateService {
         {
           text: '确定',
           handler: () => {
+            // alert( downUrl );
             if (apkName) {
-              this.downFile(downUrl, 'application/vnd.android.package-archive', apkName);
+              this.downFile(downUrl, 'apk', apkName);
             } else {
               this.browser.create(downUrl);
             }
@@ -119,11 +120,11 @@ export class AppUpdateService {
     alert.present();
   }
   /**
- * 检查文件是否存在
- * @param fileName 文件名 必传
- * @param filePath 文件路径 必传
- */
-   fileIsExited(fileName, filePath, callback) {
+   * 检查文件是否存在
+   * @param fileName 文件名 必传
+   * @param filePath 文件路径 必传
+   */
+  fileIsExited(fileName, filePath, callback) {
     this.file.checkFile(filePath, fileName)
       .then(
         () => {
@@ -147,11 +148,6 @@ export class AppUpdateService {
    * @param name 文件名称
    */
   async downFile(url, application, name, filesize?, callback?) {
-   
-    // this.fileIsExited(url, this.file.externalCacheDirectory + name, (res) => {
-    // alert(res);
-      
-    // })
     application = this.getFileMimeType(application);
 
     const fileTransfer: FileTransferObject = this.transfer.create();
@@ -159,43 +155,41 @@ export class AppUpdateService {
       message: '<p class="title">正在下载，请稍等...</p><div class="progress"><span class="blue"></span></div><p class="downed">已经下载：0%</p>',
       // enableBackdropDismiss: false
     });
-    window.closeUpdatePop = true;
+    // window.closeUpdatePop = true;
+    name = name.replace(/(\\|\/|\:|\*|\?|\"|\<|\>|\|)/g, '_');
     this.alert1.present();
     fileTransfer.download(url, this.file.externalCacheDirectory + name, false)
       .then(
         (entry) => {
-
           const openurl = entry.toURL();
           if (callback) {
-            // alert(this.file.externalCacheDirectory + name);//调试用
             callback();
           }
           this.openFile(this.file.externalCacheDirectory + name, application);
         },
         (error) => {
-          console.log('1', error)
+          // console.log('1', error);
           if (this.alert1) {
             this.alert1.dismiss();
             this.alert1 = null;
           }
-          window.closeUpdatePop = false;
+          // window.closeUpdatePop = false;
           this.httpUtils.thsToast('文件下载失败，请重试');
         }
       ).catch(
         e => {
-          console.log('1', e)
+          // console.log('1', e);
           if (this.alert1) {
             this.alert1.dismiss();
             this.alert1 = null;
           }
-          window.closeUpdatePop = false;
+          // window.closeUpdatePop = false;
           this.httpUtils.thsToast('文件下载失败，请重试');
         }
       );
 
 
     fileTransfer.onProgress((event: ProgressEvent) => {
-      //alert(JSON.stringify(event));//调试用
       let num: any;
       if (filesize) {
         num = Math.floor(event.loaded / filesize * 100);
@@ -204,7 +198,6 @@ export class AppUpdateService {
       }
       if (num > 100) {
         if (this.alert1) {
-          //alert(num);//调试用
           this.alert1.dismiss();
           this.alert1 = null;
         }
@@ -221,7 +214,7 @@ export class AppUpdateService {
       }
     });
   }
- 
+
   /**
    * 打开文件
    * @param filePath 文件路径 必传
@@ -232,19 +225,19 @@ export class AppUpdateService {
     this.fileOpener.open(filePath, application).then(
       () => {
 
-        window.closeUpdatePop = false;
+        // window.closeUpdatePop = false;
         if (this.alert1) {
           this.alert1.dismiss();
           this.alert1 = null;
         }
       }).catch(
         e => {
-          console.log('3', e)
+          // console.log('3', e);
           if (this.alert1) {
             this.alert1.dismiss();
             this.alert1 = null;
           }
-          window.closeUpdatePop = false;
+          // window.closeUpdatePop = false;
           this.httpUtils.thsToast('文件打开失败，请重试');
         }
       );
@@ -265,7 +258,7 @@ export class AppUpdateService {
       httpMethod: 'post',
       headers: {},
       params: {
-        'docID': param.docID
+        docID: param.docID
       }
     };
     fileTransfer.upload(fllePath, url, options)
@@ -318,6 +311,9 @@ export class AppUpdateService {
       case 'png':
         mimeType = 'image/png';
         break;
+      case 'apk':
+        mimeType = 'application/vnd.android.package-archive';
+        break;
       default:
         mimeType = 'application/' + fileType;
         break;
@@ -339,16 +335,15 @@ export class AppUpdateService {
    * @param codeNum 对应codeNum
    */
   tranToString(arr, codeNum) {
-    let name=null;
-    if(arr.length>0){
-      for(let i=0;i<arr.length;i++){
-        let item=arr[i];
+    let name = null;
+    if (arr.length > 0) {
+      for (const item of arr) {
         if (item['dictionary_code'] === codeNum) {
-          name=item['dictionary_name']
+          name = item['dictionary_name']
         }
       }
-    }else{
-      name='- -';
+    } else {
+      name = '- -';
     }
     return name;
   }

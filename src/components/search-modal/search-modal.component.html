@@ -1,15 +1,16 @@
 <ion-content>
   <div class="search-box">
-    <ion-searchbar [(ngModel)]="plotName" placeholder="请输入地块名称" mode="ios" (ngModelChange)="searchPlot()" (ionClear)="closePlotBox()"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="plotName" placeholder="请输入地块名称" mode="ios"
+     (ngModelChange)="searchPlot()" (ionClear)="closePlotBox()"></ion-searchbar>
     <span class="cancle-btn" (click)="closeModal()">取消</span>
   </div>
 
   <div *ngIf="plotListShow" class="plot-list">
-    <ion-list lines="inset" *ngIf="type=='tjfx'">
+    <!-- <ion-list lines="inset" *ngIf="type=='tjfx'">
       <ion-item *ngFor="let item of plotList" (click)="selectPlot(item)">{{item.title}}</ion-item>
-    </ion-list>
+    </ion-list> -->
 
-    <div *ngIf="type=='qyxx'">
+    <div *ngIf="type=='wrdk'">
       <!-- 污染列表 -->
       <ion-list lines="inset" class="list-box" *ngIf="dataType==='pollute'">
         <ion-item *ngFor="let item of dataList" (click)="goNextPage(item.SEEMINFO_ID)">
@@ -39,7 +40,7 @@
 
 
   </div>
-  <ion-infinite-scroll threshold="-5%" (ionInfinite)="loadData($event)" [disabled]='isLoaded'>
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)" >
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="努力加载中...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>

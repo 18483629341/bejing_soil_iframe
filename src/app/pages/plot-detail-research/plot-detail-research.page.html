@@ -16,20 +16,20 @@
 
   <ion-grid class="detail_table" *ngIf="dataFlag">
     <ion-row justify-content-around>
-      <ion-col class="left-text">详细调查标题：</ion-col>
-      <ion-col class="right-text" style=" line-height: 22px;">{{detailCensusInfo.CENSUS_TITLE||"--"}}</ion-col>
+      <ion-col class="left-text" size="6">详细调查标题：</ion-col>
+      <ion-col class="right-text" style=" line-height: 22px;" size="6">{{detailCensusInfo.CENSUS_TITLE||"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">详细调查报告编制单位：</ion-col>
-      <ion-col class="right-text">{{detailCensusInfo.CENSUS_UNIT||"--"}}</ion-col>
+      <ion-col class="left-text" size="6">详细调查报告编制单位：</ion-col>
+      <ion-col class="right-text"  size="6">{{detailCensusInfo.CENSUS_UNIT||"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">详细调查完成时间：</ion-col>
-      <ion-col class="right-text">{{(detailCensusInfo.CENSUS_END_TIME| date:'yyyy-MM-dd')?(detailCensusInfo.CENSUS_END_TIME| date:'yyyy-MM-dd'):"--"}}</ion-col>
+      <ion-col class="left-text" size="6">详细调查完成时间：</ion-col>
+      <ion-col class="right-text"  size="6">{{(detailCensusInfo.CENSUS_END_TIME| date:'yyyy-MM-dd')?(detailCensusInfo.CENSUS_END_TIME| date:'yyyy-MM-dd'):"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">详细调查报告附件：</ion-col>
-      <ion-col class="right-text" style=" line-height: 22px;">
+      <ion-col class="left-text" size="6">详细调查报告附件：</ion-col>
+      <ion-col class="right-text" style=" line-height: 22px;" size="6">
         <ion-list *ngIf="censusFileArr.length>0">
           <ion-item *ngFor="let item of censusFileArr" lines="none">
             <p class="down-line" size="small" color="tertiary" (click)="downFile(item)"> {{item.FILENAME}}</p>
@@ -39,8 +39,8 @@
       </ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">检测报告附件：</ion-col>
-      <ion-col class="right-text" style=" line-height: 22px;">
+      <ion-col class="left-text" size="6">检测报告附件：</ion-col>
+      <ion-col class="right-text" style=" line-height: 22px;" size="6">
         <ion-list *ngIf="surveyFileArr.length==0">
           <ion-item *ngFor="let item of surveyFileArr" lines="none">
             <p class="down-line" size="small" color="tertiary" (click)="downFile(item)"> {{item.FILENAME}}</p>
@@ -50,8 +50,8 @@
       </ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">公示网址：</ion-col>
-      <ion-col class="right-text" style=" line-height: 22px;">
+      <ion-col class="left-text" size="6">公示网址：</ion-col>
+      <ion-col class="right-text" style=" line-height: 22px;" size="6">
         <div *ngIf="historyEvilFileArr.CENSUS_PUBLIC_TYPE===1">新增项目:
             <p (click)="openBrower(detailCensusInfo.CENSUS_PUBLIC_URL)">{{detailCensusInfo.CENSUS_PUBLIC_URL}}</p></div>
         <div *ngIf="historyEvilFileArr.CENSUS_PUBLIC_TYPE===0">

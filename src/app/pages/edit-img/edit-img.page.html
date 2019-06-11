@@ -1,9 +1,8 @@
-
 <ion-header mode='ios'>
   <ion-toolbar mode='ios' [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
-    <ion-buttons slot="start">
+    <!-- <ion-buttons slot="start">
       <ion-back-button text="" icon="ios-arrow-back" mode='ios'></ion-back-button>
-    </ion-buttons>
+    </ion-buttons> -->
     <ion-title>添加附件</ion-title>
     <ion-buttons slot="primary" (click)="publishEvents()">
       <ion-button class="size">
@@ -27,22 +26,27 @@
       </ion-segment-button>
     </ion-segment>
   </div>
-  <div [style.display]="item==0?'block':'none'" class="media-box">
-    <div class="imgBox">
-      <img [src]="item" *ngFor="let item of imgArr" [ngStyle]="{'width': imgWidth,'height':imgWidth}" (click)="goEdit(item)">
-      <img src="../../../assets/img/tj.png" (click)="addCamera()" [ngStyle]="{'width': imgWidth,'height':imgWidth}">
+  <div [style.display]="item===0?'block':'none'" class="media-box">
+    <div class="img-box ">
+      <div class="img-li" *ngFor="let item of mediaObjectArr0;let i=index" [ngStyle]="{'width': imgWidth,'height':imgWidth}" (click)="goEdit(item,0,i)" (tap)="showDelBtn(0,i)">
+        <img [src]="item.path" [ngStyle]="{'width': '100%','height':imgWidth}" />
+        <ion-icon name="close" *ngIf='item.showDel'  class="close-icon"  (click)="delete(0,i)"></ion-icon>
+      </div>
+      <div class="img-li" [ngStyle]="{'width': imgWidth,'height':imgWidth}">
+        <img src="../../../assets/img/tj.png" (click)="addCamera()" [ngStyle]="{'width': '100%','height':imgWidth}">
+      </div>
     </div>
   </div>
-  <div [style.display]="item==1?'block':'none'" class="media-box">
-    <video [src]="video" class="video"  *ngIf="video"  type="video/mp4" controls="controls"></video>
-    <img src="../../../assets/img/tj.png" (click)="addVideo()" [ngStyle]="{'width': imgWidth,'height':imgWidth}" *ngIf="isShow">
+  <div [style.display]="item===1?'block':'none'" class="media-box">
+    <video [src]="video" class="video" *ngIf="!isShowPlus" type="video/mp4" controls="controls" ></video>
+    <ion-button (click)="goEdit(mediaObjectArr1[0],1,0)" *ngIf="!isShowPlus">编辑名称</ion-button>
+    <img src="../../../assets/img/tj.png" (click)="addVideo()" [ngStyle]="{'width': imgWidth,'height':imgWidth}" *ngIf="isShowPlus">
   </div>
-  <div [style.display]="item==2?'block':'none'" class="media-box">
-    <ion-list *ngIf="filesArr.length>0">
-      <ion-item *ngFor="let item of filesArr">
-        <ion-label>
-          {{item}}
-        </ion-label>
+  <div [style.display]="item===2?'block':'none'" class="media-box">
+    <ion-list >
+      <ion-item *ngFor="let item of mediaObjectArr2;let i=index">
+        <ion-label (click)="goEdit(item,2,i)" (tap)="showDelBtn(2,i)">{{item.name}}</ion-label>
+        <ion-icon slot="end" name="close" *ngIf='item.showDel' class="close-icon"  (click)="delete(2,i)"></ion-icon>
       </ion-item>
     </ion-list>
     <img src="../../../assets/img/tj.png" (click)="addFiles()" [ngStyle]="{'width': imgWidth,'height':imgWidth}">

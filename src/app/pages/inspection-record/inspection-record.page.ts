@@ -13,6 +13,7 @@ import { StreamingMedia, StreamingVideoOptions } from '@ionic-native/streaming-m
 import { GlobalService } from '../../services/public/global.service';
 import { ConfigService } from '../../services/public/config.service';
 import { ThsLocationService } from '../../services/public/ths-location.service';
+import { HttpUtilsService } from '../../services/public/http-utils.service';
 
 @Component({
   selector: 'app-inspection-record',
@@ -29,13 +30,18 @@ export class InspectionRecordPage implements OnInit {
   imgPath: string; //  图片路径
   video: string; //  视频
   SUPERVISE_ID = ''; //  判断是否暂存id
-  public progressNum: any; // 进度
-  public alertControl: any; // 提示框
+  SEEMINFO_ID = ''; // 地块id
+  progressNum: any; // 进度
+  alertControl: any; // 提示框
   data = []; //  图片数组
   fileID: string;
+  fileSuccessNum = 0; // 上传成功文件的数量
   newSkinName: string; // 获取新的皮肤名称
   skinName: string; // 皮肤名称
-  distance:any;//距现场的距离
+
+  isValid = true; // 表单验证 是否通过
+  fileNameArr = []; // 存放需上传文件的名称数组；
+  loader: any;
   constructor(
     private router: Router,
     private fileChooser: FileChooser,
@@ -53,35 +59,27 @@ export class InspectionRecordPage implements OnInit {
     public global: GlobalService,
     public loadingController: LoadingController,
     public configService: ConfigService,
-    private thsLocation: ThsLocationService
+    private thsLocation: ThsLocationService,
+    public httpUtils: HttpUtilsService
   ) {
-    
-    // 获取暂存数据并赋值回显
-    // const checkData = JSON.parse(localStorage.getItem('checkData'));
-    // if (checkData) {
-    //   this.nowTime = checkData.nowTime;
-    //   this.checkTitle = checkData.checkTitle;
-    //   this.checkUnit = checkData.checkUnit;
-    //   this.checkCondition = checkData.checkCondition;
-    // }
-    
   }
 
   ngOnInit() {
-    // this.activatedRouted.queryParams.subscribe(params => {
-    // //  获取传过来的项目id
-    //   this.SEEMINFO_ID = params.id;
-    //   console.log(this.SEEMINFO_ID);
-    // });
-     //获取定位
-     
+    this.activatedRouted.queryParams.subscribe(params => {
+      if (params && params.id) {
+        //  获取传过来的项目id
+        this.SEEMINFO_ID = params.id;
+        // alert(this.SEEMINFO_ID);
+      }
+    });
 
+    // 根据地块id请求暂存数据
     this.configService.getUpdatedSuperviseByLand({
       sessionId: this.global.sessionId,
-      id: this.global.SEEMINFO_ID,
+      id: this.SEEMINFO_ID,
     }, true, res => {
       if (res !== 'error' && res.data !== null) {
-        // console.log(res);
+        console.log(res);
         this.global.SUPERVISE_ID = res.data.SUPERVISE_ID;
         this.global.filesID = res.data.FILEIDS;
         this.checkTitle = res.data.TITLE;
@@ -90,23 +88,29 @@ export class InspectionRecordPage implements OnInit {
         this.nowTime = this.formatDate(new Date(res.data.CREATE_DATE));
       }
     });
+
   }
-  
- 
 
   ionViewWillEnter() {
-    //设置头部皮肤
+    // 设置头部皮肤
     this.skinName = localStorage.getItem('skinName') || 'blue';
-    this.events.subscribe('user:created', (imgArr) => {
-      if (imgArr) {
+    this.events.subscribe('user:created', (objectArr) => {
+      if (objectArr.length > 0) {
         // alert(imgArr);
-        console.log(imgArr);
-        this.data = imgArr;
+        this.data = [];
+        this.fileNameArr = [];
+        objectArr.map((item) => {
+          // 如果有媒体数据
+          if (item.data) {
+            this.fileNameArr.push(item.name);
+            this.data.push(item.data);
+          }
+        });
       }
     });
   }
 
-  /** 
+  /**
    * 获取当前时间
    */
   getNowFormatDate() {
@@ -134,7 +138,7 @@ export class InspectionRecordPage implements OnInit {
       + seperator2 + seconds;
     return currentdate;
   }
- 
+
   /**
    * 时间转换
    * @param now number 时间戳
@@ -148,7 +152,7 @@ export class InspectionRecordPage implements OnInit {
     const second = now.getSeconds();
     return year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second;
   }
- 
+
   /**
    * 提示框
    * @param msg str 信息内容
@@ -168,30 +172,31 @@ export class InspectionRecordPage implements OnInit {
    * 跳转编辑页面
    */
   goEdit() {
-    this.router.navigate(['edit-img']);
+    this.router.navigate(['edit-img'], { queryParams: { id: this.SEEMINFO_ID } });
   }
 
   /**
    * 上传到服务器
    * @param path 文件路径
    */
-  async upload(path, index, type) {
+  async upload(path, filename, index, type) {
     if (path === '') {
       return;
     }
-    // this.showLoadingAlert();
-    const loader = await this.presentLoading('正在上传');
+    if (index === 0) {
+      this.loader = await this.presentLoading('正在上传，请耐心等待');
+    }
     const transfer: FileTransferObject = this.fileTransfer.create();
 
     // 文件类型
     const fileType = this.getFileType(path);
     // 文件名
-    const fileName = this.getFileName(path);
+    // const fileName = this.getFileName(path);
     const fileMimeType = this.getFileMimeType(fileType);
     // FileUploadOptions
     const options: FileUploadOptions = {
       fileKey: 'file',
-      fileName,
+      fileName: filename,
       mimeType: fileMimeType,
       httpMethod: 'POST'
     };
@@ -202,23 +207,28 @@ export class InspectionRecordPage implements OnInit {
       .then((data) => {
         // 获取文件id并且拼接
         this.fileID = this.fileID + data.response + ',';
-        // 判断是否是最后一个文件，然后请求暂存接口
-        if (index === this.data.length - 1) {
+        this.fileSuccessNum++;
+        alert(this.fileSuccessNum);
+        // 判断是否是最后一个文件已经上传成功，然后请求保存表单接口
+        if (this.fileSuccessNum === this.data.length) {
           //  删除拼接id 最后一个逗号
+          alert(this.fileID);
+          this.loader.dismiss();
           const FILEIDS = this.fileID.substring(0, this.fileID.length - 1);
-          // alert('文件id     ' + FILEIDS + '之前');
-          this.configService.supervisesave({
+          alert('文件id     ' + FILEIDS + '之前');
+          const params = {
             sessionId: this.global.sessionId,
-            'form[FILEIDS]': FILEIDS + ',' + this.global.filesID ,
+            'form[FILEIDS]': FILEIDS + ',' + this.global.filesID,
             'form[TITLE]': this.checkTitle,
-            'form[SEEMINFO_ID]': this.global.SEEMINFO_ID,
+            'form[SEEMINFO_ID]': this.SEEMINFO_ID,
             'form[DEPTNAME]': this.checkUnit,
             'form[SUGGEST]': this.checkCondition,
             'form[SAVESTATUS]': type,
             'form[SUPERVISE_ID]': this.global.SUPERVISE_ID,
-          }, true, res => {
-            // alert(JSON.stringify(res));
+          };
+          this.configService.supervisesave(params, true, res => {
             if (res !== 'error') {
+              alert(JSON.stringify(res));
               if (res.status === 'success') {
                 this.presentToastWithOptions('上传成功');
               }
@@ -231,9 +241,9 @@ export class InspectionRecordPage implements OnInit {
       });
     transfer.onProgress(async (event: ProgressEvent) => {
       this.progressNum = Math.round(event.loaded / event.total * 100);
-      if (this.progressNum >= 100) {
-        this.hideLoading(loader);
-      }
+      // if (this.progressNum >= 100) {
+      //   this.loader.dismiss();
+      // }
     });
   }
 
@@ -242,9 +252,10 @@ export class InspectionRecordPage implements OnInit {
    * @param fileUrl  string  文件url
    */
   getFileType(fileUrl: string): string {
+    alert(fileUrl);
     return fileUrl.substring(fileUrl.lastIndexOf('.') + 1, fileUrl.length).toLowerCase();
   }
- 
+
   /**
    * 根据url获取文件名(包含文件类型)
    * @param fileUrl  string  文件url
@@ -252,7 +263,7 @@ export class InspectionRecordPage implements OnInit {
   getFileName(fileUrl: string): string {
     return fileUrl.substring(fileUrl.lastIndexOf('/') + 1, fileUrl.length).toLowerCase();
   }
-   
+
   /**
    * 根据文件类型获取文件的mimeType
    * @param fileUrl  string  文件url
@@ -302,39 +313,12 @@ export class InspectionRecordPage implements OnInit {
     }
     return mimeType;
   }
-  /**
-   * 显示下载进度框
-   */
-  // async showLoadingAlert() {
-  //   this.alertControl = await this.alertController.create({
-  //     message: '<p class="title">正在上传，请稍等...</p><div class="progress">' +
-  //       '<span class="blue loading"></span></div><p class="downed">已经上传：0%</p>',
-  //     buttons: [
-  //       {
-  //         text: '后台上传',
-  //         role: 'cancel',
-  //         cssClass: 'secondary',
-  //         handler: (blah) => {
-  //           this.hideAlert();
-  //         }
-  //       }
-  //     ]
-  //   });
-  //   this.alertControl.present();
-  // }
+
 
   /**
-   * 关闭下载进度框
+   * showloading服务
+   * @param template 展示内容(选传)
    */
-  // hideAlert() {
-  //   this.alertControl.dismiss();
-  //   this.alertControl = null;
-  // }
-
-  /**
-  * showloading服务
-  * @param template 展示内容(选传)
-  */
   async presentLoading(template?) {
     const loader = await this.loadingController.create({
       spinner: 'circles',
@@ -345,16 +329,8 @@ export class InspectionRecordPage implements OnInit {
 
   }
 
-  /**
-  * 关闭loading
-  * @param  loader 创建的loading对象
-  */
-  hideLoading(loader) {
-    loader.dismiss();
-  }
 
- 
-  /** 
+  /**
    * 暂存数据
    */
   saveData() {
@@ -362,24 +338,29 @@ export class InspectionRecordPage implements OnInit {
     this.fileID = '';
     // this.nowTime = this.getNowFormatDate(); // 获取暂存时间
     // 循环文件数组并且上传
+
     if (this.data.length > 0) {
       // tslint:disable-next-line:prefer-for-of
       for (let index = 0; index < this.data.length; index++) {
         const element = this.data[index];
-        this.upload(element, index, '0');
+        const fileName = this.fileNameArr[index];
+        alert(index);
+        this.upload(element, fileName, index, '0');
       }
     } else {
-      this.configService.supervisesave({
+      const params = {
         sessionId: this.global.sessionId,
         'form[TITLE]': this.checkTitle,
         'form[FILEIDS]': this.fileID,
-        'form[SEEMINFO_ID]': this.global.SEEMINFO_ID,
+        'form[SEEMINFO_ID]': this.SEEMINFO_ID,
         'form[DEPTNAME]': this.checkUnit,
         'form[SUGGEST]': this.checkCondition,
         'form[SAVESTATUS]': '0',
         'form[SUPERVISE_ID]': this.global.SUPERVISE_ID,
-      }, true, res => {
-        // console.log(res);
+      };
+      // alert(JSON.stringify(params));
+      this.configService.supervisesave(params, true, res => {
+        // alert(JSON.stringify(res));
         if (res !== 'error') {
           if (res.status === 'success') {
             this.presentToastWithOptions('暂存成功');
@@ -388,41 +369,72 @@ export class InspectionRecordPage implements OnInit {
       });
     }
   }
-  
-  /** 
-   * 下载
+
+  /**
+   * 提交表单 以及长传
    */
   upLoad() {
     // 清空fileid
     this.fileID = '';
     // this.nowTime = this.getNowFormatDate(); // 获取暂存时间
     // 循环文件数组并且上传
-    if (this.data.length > 0) {
-      // tslint:disable-next-line:prefer-for-of
-      for (let index = 0; index < this.data.length; index++) {
-        const element = this.data[index];
-        this.upload(element, index, '1');
-      }
-    } else {
-      // alert('返回记录id' + this.global.SUPERVISE_ID);
-      this.configService.supervisesave({
-        sessionId: this.global.sessionId,
-        'form[TITLE]': this.checkTitle,
-        'form[FILEIDS]': this.fileID,
-        'form[SEEMINFO_ID]': this.global.SEEMINFO_ID,
-        'form[DEPTNAME]': this.checkUnit,
-        'form[SUGGEST]': this.checkCondition,
-        'form[SAVESTATUS]': '1',
-        'form[SUPERVISE_ID]': this.global.SUPERVISE_ID,
-      }, true, res => {
-        // console.log(res);
-        if (res !== 'error') {
-          if (res.status === 'success') {
-            this.presentToastWithOptions('提交成功');
-          }
+    this.isValid = this.checkConfirm();
+    // 如果验证通过，才能发送表单内容
+    if (this.isValid) {
+      if (this.data.length > 0) {
+        // tslint:disable-next-line:prefer-for-of
+        for (let index = 0; index < this.data.length; index++) {
+          const element = this.data[index];
+          const fileName = this.fileNameArr[index];
+          this.upload(element, fileName, index, '1');
         }
-      });
-    }
+      } else {
+        // alert('返回记录id' + this.global.SUPERVISE_ID);
 
+        this.configService.supervisesave({
+          sessionId: this.global.sessionId,
+          'form[TITLE]': this.checkTitle,
+          'form[FILEIDS]': this.fileID,
+          'form[SEEMINFO_ID]': this.SEEMINFO_ID,
+          'form[DEPTNAME]': this.checkUnit,
+          'form[SUGGEST]': this.checkCondition,
+          'form[SAVESTATUS]': '1',
+          'form[SUPERVISE_ID]': this.global.SUPERVISE_ID,
+        }, true, res => {
+          // console.log(res);
+          if (res !== 'error') {
+            if (res.status === 'success') {
+              this.presentToastWithOptions('提交成功');
+              this.clearForm();
+            }
+          }
+        });
+
+      }
+      // 将部分数据初始化
+      this.clearForm();
+      this.global.SUPERVISE_ID = '';
+      this.global.filesID = '';
+      this.fileID = '';
+      this.fileSuccessNum = 0; // 提交成功后数量初始化为 0
+    }
+  }
+
+  checkConfirm() {
+    if (this.checkTitle === '') {
+      this.httpUtils.thsToast('您的监督管理标题不能为空'); return false;
+    } else if (this.checkUnit === '') {
+      this.httpUtils.thsToast('您的监督管理单位不能为空'); return false;
+    } else if (this.checkCondition === '') {
+      this.httpUtils.thsToast('您的督察管理情况不能为空'); return false;
+    } else {
+      return true;
+    }
+  }
+
+  clearForm() {
+    this.checkTitle = '';
+    this.checkUnit = '';
+    this.checkCondition = '';
   }
 }

@@ -9,9 +9,9 @@ import { GlobalService } from '../../services/public/global.service';
   styleUrls: ['./plot-liveinspection-record.page.scss'],
 })
 export class PlotLiveinspectionRecordPage implements OnInit {
-  inspectorList: any = [];  //现场督察记录数据
-  dataFlag: any = false;  //是否拿到现场督察记录数据
-  skinName: string; //皮肤名称
+  inspectorList: any = [];  // 现场督察记录数据
+  dataFlag: any = false;  // 是否拿到现场督察记录数据
+  skinName: string; // 皮肤名称
   constructor(
     public configService: ConfigService,
     public global: GlobalService,
@@ -21,16 +21,16 @@ export class PlotLiveinspectionRecordPage implements OnInit {
   }
 
   ngOnInit() {
-    //初始化页面数据
+    // 初始化页面数据
     this.init();
   }
 
   ionViewWillEnter() {
-    //设置头部皮肤
+    // 设置头部皮肤
     this.skinName = localStorage.getItem('skinName') || 'blue';
   }
 
-  /** 
+  /**
    * 初始化页面数据
    */
   init() {
@@ -49,18 +49,16 @@ export class PlotLiveinspectionRecordPage implements OnInit {
    * @param id 记录ID
    */
   goNext(id) {
-    this.router.navigate(['plot-liveinspection-detail'], { queryParams: { 'SUPERVISE_ID': id } });
+    this.router.navigate(['plot-liveinspection-detail'], { queryParams: { SUPERVISE_ID: id } });
   }
 
   /**
-   *下拉刷新事件
+   * 下拉刷新事件
    * @param event 事件
    */
   doRefresh(event) {
-     //初始化页面数据
-     this.init();
-    setTimeout(() => {
-      event.target.complete();
-    }, 1000);
+     // 初始化页面数据
+    this.init();
+    event.target.complete();
   }
 }

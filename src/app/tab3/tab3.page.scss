@@ -25,7 +25,10 @@
    }
 }
 .quit-btn{  width: 60%; line-height: 40px; height: 40px; background: #4162fb; color: #fff;border-radius: 3px; text-align: center; margin: 0 auto; margin-top: 50%;}
-.icon{ color: #4162fb; margin-right: 15px;}
+.icon{ 
+    // color: #4162fb; 
+    margin-right: 15px;
+}
 .label-ios{ font-size: 1.5rem}
 .user-name{     color: #fff;
     line-height: 34px;
@@ -36,4 +39,20 @@
 }
 .margin-right-10{
     margin-right: 10px;
+}
+
+ion-list.blue{
+    .icon{
+        color:#20A4EC;
+    }
+}
+ion-list.green{
+    .icon{
+        color:#00c393;
+    }
+}
+ion-list.orange{
+    .icon{
+        color:#FFA500;
+    }
 }

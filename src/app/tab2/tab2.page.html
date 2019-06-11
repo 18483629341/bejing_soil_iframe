@@ -3,7 +3,7 @@
     <!-- <ion-icon name="expand" class="expand" *ngIf="expand"></ion-icon> -->
     <img src="../../assets/img/search.png" (click)="goSearch()">
   </div>
-  <ion-grid>
+  <ion-grid >
     <ion-row class="col-shadow" [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
       <ion-col (click)="showOption(1)" size='4' [ngClass]="{'skin': isShowOptions && currentOptionTabIndex === 1}">
         <span class="text-ellipsis" >区域</span>
@@ -64,11 +64,12 @@
   <div  class="interval"></div>
 </ion-header>
 
-<ion-content>
+<ion-content >
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content pullingIcon="arrow-dropdown" refreshingSpinner="lines" mode='ios'>
     </ion-refresher-content>
   </ion-refresher>
+ 
   <!-- 遮罩层 -->
   <div class="layer" (click)="closePotionSelectWindow();" *ngIf="isShowOptions"></div>
   
@@ -99,7 +100,8 @@
   </ion-list>
 
   <div *ngIf="dataList.length===0" class="nodata">暂无数据，请稍后再试！</div>
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)" >
+  
+  <ion-infinite-scroll threshold="10%" (ionInfinite)="loadData($event)" >
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="努力加载中...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>

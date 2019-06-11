@@ -8,7 +8,7 @@
       <ion-button class="download-btn" (click)="presentSheet()">
         <ion-icon name="download"></ion-icon>
       </ion-button>
-      <span slot="end"  [ngClass]="{'collect':!isCollected,'collected':isCollected}" (click)="doCollection()"></span>
+      <span slot="end"  [ngClass]="{'collect':!isCollected,'collected':isCollected}" (click)="collectSheet()"></span>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -107,8 +107,8 @@
     </ion-item>
     <ion-item lines="full" router-direction="forward" (click)="tranTo('liveInspectionRecord')" *ngIf="inspectionDataFlag">
       <ion-label>
-        <p class="p-title">现场督察记录(
-          <span style="color:#20A4EC;">{{inspectionLength}}</span>)</p>
+        <p class="p-title">现场督察记录(<span style="color:#20A4EC;">{{inspectionLength}}</span>)</p>
+          
       </ion-label>
       <ion-icon mode='ios' name="arrow-forward" slot='end'></ion-icon>
     </ion-item>

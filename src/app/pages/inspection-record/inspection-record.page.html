@@ -56,7 +56,7 @@
   <div class="fixedBox">
     <div class="btnBox">
       <span (click)="saveData()">暂存</span>
-      <span (click)="upLoad()">提交</span>
+      <span (click)="upLoad()" [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}" >提交</span>
     </div>
   </div>
 </ion-content>

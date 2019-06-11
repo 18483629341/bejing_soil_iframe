@@ -5,10 +5,11 @@ import { Router } from '@angular/router';
 import { HttpUtilsService } from '../services/public/http-utils.service';
 import { ConfigService } from '../services/public/config.service';
 import { GlobalService } from '../services/public/global.service';
+import { AppUpdateService } from '../services/public/app-update.service';
 import { ThsLocationService } from '../services/public/ths-location.service';
 import { ModalController } from '@ionic/angular';
 import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
-//import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
+
 
 @Component({
   selector: 'app-tab2',
@@ -16,8 +17,8 @@ import { SearchModalComponent } from '../../components/search-modal/search-modal
   styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page {
-  newSkinName: string; //获取新的皮肤名称
-  skinName: string; //皮肤名称
+  newSkinName: string; // 获取新的皮肤名称
+  skinName: string; // 皮肤名称
   skinRgb: string;
   expand = true; // 扫一扫是否显示
   title = '污染地块'; //  页面标题
@@ -32,12 +33,12 @@ export class Tab2Page {
   AreaList: Array<string> = []; // 区域列表
   industryList: Array<string> = []; // 行业列表
   blockTypeList: Array<string> = []; // 地块列表
-
-  dataList: Array<object> = [{//地块列表
-    title: '北京市门头沟区1号污染地块',
-    date: '最新督查时间 2018-09-16',
-    times: '督察次数 3',
+  dataList: Array<object> = [{ // 地块列表
+    title: '',
+    date: '',
+    times: '',
   }];
+  listShowFlag = true; // 是否显示列表
   active: any; //  选中
   active2: any; //  选中
   active3: any; //  选中
@@ -49,70 +50,69 @@ export class Tab2Page {
   CODE_LANDTYPE = ''; // 地块类型
   type: any;
   pageCount = 1; // 列表请求页数
+  pageNum = 0; // 每次加载请求的数量
   totalSize: number; // 列表总条数
-  isloadMore = true; // 默认上拉加载
-  baseInfo: any;//选中地块的基本信息
+  loadMore = true; // 默认上拉加载
+  baseInfo: any; // 选中地块的基本信息
   distance: any;
-  showRecords =false; //显示tab1，还是tab2,对应得内容
+  showRecords = false; // 显示tab1，还是tab2,对应得内容
+  reqSuc = 0; // 异步请求成功的数量
   constructor(
     public statusBar: StatusBar,
     public router: Router,
     public activatedRoute: ActivatedRoute,
     public httpUtilsService: HttpUtilsService,
     public configService: ConfigService,
+    public appUpdate: AppUpdateService,
     public global: GlobalService,
     public modalCtrl: ModalController,
     private thsLocation: ThsLocationService
   ) {
-    //设置状态栏皮肤
+    // 设置状态栏皮肤
     this.skinRgb = localStorage.getItem('skinRgb') || '20A4EC';
     // set status bar to white
     this.statusBar.backgroundColorByHexString(this.skinRgb);
+  }
 
+  ngOnInit() {
+    if (this.global.checkFlag) {
+      this.appUpdate.checkVersion();
+      this.global.checkFlag = false;
+    }
     this.getAreaList();
     this.getIndustryList();
     this.getDectionary();
-    this.getListSupervise(1);
-    // this.getBlockList();
+    this.getListSupervise(1, true);
   }
 
   ionViewWillEnter() {
-    //设置头部皮肤
+    //  设置头部皮肤
     this.skinName = localStorage.getItem('skinName') || 'blue';
     this.url = window.location.href;
     this.global.tab = this.url.substr(this.url.lastIndexOf('/') + 1);
     if (this.global.tab === 'tab1') {
       this.title = '污染地块';
-      this.global.type = "pollute";
-      this.type = "pollute";
+      this.global.type = 'pollute';
+      this.type = 'pollute';
       this.showRecords = false;
       this.expand = true;
+      this.pageNum = 15;
+      this.loadMore = true;
     } else {
       this.title = '现场督察';
       this.showRecords = true;
       this.expand = false;
-      this.global.type = "inspection";
-      this.type = "inspection";
+      this.global.type = 'inspection';
+      this.type = 'inspection';
+      this.pageNum = 8;
+      this.loadMore = true;
     }
-
   }
 
   /**
-   * 获取字典数据
+   * 显示选项列表及其弹窗
+   * @param tabIndex string  tab1或者tab2
    */
-  getDectionary() {
-    this.configService.getDectionary({ sessionId: this.global.sessionId }, false, res => {
-      // console.log('dectionary', res);
-      if (res !== 'error') {
-        this.global.dectionary = res;
-      }
-    });
-  }
-
-  /**
-  * 显示选项列表及其弹窗
-  * @param tabIndex string  tab1或者tab2
-  */
   showOption(tabIndex) {
     if (!this.isShowOptions) { // 关闭状态下
       this.isShowOptions = !this.isShowOptions;
@@ -142,7 +142,6 @@ export class Tab2Page {
     this.CODE_REGION = item.REGIONCODE;
     this.showArea = true;
     this.pageCount = 1;
-    
     this.getListSupervise(1);
 
   }
@@ -160,7 +159,6 @@ export class Tab2Page {
     this.CODE_TRADE = item.dictionary_code;
     this.showIndustry = true;
     this.pageCount = 1;
-    
     this.getListSupervise(1);
 
   }
@@ -174,7 +172,6 @@ export class Tab2Page {
     this.CODE_LANDTYPE = item.dictionary_code;
     this.showBlockType = true;
     this.pageCount = 1;
-    
     this.getListSupervise(1);
 
   }
@@ -185,7 +182,6 @@ export class Tab2Page {
     this.active = -1;
     this.CODE_REGION = '';
     this.pageCount = 1;
-    
     this.getListSupervise(1);
 
   }
@@ -196,7 +192,6 @@ export class Tab2Page {
     this.active2 = -1;
     this.CODE_TRADE = '';
     this.pageCount = 1;
-    
     this.getListSupervise(1);
 
   }
@@ -207,7 +202,6 @@ export class Tab2Page {
     this.active3 = -1;
     this.CODE_LANDTYPE = '';
     this.pageCount = 1;
-    
     this.getListSupervise(1);
 
   }
@@ -219,63 +213,87 @@ export class Tab2Page {
       this.router.navigate(['plot-detail'], { queryParams: { id: SEEMINFO_ID } });
     } else {
       // this.isInlive(SEEMINFO_ID,false);
-      this.router.navigate(['inspection-record']);
+      this.router.navigate(['inspection-record'], { queryParams: { id: SEEMINFO_ID } });
     }
   }
 
 
   /**
    * 判断力用户是否在现场
-   * @param SEEMINFO_ID 
-   * @param flag 
+   * @param SEEMINFO_ID str 地块
+   * @param flag boolean 是否需要加载
    */
   isInlive(SEEMINFO_ID, flag = true) {
-    this.configService.getPlotDetail({ 'sessionId': this.global.sessionId, 'id': SEEMINFO_ID }, flag, res => {
-      // console.log(res);
+    this.configService.getPlotDetail({ sessionId: this.global.sessionId, id: SEEMINFO_ID }, flag, res => {
       if (res !== 'error') {
-        this.baseInfo = res['baseInfo'];
+        this.baseInfo = res.baseInfo;
       }
-    })
+    });
     this.thsLocation.startLocation().then(res => {
       this.global.location = res;
-      this.distance=this.thsLocation.distance(res.latitude,res.longitude,this.baseInfo.LATITUDE,this.baseInfo.LONGITUDE);
-      // this.distance = this.thsLocation.distance(39.900198, 116.400012, 39.45555,116.4); //调试用
-      //  this.distance = this.thsLocation.distance(39.900198, 116.400012, 0,0); //调试用
-      //this.global.minLiveDistance 最大允许现场监督检查的距离
+      this.distance = this.thsLocation.distance(res.latitude, res.longitude, this.baseInfo.LATITUDE, this.baseInfo.LONGITUDE);
       if (this.distance > this.global.minLiveDistance) {
-        this.httpUtilsService.thsToast("您需在离该地块1km以内，才能进行现场督察编辑！");
+        this.httpUtilsService.thsToast('您需在离该地块1km以内，才能进行现场督察编辑！');
       } else {
         this.router.navigate(['inspection-record']);
       }
     });
-
-
-
   }
 
-  // 获取区域列表
-  getAreaList(flag = true) {
+  /**
+   * 获取字典数据
+   * @param flag? boolean  默认为true ,表示是否显示loading 遮罩
+   * @param event? 刷新 或 加载事件
+   */
+  getDectionary(flag = true, event?) {
+    this.configService.getDectionary({ sessionId: this.global.sessionId }, false, res => {
+      // console.log('dectionary', res);
+      if (res !== 'error') {
+        this.global.dectionary = res;
+      }
+      this.reqSucFun(event);
+    });
+  }
+
+  /**
+   * 获取区域列表
+   * @param flag? boolean  默认为true ,表示是否显示loading 遮罩
+   * @param event? 刷新 或 加载事件
+   */
+  getAreaList(flag = true, event?) {
     this.configService.getAreaList({ sessionId: this.global.sessionId }, flag, res => {
       // console.log(res);
       if (res !== 'error') {
         this.AreaList = res;
         this.global.AreaList = res;
       }
+      this.reqSucFun(event);
     });
   }
-  // 获取行业列表和地块类型
-  getIndustryList(flag = true) {
+
+  /**
+   * 获取企业地块获取行业列表和地块类型统计数据
+   * @param flag? boolean  默认为true ,表示是否显示loading 遮罩
+   * @param event? 刷新 或 加载事件
+   */
+  getIndustryList(flag = true, event?) {
     this.configService.getIndustryList({ sessionId: this.global.sessionId }, flag, res => {
       // console.log(res);
       if (res !== 'error') {
         this.industryList = res.PL_TRADE;
         this.blockTypeList = res.PL_LANDTYPE;
       }
+      this.reqSucFun(event);
     });
   }
 
-  // 获取督察列表全部数据
-  getListSupervise(dataType, flag = true,event?) {
+  /**
+   * 获取督察列表全部数据
+   * @param dataType? 页面重新请求：1/上拉加载 ：2
+   * @param flag? boolean  默认为true ,表示是否显示loading 遮罩
+   * @param event? 刷新 或 加载事件
+   */
+  getListSupervise(dataType, flag = true, event?) {
     // console.log(this.pageCount);
     this.configService.getListSupervise({
       sessionId: this.global.sessionId,
@@ -283,72 +301,86 @@ export class Tab2Page {
       CODE_TRADE: this.CODE_TRADE,
       CODE_LANDTYPE: this.CODE_LANDTYPE,
       pageCount: this.pageCount,
-      pageSize: 10,
+      pageSize: '15',
     }, flag, res => {
-      console.log(res);
-      if (res !== 'error') {
-       
+      // console.log(res);
+      if (res && res !== 'error') {
+        this.listShowFlag = true;
         this.totalSize = res.total;
-        
         if (dataType === 1) { // 刷新
+          this.loadMore = true;
           this.dataList = res.list;
+          // 执行加载完成时间是
+          this.reqSucFun(event);
         } else { // 向上加载时
-          if(this.dataList.length === this.totalSize){
-            console.log(this.isloadMore);
+          // console.log(this.dataList.length, this.totalSize);
+          if (this.dataList.length < this.totalSize) {
+            this.loadMore = true;
+            this.dataList = [...this.dataList, ...res.list];
+            // console.log(this.dataList.length);
+          } else {
+            this.loadMore = false;
             this.httpUtilsService.thsToast('没有更多了');
-          }else{
-            console.log(this.isloadMore);
-            this.dataList = [...this.dataList, ...res.data];
           }
-          
         }
-        
-        // 执行加载
-        if(event){
-          event.target.complete();
-        }
-        //判定是否还需加载
-        if(this.dataList.length < this.totalSize){
-          this.isloadMore = true;
-        }else{
-          this.isloadMore = false;
-        }
-        console.log(this.isloadMore);
       }
+
+      // 关闭加载动画
+      if (dataType === 1) { // 刷新
+        if (event) { this.reqSucFun(event); }
+      } else {
+        if (event) { event.target.complete(); }
+      }
+
     });
   }
 
+  /**
+   * 异步请求成功 数据/事件处理
+   * @param event 刷新 事件
+   */
+  reqSucFun(event) {
+    this.reqSuc++;
+    if (event && this.reqSuc === 4) {
+      event.target.complete();
+    }
+  }
 
   /**
    * 创建搜索模态框
    */
   async goSearch() {
     const searchModal = await this.modalCtrl.create({
-      cssClass: "date-modal",
+      cssClass: 'date-modal',
       component: SearchModalComponent,
       componentProps: {
-        type: 'qyxx'
+        type: 'wrdk'
       }
     });
     await searchModal.present();
   }
 
   /**
-   *下拉刷新事件
+   * 下拉刷新事件
    * @param event 事件
    */
   doRefresh(event) {
     this.pageCount = 1;
+    this.reqSuc = 0;
+    this.getAreaList(false, event);
+    this.getIndustryList(false, event);
+    this.getDectionary(false, event);
     this.getListSupervise(1, false, event); // 加载督察列表
   }
 
   /**
-  *上拉加载事件
-  * @param event 事件
-  */
+   * 上拉加载事件
+   * @param event 事件
+   */
   loadData(event) {
     this.pageCount++;
     this.getListSupervise(2, false, event);
-    
   }
+
+
 }

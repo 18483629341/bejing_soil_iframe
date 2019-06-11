@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { GlobalService } from '../../services/public/global.service';
+
 @Component({
   selector: 'app-edit-photo',
   templateUrl: './edit-photo.page.html',
@@ -8,21 +10,32 @@ import { ActivatedRoute } from '@angular/router';
 export class EditPhotoPage implements OnInit {
   imgPath: string;
   imgDate: string;
-  imgName: string;
+  name: string;
   skinName: string;
-  constructor(public activatedRoute: ActivatedRoute) {
+  constructor(
+    public activatedRoute: ActivatedRoute,
+    public global: GlobalService,
+  ) {
     this.activatedRoute.queryParams.subscribe(params => {
+      this.name = params.name;
       this.imgPath = params.imgPath;
       this.imgDate = this.getNowFormatDate();
     });
   }
 
   ngOnInit() {
+
   }
 
   ionViewWillEnter() {
-    //设置头部皮肤
+    // 设置头部皮肤
     this.skinName = localStorage.getItem('skinName') || 'blue';
+  }
+  ionViewWillLeave() {
+    if (this.name) {
+      this.global.editName = this.name;
+      this.global.editTime = this.imgDate;
+    }
   }
 
   /**

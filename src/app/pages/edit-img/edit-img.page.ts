@@ -11,6 +11,7 @@ import { StreamingMedia, StreamingVideoOptions } from '@ionic-native/streaming-m
 import { ConfigService } from '../../services/public/config.service';
 import { GlobalService } from '../../services/public/global.service';
 import { HttpUtilsService } from '../../services/public/http-utils.service';
+import { Key } from 'protractor';
 
 @Component({
   selector: 'app-edit-img',
@@ -20,17 +21,25 @@ import { HttpUtilsService } from '../../services/public/http-utils.service';
 export class EditImgPage implements OnInit {
   imgWidth: string;
   imgPath: string;
-  item: any = 0; // 选项卡切换默认选项
-  imgArr: any[] = []; // 展示图片数组
-  imgArr2: any[] = []; // 图片绝对路径数组
-  filesArr: string[] = [];
-  videoUrl: string; // 用户上传的视频地址(未转换)
-  video: string; // 用户上传的视频地址(转换后的)
-  isShow = true; // 是否展示加号
-  fileUrl: string; // 文件路径
-  newSkinName: string; // 获取新的皮肤名称
-  skinName: string; // 皮肤名称
-  hostUrl = 'http://192.168.0.55:1012/bjsoilapi/file/download.vm?';
+  item: any = 0; //  选项卡切换默认选项
+  imgArr: any[] = []; //  展示图片数组
+  filesArr: any[] = []; //  展示图片数组
+  nameArr0 = [];  // 展示图片的名称
+  mediaObjectArr = []; // 媒体的对象数组
+  mediaObjectArr0 = [];
+  mediaObjectArr1 = [];
+  mediaObjectArr2 = [];
+  videoUrl: string; //  用户上传的视频地址(未转换)
+  video: string; //  用户上传的视频地址(转换后的)
+  showVideoDel = false; // 是否删除视频
+  isShowPlus = true; //  是否展示加号
+  fileUrl: string; //  文件路径
+  newSkinName: string; //  获取新的皮肤名称
+  skinName: string; //  皮肤名称
+  hostUrl = '';
+  editIndex = 0;  // 点击图片时，所在数组的下标
+  themeIndex = 0; // 点击图片时，所在的主题下标
+  isSaved = false; // 进入以前该地块是否暂存
   constructor(
     public activatedRoute: ActivatedRoute,
     public actionSheetController: ActionSheetController,
@@ -43,40 +52,54 @@ export class EditImgPage implements OnInit {
     public streamingMedia: StreamingMedia,
     public events: Events,
     public configService: ConfigService,
-    public globalService: GlobalService,
+    public global: GlobalService,
     public httpUtils: HttpUtilsService,
   ) {
-    // 设置头部皮肤
+    //  设置头部皮肤
     this.skinName = localStorage.getItem('skinName') || 'blue';
+    this.hostUrl = this.global.hostUrl + this.global.downUrl;
   }
+
+  /**
+   * 点击保存按钮
+   */
   publishEvents() {
-    this.events.publish('user:created', this.imgArr2);
+    this.mediaObjectArr = [...this.mediaObjectArr0, ...this.mediaObjectArr1, ...this.mediaObjectArr2];
+    console.log(this.mediaObjectArr);
+    this.events.publish('user:created', this.mediaObjectArr);
     this.router.navigate(['inspection-record']);
   }
   ngOnInit() {
-    this.imgWidth = window.innerWidth / 3 + 'px';
+    this.imgWidth = (window.innerWidth - 30) / 3 + 'px';
+    // 暂存信息回显
     this.configService.getFile({
-      sessionId: this.globalService.sessionId,
-      ids: this.globalService.filesID,
+      sessionId: this.global.sessionId,
+      ids: this.global.filesID,
     }, true, res => {
-      //console.log(res);
       if (res !== 'error') {
-        // tslint:disable-next-line:forin
+        //  tslint:disable-next-line:forin
         for (const key of res) {
-          // const arr = key.FILENAME.split('%');
-          // const imgPath = this.hostUrl + arr[0] + '%' + arr[1].toUpperCase();
-          // console.log(imgPath);
-          // this.imgArr.push(imgPath);
-          if (key.FILETYPE.indexOf('image') !== -1) {
-            //console.log(`${this.hostUrl}sessionId=${this.globalService.sessionId}&fileid=${key.FILEID}`);
-            const imgPath = `${this.hostUrl}sessionId=${this.globalService.sessionId}&fileid=${key.FILEID}`;
-            this.imgArr.push(imgPath);
+          console.log(JSON.stringify(key));
+          key.name = key.FILENAME;
+          // 文件类型为图片的
+          if (key.FILETYPE.indexOf('image') !== -1 || key.FILETYPE.indexOf('jpg') !== -1) {
+            const imgPath = `${this.hostUrl}?sessionId=${this.global.sessionId}&fileid=${key.FILEID}`;
+            key.path = imgPath;
+            key.isDelete = false;
+            this.mediaObjectArr0.unshift(key);
+          // 文件类型为video或MP4的
           } else if (key.FILETYPE.indexOf('mp4') !== -1 || key.FILETYPE.indexOf('video') !== -1) {
-            this.video = `${this.hostUrl}sessionId=${this.globalService.sessionId}&fileid=${key.FILEID}`;
+            this.video = `${this.hostUrl}?sessionId=${this.global.sessionId}&fileid=${key.FILEID}`;
+            key.path = this.video;
+            this.isShowPlus = false;
+            this.mediaObjectArr1.unshift(key);
+          // 其他文件类型
           } else {
-            this.filesArr.push(key.FILENAME);
+            const filePath = `${this.hostUrl}?sessionId=${this.global.sessionId}&fileid=${key.FILEID}`;
+            key.path = filePath;
+            key.isDelete = false;
+            this.mediaObjectArr2.unshift(key);
           }
-
         }
       }
     });
@@ -84,6 +107,17 @@ export class EditImgPage implements OnInit {
 
   ionViewWillEnter() {
     this.skinName = localStorage.getItem('skinName') || 'blue';
+    // 获取编辑的名称
+    if (this.global.editName) {
+      if (this.themeIndex === 0) {
+        this.mediaObjectArr0[this.editIndex].name = this.global.editName;
+      } else if (this.themeIndex === 1) {
+        this.mediaObjectArr1[this.editIndex].name = this.global.editName;
+      } else if (this.themeIndex === 2) {
+        this.mediaObjectArr2[this.editIndex].name = this.global.editName;
+      }
+      this.global.editName = '';
+    }
   }
 
   /**
@@ -94,28 +128,28 @@ export class EditImgPage implements OnInit {
     this.item = num;
   }
 
-  /** 
+  /**
    * 选择照相
    */
   addCamera() {
     this.presentCamera();
   }
 
-  /** 
+  /**
    * 选择视频拍摄
    */
   addVideo() {
     this.presentVideo();
   }
 
-  /** 
+  /**
    * 选择文件
    */
   addFiles() {
     this.presentFiles();
   }
- 
-  /** 
+
+  /**
    * 弹出层相机
    */
   async presentCamera() {
@@ -124,13 +158,13 @@ export class EditImgPage implements OnInit {
         text: '拍摄照片',
         role: 'destructive',
         handler: () => {
-          //console.log('Delete clicked');
+          // console.log('Delete clicked');
           this.openCamera('CAMERA');
         }
       }, {
         text: '选择照片',
         handler: () => {
-          //console.log('Share clicked');
+          // console.log('Share clicked');
           this.openCamera('PHOTOLIBRARY');
 
         }
@@ -138,14 +172,14 @@ export class EditImgPage implements OnInit {
         text: '取消',
         role: 'cancel',
         handler: () => {
-          //console.log('Cancel clicked');
+          // console.log('Cancel clicked');
         }
       }],
     });
     await actionSheet.present();
   }
- 
-  /** 
+
+  /**
    * 弹出层摄像
    */
   async presentVideo() {
@@ -155,21 +189,21 @@ export class EditImgPage implements OnInit {
         role: 'destructive',
         handler: () => {
           this.openVideo();
-          //console.log('Delete clicked');
+          // console.log('Delete clicked');
 
         }
       }, {
         text: '取消',
         role: 'cancel',
         handler: () => {
-          //console.log('Cancel clicked');
+          // console.log('Cancel clicked');
         }
       }],
     });
     await actionSheet.present();
   }
 
-  /** 
+  /**
    * 弹出层文件
    */
   async presentFiles() {
@@ -178,14 +212,14 @@ export class EditImgPage implements OnInit {
         text: '在手机文件中选择',
         role: 'destructive',
         handler: () => {
-          //console.log('Delete clicked');
+          // console.log('Delete clicked');
           this.chooseFile();
         }
       }, {
         text: '取消',
         role: 'cancel',
         handler: () => {
-          //console.log('Cancel clicked');
+          // console.log('Cancel clicked');
         }
       }],
     });
@@ -198,25 +232,27 @@ export class EditImgPage implements OnInit {
    */
   openCamera(option) {
     const options: CameraOptions = {
-      quality: 50,                                                   // 相片质量 0 -100
-      destinationType: this.camera.DestinationType.FILE_URI,        // DATA_URL 是 base64   FILE_URL 是文件路径
+      quality: 50,                                                   //  相片质量 0 -100
+      destinationType: this.camera.DestinationType.FILE_URI,        //  DATA_URL 是 base64   FILE_URL 是文件路径
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
-      saveToPhotoAlbum: false,                                       // 是否保存到相册
-      sourceType: this.camera.PictureSourceType[option],         // 是打开相机拍照还是打开相册选择  PHOTOLIBRARY : 相册选择, CAMERA : 拍照,
+      saveToPhotoAlbum: false,                                       //  是否保存到相册
+      sourceType: this.camera.PictureSourceType[option],         //  是打开相机拍照还是打开相册选择  PHOTOLIBRARY : 相册选择, CAMERA : 拍照,
     };
 
-    this.camera.getPicture(options).then((imageData) => {
-      // If it's base64:
-      // const base64Image = 'data:image/jpeg;base64,' + imageData;
-      const fileImg = this.webView.convertFileSrc(imageData);
-      // alert(fileImg);
-      this.imgPath = fileImg;
-      this.imgArr.unshift(fileImg); // 页面展示图片数组
-      this.imgArr2.push(imageData); // 添加到同一个数组
-    }, (err) => {
-      // Handle error
-    });
+    this.camera.getPicture(options).then(
+      (imageData) => {
+        //  If it's base64:
+        //  const base64Image = 'data:image/jpeg;base64,' + imageData;
+
+        const fileImg = this.webView.convertFileSrc(imageData);
+        this.imgPath = fileImg;
+        alert(JSON.stringify(this.getFileName(fileImg))); // app储存路径
+        this.mediaObjectArr0.unshift({ data: imageData, path: fileImg, name: this.getFileName(fileImg), showDel: false }); //  页面展示图片数组
+
+      }, (err) => {
+        //  Handle error
+      });
   }
 
   /**
@@ -231,47 +267,96 @@ export class EditImgPage implements OnInit {
 
     this.mediaCapture.captureVideo(options).then(
       (res: MediaFile[]) => {
-        // alert(JSON.stringify(res));
         this.videoUrl = res[0].fullPath;
         this.video = this.webView.convertFileSrc(res[0].fullPath);
-        this.imgArr2.push(res[0].fullPath); // 添加到同一个数组
-        this.isShow = false;
+        alert(JSON.stringify(this.videoUrl)); // app储存路径
+        alert(JSON.stringify(this.getFileName(this.videoUrl)));
+        // this.mediaDataArr1.unshift(this.videoUrl); //  添加到同一个数组
+        this.mediaObjectArr1.unshift({ data: res[0].fullPath, name: this.getFileName(this.videoUrl), path: this.videoUrl });
+        this.isShowPlus = false;
       }, (err: CaptureError) => {
-        console.log('Something went wrong');
-        // alert(JSON.stringify(err));
+        // console.log(err);
       });
   }
- 
+
   /**
    * 选择文件
    */
   chooseFile() {
     this.fileChooser.open()
       .then(uri => {
-        // alert(uri);
-        this.imgArr2.push(uri); // 添加到同一个数组
-        const fileName = this.getFileName(uri);
-        this.filesArr.unshift(fileName);
+        alert(JSON.stringify(uri)); // app储存路径
+        alert(JSON.stringify(this.getFileName(uri)));
+        this.mediaObjectArr2.unshift({ data: uri, name: this.getFileName(uri), showDel: false, path: uri });
       })
-      .catch(e => console.log(e));
+      .catch(e => alert(e));
   }
 
   /**
    * 跳转照片编辑
-   * @param item 对象
+   * @param tab 执行对象所在的tab标签，取值为 0,1，2
+   * @param index 所在数组的下标
    */
-  goEdit(item) {
-    this.router.navigate(['edit-photo'], { queryParams: { imgPath: item } });
+  goEdit(item, tab, index) {
+    alert(index);
+    this.editIndex = index;
+    this.themeIndex = tab;
+    this.router.navigate(['edit-photo'], { queryParams: { themeIndex: this.themeIndex, imgPath: item.path , name: item.name} });
   }
 
+  /**
+   * 展示照片对应的删除按钮
+   * @param tab 执行对象所在的tab标签，取值为 0,2
+   * @param index 所在数组的下标
+   */
+  showDelBtn(tab, index) {
+    if (tab === 0) {
+      const obj = this.mediaObjectArr0[index];
+      obj.showDel = true;
+    } else if (tab === 2) {
+      const obj = this.mediaObjectArr2[index];
+      obj.showDel = true;
+    }
+  }
+
+  /**
+   * 删除所选照片照片
+   * @param tab 执行对象所在的tab标签，取值为 0,2
+   * @param index 所在数组的下标
+   */
+  delete(tab, index) {
+    alert(JSON.stringify(index));
+    if (tab === 0) {
+      // this.mediaDataArr0.splice(index, 1);
+      this.mediaObjectArr0.splice(index, 1);
+    } else if (tab === 2) {
+      // this.mediaDataArr2.splice(index, 1);
+      this.mediaObjectArr2.splice(index, 1);
+    }
+  }
+
+  // deleteVedio(){
+  //   alert(JSON.stringify(this.video));
+  // }
   /**
    * 根据url获取文件名(包含文件类型)
    * @param fileUrl 文件路径
    */
   getFileName(fileUrl: string): string {
-    return fileUrl.substring(fileUrl.lastIndexOf('/') + 1, fileUrl.length).toLowerCase();
+
+    let fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1, fileUrl.length).toLowerCase();
+    // 如果有image% 给它加上后缀名.jpg
+    if (fileName.indexOf('image%') !== -1 && fileName.indexOf('.jpg') === -1) {
+      const arr = fileName.split('%');
+      fileName = arr[0] + arr[1] + '.jpg';
+    } else if (fileName.indexOf('video%') !== -1 && fileName.indexOf('.mp4') === -1) {
+      const arr = fileName.split('%');
+      fileName = arr[0] + arr[1] + '.mp4';
+    }
+    fileName.replace(/(\\|\/|\:|\*|\?|\"|\<|\>|\|)/g, '_');
+    return fileName;
   }
-  
+
   /**
    * 播放视频
    */
@@ -284,6 +369,6 @@ export class EditImgPage implements OnInit {
       controls: true
     };
 
-    this.streamingMedia.playVideo('http://v.qq.com/x/page/r0506bwgizi.html', options);
+    this.streamingMedia.playVideo('http:// v.qq.com/x/page/r0506bwgizi.html', options);
   }
 }

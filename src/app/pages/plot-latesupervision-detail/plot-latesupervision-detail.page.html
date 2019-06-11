@@ -27,36 +27,36 @@
   <!-- 信息表格 -->
   <ion-grid class="detail_table" *ngIf="dataFlag">
     <ion-row justify-content-around>
-      <ion-col class="left-text">申报时间：</ion-col>
-      <ion-col class="right-text">{{(laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd')?(laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd'):"--"}}</ion-col>
+      <ion-col class="left-text" size="6">申报时间：</ion-col>
+      <ion-col class="right-text"  size="6">{{(laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd')?(laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd'):"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">监测时间：</ion-col>
-      <ion-col class="right-text">{{(laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd')?(laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd'):"--"}}</ion-col>
+      <ion-col class="left-text" size="6">监测时间：</ion-col>
+      <ion-col class="right-text"  size="6">{{(laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd')?(laterMonitorDetail.MONITOR_DATE| date:'yyyy-MM-dd'):"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">监测状态：</ion-col>
-      <ion-col class="right-text">{{laterMonitorDetail.STATUS||"--"}}</ion-col>
+      <ion-col class="left-text" size="6">监测状态：</ion-col>
+      <ion-col class="right-text"  size="6">{{laterMonitorDetail.STATUS||"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">土壤环境监测结论：</ion-col>
-      <ion-col class="right-text">{{laterMonitorDetail.SOIL_ENVIRON_VERDICT||"--"}}</ion-col>
+      <ion-col class="left-text" size="6">土壤环境监测结论：</ion-col>
+      <ion-col class="right-text"  size="6">{{laterMonitorDetail.SOIL_ENVIRON_VERDICT||"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">地下水环境监测结论：</ion-col>
-      <ion-col class="right-text">{{laterMonitorDetail.GROUNDWATER_VERDICT||"--"}}</ion-col>
+      <ion-col class="left-text" size="6">地下水环境监测结论：</ion-col>
+      <ion-col class="right-text"  size="6">{{laterMonitorDetail.GROUNDWATER_VERDICT||"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">地表水环境监测结论：</ion-col>
-      <ion-col class="right-text">{{laterMonitorDetail.SURFACE_WATER_VERDICT||"--"}}</ion-col>
+      <ion-col class="left-text" size="6">地表水环境监测结论：</ion-col>
+      <ion-col class="right-text"  size="6">{{laterMonitorDetail.SURFACE_WATER_VERDICT||"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">空气环境监测结论：</ion-col>
-      <ion-col class="right-text">{{laterMonitorDetail.AIR_ENVIRON_VERDICT||"--"}}</ion-col>
+      <ion-col class="left-text" size="6">空气环境监测结论：</ion-col>
+      <ion-col class="right-text"  size="6">{{laterMonitorDetail.AIR_ENVIRON_VERDICT||"--"}}</ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">监测方案附件：</ion-col>
-      <ion-col class="right-text">
+      <ion-col class="left-text" size="6">监测方案附件：</ion-col>
+      <ion-col class="right-text"  size="6" style=" line-height: 22px;">
         <ion-list *ngIf="censusFileArr.length>0">
           <ion-item *ngFor="let item of censusFileArr" lines="none">
             <p class="down-line" size="small" color="tertiary" (click)="downFile(item)"> {{item.FILENAME}}</p>
@@ -66,8 +66,8 @@
       </ion-col>
     </ion-row>
     <ion-row justify-content-around>
-      <ion-col class="left-text">监测结果附件：</ion-col>
-      <ion-col class="right-text">
+      <ion-col class="left-text" size="6">监测结果附件：</ion-col>
+      <ion-col class="right-text"  size="6" style=" line-height: 22px;">
         <ion-list *ngIf="surveyFileArr.length>0">
           <ion-item *ngFor="let item of surveyFileArr" lines="none">
             <p class="down-line" size="small" color="tertiary" (click)="downFile(item)"> {{item.FILENAME}}</p>
@@ -78,8 +78,8 @@
     </ion-row>
 
     <ion-row justify-content-around>
-      <ion-col class="left-text">公示网址：</ion-col>
-      <ion-col class="right-text">
+      <ion-col class="left-text" size="6">公示网址：</ion-col>
+      <ion-col class="right-text"  size="6" style=" line-height: 22px;">
         <div *ngIf="laterMonitorDetail.CENSUS_PUBLIC_TYPE===1">新增项目:
           <p class="down-line" (click)="openBrower(laterMonitorDetail.CENSUS_PUBLIC_URL)">{{laterMonitorDetail.CENSUS_PUBLIC_URL}}</p>
         </div>

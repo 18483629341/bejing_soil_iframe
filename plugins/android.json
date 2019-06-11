@@ -84,6 +84,9 @@
     "cn-com-ths-baidulocation": {
       "BD_AK": "idh0uCR7rcC1sGclhscaxy2A5YIUPBUN",
       "PACKAGE_NAME": "cn.com.ths.bjwrapp"
+    },
+    "cordova-plugin-filepath": {
+      "PACKAGE_NAME": "cn.com.ths.bjwrapp"
     }
   },
   "dependent_plugins": {}

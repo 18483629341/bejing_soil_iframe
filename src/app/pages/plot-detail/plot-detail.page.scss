@@ -1,7 +1,7 @@
 /*公用样式*/
 
 ion-buttons{
-    width: 75px;
+    width: 70px;
 }
 
 ion-back-button{
@@ -9,11 +9,12 @@ ion-back-button{
 }
 
 .download-btn{
-    width:67%;
-    --color:#fff;
+    width: 47%;
+    --color: #fff;
     font-size: 20px;
-    --padding-start:5px;
-    --padding-end:5px;
+    --padding-start: 6px;
+    --padding-end: 5px;
+    --padding-top: 2px;
 }
 
 .p-title {
@@ -87,8 +88,8 @@ ion-item{
 
 .collect,.collected{
     display: inline-block;
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     // margin-right: 10px;
 }
 

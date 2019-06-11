@@ -18,7 +18,7 @@ export class ConfigService {
    * @param callback 回调函数
    */
   getAppVersion(params, showloading, callback) {
-    return this.httpUtils.get(this.global.versionUrl, params, showloading, callback);
+    return this.httpUtils.get(this.global.hostUrl+this.global.versionUrl, params, showloading, callback);
   }
   /**************************登录********************************/
   /**
@@ -136,21 +136,21 @@ export class ConfigService {
   }
 
   /**
- * 督察列表提交暂存
- * @param params  调用方法传过来的参数，根据城市代码查询进行获取
- * @param showloading 是否显示数据加载框
- * @param callback 回调函数
- */
+   * 督察列表提交暂存
+   * @param params  调用方法传过来的参数，根据城市代码查询进行获取
+   * @param showloading 是否显示数据加载框
+   * @param callback 回调函数
+   */
   supervisesave(params, showloading, callback) {
     return this.httpUtils.get(this.global.hostUrl + this.global.supervisesave, params, showloading, callback);
   }
 
   /**
-  * 获取可编辑的督查记录
-  * @param params  调用方法传过来的参数，根据城市代码查询进行获取
-  * @param showloading 是否显示数据加载框
-  * @param callback 回调函数
-  */
+   * 获取可编辑的督查记录
+   * @param params  调用方法传过来的参数，根据城市代码查询进行获取
+   * @param showloading 是否显示数据加载框
+   * @param callback 回调函数
+   */
   getUpdatedSuperviseByLand(params, showloading, callback) {
     return this.httpUtils.get(this.global.hostUrl + this.global.getUpdatedSuperviseByLand, params, showloading, callback);
   }

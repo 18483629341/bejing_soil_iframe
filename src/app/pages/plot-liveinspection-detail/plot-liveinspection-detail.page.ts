@@ -12,14 +12,15 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./plot-liveinspection-detail.page.scss'],
 })
 export class PlotLiveinspectionDetailPage implements OnInit {
-  inspecterDetail: any = {};//初步调查数据
-  dataFlag: any = false;  //是否拿到初步调查数据
+  inspecterDetail: any = {}; // 初步调查数据
+  dataFlag: any = false;  // 是否拿到初步调查数据
 
   data: any;
   SUPERVISE_ID: any;
   censusFileArr: any = []; // 报告附件列表
 
-  skinName: string; //皮肤名称
+  skinName: string; // 皮肤名称
+  reqSuc = 0; // 异步请求成功的数量
   constructor(
     public iab: InAppBrowser,
     public global: GlobalService,
@@ -29,17 +30,16 @@ export class PlotLiveinspectionDetailPage implements OnInit {
     public activatedRouted: ActivatedRoute
   ) {
     this.activatedRouted.queryParams.subscribe(params => {
-      if(params&&params.SUPERVISE_ID){
+      if (params && params.SUPERVISE_ID) {
         this.SUPERVISE_ID = params.SUPERVISE_ID;
       }
-      
     });
   }
 
   ngOnInit() {
-    //初始化页面数据
+    // 初始化页面数据
     this.init();
-    //获取所有的附件的数组
+    // 获取所有的附件的数组
     this.getAllFileArr();
   }
 
@@ -58,37 +58,60 @@ export class PlotLiveinspectionDetailPage implements OnInit {
     }
   }
 
-  /** 
+  /**
    * 初始化页面数据
    */
   init() {
     this.global.plotInspectorList.map((item) => {
       if (item.SUPERVISE_ID === this.SUPERVISE_ID) {
         this.inspecterDetail = item;
-        // console.log(this.inspecterDetail);
-        if (JSON.stringify(this.inspecterDetail) !== "{}") {
+        if (this.inspecterDetail) {
           this.dataFlag = true;
         } else {
           this.dataFlag = false;
         }
       }
-    })
+    });
   }
 
   /**
    * 获取所有的附件的数组
    * @param flag? boolean  默认为true ,表示是否显示loading 遮罩
+   * @param event? 刷新 或 加载事件
    */
-  getAllFileArr(flag = true) {
-    //let CENSUS = '58625234-0b18-4e39-9bef-c4515beb9617,a212f803-1af8-45d1-a0d6-a7cf669b85a6';
-    //获取检查调查报告数组
-    this.configService.getFile({ 'ids': this.inspecterDetail.CENSUS, 'sessionId': this.global.sessionId }, flag, res => {
-      // console.log(res);
+  getAllFileArr(flag = true , event?) {
+    // 获取检查调查报告数组
+    this.configService.getFile({ ids: this.inspecterDetail.FILEIDS, sessionId: this.global.sessionId }, flag, res => {
+      console.log(res);
       if (res !== 'error') {
         this.censusFileArr = res;
+        if ( this.censusFileArr.length > 0 ) {
+           for ( const item of this.censusFileArr) {
+              item.FILENAME = decodeURI(item.FILENAME);
+              // 如果有image% 给它加上后缀名.jpg
+              if (item.FILENAME.indexOf('image%') !== -1 && item.FILENAME.indexOf('.jpg') === -1) {
+                const arr = item.FILENAME.split('%');
+                item.FILENAME = arr[0] + arr[1] + '.jpg';
+              } else if (item.FILENAME.indexOf('video%') !== -1  && item.FILENAME.indexOf('.mp4') === -1) {
+                const arr = item.FILENAME.split('%');
+                item.FILENAME = arr[0] + arr[1]  + '.mp4';
+              }
+           }
+        }
       }
+      this.reqSucFun(event);
     });
+  }
 
+  /**
+   * 异步请求成功 数据/事件处理
+   * @param event 刷新 或 加载事件
+   */
+  reqSucFun(event) {
+    this.reqSuc++;
+    if (event && this.reqSuc === 1) {
+      event.target.complete();
+    }
   }
 
   /**
@@ -97,9 +120,9 @@ export class PlotLiveinspectionDetailPage implements OnInit {
    */
   downFile(item) {
     if (item.FILENAME) {
-      //获取后缀名
-      let fileSuffix = this.appUpdate.getFileSuffix(item.FILENAME);
-      let downUrl = `${this.global.hostUrl}${this.global.downUrl}?fileid=${item.FILEID}&sessionId=${this.global.sessionId}`;
+      // 获取后缀名
+      const fileSuffix = this.appUpdate.getFileSuffix(item.FILENAME);
+      const downUrl = `${this.global.hostUrl}${this.global.downUrl}?fileid=${item.FILEID}&sessionId=${this.global.sessionId}`;
       this.appUpdate.downFile(downUrl, fileSuffix, item.FILENAME, item.FILESIZE);
     } else {
       this.httpUtils.thsToast('附件暂时无法下载！');
@@ -107,16 +130,14 @@ export class PlotLiveinspectionDetailPage implements OnInit {
   }
 
   /**
-   *下拉刷新事件
+   * 下拉刷新事件
    * @param event 事件
    */
   doRefresh(event) {
-    //初始化页面数据
+    this.reqSuc = 0;
+    // 初始化页面数据
     this.init();
-    //获取所有的附件的数组
-    this.getAllFileArr(false);
-    setTimeout(() => {
-      event.target.complete();
-    }, 1000);
+    // 获取所有的附件的数组
+    this.getAllFileArr(false, event);
   }
 }
