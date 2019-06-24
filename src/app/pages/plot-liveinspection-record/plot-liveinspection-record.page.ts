@@ -36,7 +36,6 @@ export class PlotLiveinspectionRecordPage implements OnInit {
   init() {
     if (this.global.plotInspectorList.length > 0) {
       this.inspectorList = this.global.plotInspectorList;
-      // console.log(this.global.plotInspectorList);
       this.dataFlag = true;
     } else {
       this.dataFlag = false;

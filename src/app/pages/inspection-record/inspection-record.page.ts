@@ -79,7 +79,7 @@ export class InspectionRecordPage implements OnInit {
       id: this.SEEMINFO_ID,
     }, true, res => {
       if (res !== 'error' && res.data !== null) {
-        console.log(res);
+        // console.log(res);
         this.global.SUPERVISE_ID = res.data.SUPERVISE_ID;
         this.global.filesID = res.data.FILEIDS;
         this.checkTitle = res.data.TITLE;
@@ -88,7 +88,6 @@ export class InspectionRecordPage implements OnInit {
         this.nowTime = this.formatDate(new Date(res.data.CREATE_DATE));
       }
     });
-
   }
 
   ionViewWillEnter() {
@@ -208,17 +207,15 @@ export class InspectionRecordPage implements OnInit {
         // 获取文件id并且拼接
         this.fileID = this.fileID + data.response + ',';
         this.fileSuccessNum++;
-        alert(this.fileSuccessNum);
-        // 判断是否是最后一个文件已经上传成功，然后请求保存表单接口
+        // 当所有需要上传的资源都成功，然后发送图表信息
         if (this.fileSuccessNum === this.data.length) {
           //  删除拼接id 最后一个逗号
-          alert(this.fileID);
           this.loader.dismiss();
           const FILEIDS = this.fileID.substring(0, this.fileID.length - 1);
-          alert('文件id     ' + FILEIDS + '之前');
+          // alert('文件id     ' + FILEIDS + '之前');
           const params = {
             sessionId: this.global.sessionId,
-            'form[FILEIDS]': FILEIDS + ',' + this.global.filesID,
+            'form[FILEIDS]': FILEIDS + ',' + this.global.filesID, // this.global.filesID 之前暂存的文件ids
             'form[TITLE]': this.checkTitle,
             'form[SEEMINFO_ID]': this.SEEMINFO_ID,
             'form[DEPTNAME]': this.checkUnit,
@@ -226,11 +223,20 @@ export class InspectionRecordPage implements OnInit {
             'form[SAVESTATUS]': type,
             'form[SUPERVISE_ID]': this.global.SUPERVISE_ID,
           };
-          this.configService.supervisesave(params, true, res => {
+          this.configService.supervisesave(params, false, res => {
             if (res !== 'error') {
-              alert(JSON.stringify(res));
+              // alert(JSON.stringify(res));
               if (res.status === 'success') {
                 this.presentToastWithOptions('上传成功');
+                // 如果是提交的情况
+                if (type === '1') {
+                  // 将部分数据初始化
+                  this.clearForm();
+                  this.global.SUPERVISE_ID = '';
+                  this.global.filesID = '';
+                  this.fileID = '';
+                  this.fileSuccessNum = 0; // 提交成功后数量初始化为 0
+                }
               }
             }
           });
@@ -252,7 +258,6 @@ export class InspectionRecordPage implements OnInit {
    * @param fileUrl  string  文件url
    */
   getFileType(fileUrl: string): string {
-    alert(fileUrl);
     return fileUrl.substring(fileUrl.lastIndexOf('.') + 1, fileUrl.length).toLowerCase();
   }
 
@@ -344,21 +349,19 @@ export class InspectionRecordPage implements OnInit {
       for (let index = 0; index < this.data.length; index++) {
         const element = this.data[index];
         const fileName = this.fileNameArr[index];
-        alert(index);
         this.upload(element, fileName, index, '0');
       }
     } else {
       const params = {
         sessionId: this.global.sessionId,
         'form[TITLE]': this.checkTitle,
-        'form[FILEIDS]': this.fileID,
+        'form[FILEIDS]': this.global.filesID,
         'form[SEEMINFO_ID]': this.SEEMINFO_ID,
         'form[DEPTNAME]': this.checkUnit,
         'form[SUGGEST]': this.checkCondition,
         'form[SAVESTATUS]': '0',
         'form[SUPERVISE_ID]': this.global.SUPERVISE_ID,
       };
-      // alert(JSON.stringify(params));
       this.configService.supervisesave(params, true, res => {
         // alert(JSON.stringify(res));
         if (res !== 'error') {
@@ -390,11 +393,10 @@ export class InspectionRecordPage implements OnInit {
         }
       } else {
         // alert('返回记录id' + this.global.SUPERVISE_ID);
-
         this.configService.supervisesave({
           sessionId: this.global.sessionId,
           'form[TITLE]': this.checkTitle,
-          'form[FILEIDS]': this.fileID,
+          'form[FILEIDS]': this.global.filesID,
           'form[SEEMINFO_ID]': this.SEEMINFO_ID,
           'form[DEPTNAME]': this.checkUnit,
           'form[SUGGEST]': this.checkCondition,
@@ -411,12 +413,6 @@ export class InspectionRecordPage implements OnInit {
         });
 
       }
-      // 将部分数据初始化
-      this.clearForm();
-      this.global.SUPERVISE_ID = '';
-      this.global.filesID = '';
-      this.fileID = '';
-      this.fileSuccessNum = 0; // 提交成功后数量初始化为 0
     }
   }
 

@@ -4,11 +4,12 @@
       <ion-back-button text="" icon="ios-arrow-back" mode='ios'></ion-back-button>
     </ion-buttons>
     <ion-title>地块信息</ion-title>
-    <ion-buttons slot="end">
-      <ion-button class="download-btn" (click)="presentSheet()">
+    <ion-buttons slot="end" >
+        <!-- [ngStyle]="{'width':headerEndWidth}" -->
+      <ion-button class="download-btn" (click)="presentSheet()" *ngIf="needLoadAll">
         <ion-icon name="download"></ion-icon>
       </ion-button>
-      <span slot="end"  [ngClass]="{'collect':!isCollected,'collected':isCollected}" (click)="collectSheet()"></span>
+      <span class="collect-btn" [ngClass]="{'collect':!isCollected,'collected':isCollected}" (click)="collectSheet()"></span>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

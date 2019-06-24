@@ -22,7 +22,7 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <div class="option-div">
+  <div class="option-div" [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
     <div *ngIf="isShowOptions && currentOptionTabIndex === 1">
       <ion-list class="area-new" lines="inset">
         <ion-item *ngFor="let item of AreaList ;let i=index" (click)="selectArea(i,item)" [ngClass]="{selected:active==i}">{{item.REGIONNAME}}
@@ -30,7 +30,7 @@
       </ion-list>
     </div>
   </div>
-  <div class="option-div">
+  <div class="option-div" [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
     <div *ngIf="isShowOptions && currentOptionTabIndex === 2">
       <ion-list class="area-new" lines="inset">
         <ion-item *ngFor="let item of industryList ;let i=index" (click)="selectIndustry(i,item)" [ngClass]="{selected:active2==i}">{{item.dictionary_name}}
@@ -39,7 +39,7 @@
     </div>
 
   </div>
-  <div class="option-div">
+  <div class="option-div" [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
     <div *ngIf="isShowOptions && currentOptionTabIndex === 3">
       <ion-list class="area-new" lines="inset">
         <ion-item *ngFor="let item of blockTypeList ;let i=index" (click)="selectBlockType(i,item)" [ngClass]="{selected:active3==i}">{{item.dictionary_name}}
@@ -48,16 +48,17 @@
     </div>
   </div>
   <!-- [ngStyle]="{'display': Area=='行政区域'?'none':'flex'}" -->
-  <div class="selectBox" [ngStyle]="{'display': Area=='区域' && industry=='行业' && blockType=='地块类型'?'none':'flex'}">
+  <div class="selectBox" [ngStyle]="{'display': Area=='区域' && industry=='行业' && blockType=='地块类型'?'none':'flex'}" 
+      [ngClass]="{'blue': skinName==='blue','green': skinName==='green','orange': skinName==='orange'}">
     <span>已选条件:</span>
-    <span *ngIf="showArea">{{Area}}
+    <span *ngIf="showArea" class="select-span">{{Area}}
       <ion-icon name="close-circle" (click)="closeArea()"></ion-icon>
     </span>
-    <span *ngIf="showIndustry">
+    <span *ngIf="showIndustry" class="select-span">
       <span class="industry">{{industry}}</span>
       <ion-icon name="close-circle" (click)="closeIndustry()"></ion-icon>
     </span>
-    <span *ngIf="showBlockType">{{blockType}}
+    <span *ngIf="showBlockType" class="select-span">{{blockType}}
       <ion-icon name="close-circle" (click)="closeBlock()"></ion-icon>
     </span>
   </div>

@@ -81,7 +81,6 @@ export class PlotPrimaryResearchPage implements OnInit {
   getAllFileArr(flag = true, event?) {
     // 获取检查调查报告数组
     this.configService.getFile({ ids: this.firstCensusInfo.CENSUS, sessionId: this.global.sessionId }, flag, res => {
-      // console.log(res);
       if (res !== 'error') {
         this.censusFileArr = res;
       }
@@ -90,7 +89,6 @@ export class PlotPrimaryResearchPage implements OnInit {
 
     // 获取检查报告数组
     this.configService.getFile({ ids: this.firstCensusInfo.SURVEY_REPORT, sessionId: this.global.sessionId }, flag, res => {
-      // console.log(res);
       if (res !== 'error') {
         this.surveyFileArr = res;
       }
@@ -99,30 +97,27 @@ export class PlotPrimaryResearchPage implements OnInit {
 
     // 获取证明材料数组
     this.configService.getFile({ ids: this.firstCensusInfo.EVIDENCE_FILE, sessionId: this.global.sessionId }, flag, res => {
-      // console.log(res);
       if (res !== 'error') {
         this.evidenceFileArr = res;
       }
       this.reqSucFun(event);
     });
 
-    // 如果公示网址对应 无新增项目
-    if (this.firstCensusInfo.CENSUS_PUBLIC_TYPE === 0) {
-      // 获取历史记录证明材料数组
-      this.configService.getFile({ ids: this.firstCensusInfo.CENSUS_PUBLIC_FILES, sessionId: this.global.sessionId }, flag, res => {
-        // console.log(res);
-        if (res !== 'error') {
-          this.historyEvilFileArr = res;
-        }
-        this.reqSucFun(event);
-      });
-    }
+
+    // 获取历史记录证明材料数组
+    this.configService.getFile({ ids: this.firstCensusInfo.CENSUS_PUBLIC_FILES, sessionId: this.global.sessionId }, flag, res => {
+      if (res !== 'error') {
+        this.historyEvilFileArr = res;
+      }
+      this.reqSucFun(event);
+    });
+
   }
 
-   /**
-    * 异步请求成功 数据/事件处理
-    * @param event 刷新 或 加载事件
-    */
+  /**
+   * 异步请求成功 数据/事件处理
+   * @param event 刷新 或 加载事件
+   */
   reqSucFun(event) {
     this.reqSuc++;
     if (event && this.reqSuc === 4) {
@@ -140,7 +135,7 @@ export class PlotPrimaryResearchPage implements OnInit {
       // 获取后缀名
       const fileSuffix = this.appUpdate.getFileSuffix(item.FILENAME);
       const downUrl = `${this.global.hostUrl}${this.global.downUrl}?fileid=${item.FILEID}&sessionId=${this.global.sessionId}`;
-      this.appUpdate.downFile(downUrl, fileSuffix, item.FILENAME, item.FILESIZE);
+      this.appUpdate.downFile(downUrl, fileSuffix, item.FILEID , item.FILENAME, item.FILESIZE);
     } else {
       this.httpUtils.thsToast('附件暂时无法下载！');
     }

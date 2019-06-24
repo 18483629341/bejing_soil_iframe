@@ -39,7 +39,8 @@
     </ion-row>
     <ion-row align-items-center>
       <ion-col class="left-text" size="5">地块中心经纬度：</ion-col>
-      <ion-col class="right-text" size="7">{{baseInfo.LONGITUDE|genPositionStr}}，{{baseInfo.LATITUDE|genPositionStr}} <span ><img (click)="goMap()"  class="icon-img" src="../../../assets/img/index_location.png"/></span> </ion-col>
+      <ion-col class="right-text" size="7">{{baseInfo.LONGITUDE}}，{{baseInfo.LATITUDE}} <span ><img (click)="goMap()"  class="icon-img" src="../../../assets/img/index_location.png"/></span> </ion-col>
+      <!-- |genPositionStr -->
     </ion-row>
     <ion-row align-items-center>
       <ion-col class="left-text" size="5">坐标系说明：</ion-col>

@@ -1,21 +1,26 @@
 /*公用样式*/
 
 ion-buttons{
-    width: 70px;
+    text-align: right;
+    .download-btn,.span{
+        display: inline-block;
+    }
+    .download-btn{
+        width: 36px;
+        --color: #fff;
+        font-size: 20px;
+        --padding-start: 6px;
+        --padding-end: 5px;
+        --padding-top: 2px;
+    }
+    
 }
 
 ion-back-button{
     --color:#fff;
 }
 
-.download-btn{
-    width: 47%;
-    --color: #fff;
-    font-size: 20px;
-    --padding-start: 6px;
-    --padding-end: 5px;
-    --padding-top: 2px;
-}
+
 
 .p-title {
     color:#111;
@@ -90,7 +95,7 @@ ion-item{
     display: inline-block;
     width: 20px;
     height: 20px;
-    // margin-right: 10px;
+    margin-right: 10px;
 }
 
 .collect{

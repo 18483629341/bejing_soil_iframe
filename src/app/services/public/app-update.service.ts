@@ -9,6 +9,7 @@ import { AppVersion } from '@ionic-native/app-version/ngx';
 import { HttpUtilsService } from '../public/http-utils.service';
 import { ConfigService } from '../public/config.service';
 import { GlobalService } from '../public/global.service';
+// import { setTimeout } from 'timers';
 
 declare let window;
 @Injectable({
@@ -42,7 +43,6 @@ export class AppUpdateService {
       if (res && res !== 'error') {
         const obj = res;
         this.updateInfo = '最新的版本号为：' + obj.verAndroid;
-        // alert(obj.downUrl);
         this.upDateVerison(obj.verAndroid, obj.downUrl, obj.apkName);
       } else {
         this.httpUtils.thsToast('更新失败!');
@@ -94,7 +94,7 @@ export class AppUpdateService {
    * @param apkName apk名称
    */
   async presentAlert(preVersion, nowVserion, updateInfo, downUrl, apkName?) {
-    const alert = await this.alertController.create({
+    const alertToast = await this.alertController.create({
       header: '发现新版本,是否更新?',
       message: '<div>当前版本号：' + preVersion + '</div><div>待更新版本号：' + nowVserion + '</div><div>更新内容：' + updateInfo + '</div>',
       buttons: [
@@ -107,9 +107,10 @@ export class AppUpdateService {
         {
           text: '确定',
           handler: () => {
-            // alert( downUrl );
+            // alert(downUrl);
             if (apkName) {
-              this.downFile(downUrl, 'apk', apkName);
+              const fileId = '' ;
+              this.downApk(downUrl, 'apk', fileId , apkName);
             } else {
               this.browser.create(downUrl);
             }
@@ -117,7 +118,7 @@ export class AppUpdateService {
         }
       ]
     });
-    alert.present();
+    alertToast.present();
   }
   /**
    * 检查文件是否存在
@@ -125,47 +126,134 @@ export class AppUpdateService {
    * @param filePath 文件路径 必传
    */
   fileIsExited(fileName, filePath, callback) {
-    this.file.checkFile(filePath, fileName)
+    this.file.checkFile(this.file.externalDataDirectory, fileName)
       .then(
-        () => {
+        (_) => {
+          // alert('then_right:' + _); // true 文件已经存在
           callback(true);
         },
-        () => {
+        (err) => {
+          // alert('then_err:' + JSON.stringify(err));
           callback(false);
         }
       )
-      .catch(
-        () => {
-          callback(false);
-        }
-      );
+      .catch(err => {
+        // alert('catch_err:' + err); // 不存在
+        callback(false);
+      });
   }
 
   /**
-   *
+   * 下载文件，有检查文件是否存在
    * @param url 下载地址
    * @param application 文件打开方式
    * @param name 文件名称
    */
-  async downFile(url, application, name, filesize?, callback?) {
+  async downFile(url, application, fileId, name, filesize?, callback?) {
     application = this.getFileMimeType(application);
+    let newName = fileId + name;
+    newName = newName.replace(/(\\|\/|\:|\*|\?|\"|\<|\>|\||\ |\-)/g, '_');
 
+    this.fileIsExited(newName, this.file.externalDataDirectory, (res) => {
+      // alert(res);
+      if (res === false) {
+        const fileTransfer: FileTransferObject = this.transfer.create();
+        this.alert1 = this.alertController.create({
+          message: '<p class="title">正在下载，请稍等...</p><div class="progress"><span class="blue"></span></div><p class="downed">已经下载：0%</p>',
+          // enableBackdropDismiss: false
+        });
+        // window.closeUpdatePop = true;
+        this.alert1.present();
+        fileTransfer.download(url, this.file.externalDataDirectory + newName, false)
+          .then(
+            (entry) => {
+              const openurl = entry.toURL();
+              if (callback) {
+                callback();
+              }
+              this.openFile(this.file.externalDataDirectory + newName, application);
+            },
+            (error) => {
+              // console.log('1', error);
+              if (this.alert1) {
+                this.alert1.dismiss();
+                this.alert1 = null;
+              }
+              this.httpUtils.thsToast('文件下载失败，请重试');
+            }
+          ).catch(
+            e => {
+              // console.log('1', e);
+              if (this.alert1) {
+                this.alert1.dismiss();
+                this.alert1 = null;
+              }
+              this.httpUtils.thsToast('文件下载失败，请重试');
+            }
+          );
+
+
+        fileTransfer.onProgress((event: ProgressEvent) => {
+          let num: any;
+          if (filesize) {
+            num = Math.floor(event.loaded / filesize * 100);
+          } else {
+            num = Math.floor(event.loaded / event.total * 100);
+          }
+          if (num > 100) {
+            if (this.alert1) {
+              this.alert1.dismiss();
+              this.alert1 = null;
+            }
+          } else if (event.loaded > 0 && (event.total || filesize)) {
+            const progress = document.getElementsByClassName('blue')[0];
+            if (progress) {
+              progress['style'].display = 'block';
+              progress['style'].width = num + '%';
+            }
+            const downed = document.getElementsByClassName('downed')[0];
+            if (downed) {
+              downed.innerHTML = '已经下载：' + num + '%';
+            }
+          }
+        });
+        // 如果此文件存在，将直接打开
+      } else {
+        this.httpUtils.thsToast('文件已下载，将直接打开');
+        if (callback) {
+          callback();
+        }
+        setTimeout(() => {
+          this.openFile(this.file.externalDataDirectory + newName, application);
+        }, 1000);
+      }
+    });
+  }
+
+  /**
+   * 下载apk包，不检查是否已经存在
+   * @param url 下载地址
+   * @param application 文件打开方式
+   * @param name 文件名称
+   */
+  async downApk(url, application, fileId,  name, filesize?, callback?) {
+    application = this.getFileMimeType(application);
     const fileTransfer: FileTransferObject = this.transfer.create();
     this.alert1 = await this.alertController.create({
       message: '<p class="title">正在下载，请稍等...</p><div class="progress"><span class="blue"></span></div><p class="downed">已经下载：0%</p>',
       // enableBackdropDismiss: false
     });
     // window.closeUpdatePop = true;
-    name = name.replace(/(\\|\/|\:|\*|\?|\"|\<|\>|\|)/g, '_');
     this.alert1.present();
-    fileTransfer.download(url, this.file.externalCacheDirectory + name, false)
+    const newName = fileId + name;
+    fileTransfer.download(url, this.file.externalDataDirectory + newName, false)
       .then(
         (entry) => {
           const openurl = entry.toURL();
           if (callback) {
             callback();
           }
-          this.openFile(this.file.externalCacheDirectory + name, application);
+          this.openFile(this.file.externalDataDirectory + newName, application);
         },
         (error) => {
           // console.log('1', error);
@@ -173,7 +261,6 @@ export class AppUpdateService {
             this.alert1.dismiss();
             this.alert1 = null;
           }
-          // window.closeUpdatePop = false;
           this.httpUtils.thsToast('文件下载失败，请重试');
         }
       ).catch(
@@ -183,7 +270,6 @@ export class AppUpdateService {
             this.alert1.dismiss();
             this.alert1 = null;
           }
-          // window.closeUpdatePop = false;
           this.httpUtils.thsToast('文件下载失败，请重试');
         }
       );
@@ -238,7 +324,7 @@ export class AppUpdateService {
             this.alert1 = null;
           }
           // window.closeUpdatePop = false;
-          this.httpUtils.thsToast('文件打开失败，请重试');
+          this.httpUtils.thsToast('文件打开失败，可尝试在文件夹中打开！');
         }
       );
   }
@@ -311,7 +397,7 @@ export class AppUpdateService {
       case 'png':
         mimeType = 'image/png';
         break;
-      case 'apk':
+        case 'apk':
         mimeType = 'application/vnd.android.package-archive';
         break;
       default:
@@ -338,8 +424,8 @@ export class AppUpdateService {
     let name = null;
     if (arr.length > 0) {
       for (const item of arr) {
-        if (item['dictionary_code'] === codeNum) {
-          name = item['dictionary_name']
+        if (item.dictionary_code === codeNum) {
+          name = item.dictionary_name;
         }
       }
     } else {

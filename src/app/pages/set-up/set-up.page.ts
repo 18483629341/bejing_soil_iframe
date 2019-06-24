@@ -27,7 +27,6 @@ export class SetUpPage implements OnInit {
   }
 
   ionViewWillEnter( ) {
-    console.log(localStorage.getItem('skinName'));
     // 设置头部皮肤
     this.skinName = localStorage.getItem('skinName') || 'blue';
   }
@@ -62,7 +61,6 @@ export class SetUpPage implements OnInit {
    * @param e object 事件对象
    */
   public notify(e) {
-    // console.log(this.info.fingerprint);
     if (this.isToggle) { // 确保开启指纹功能时用户手机中有录入指纹
       this.fingerprintAIO.isAvailable()
         .then((result) => {

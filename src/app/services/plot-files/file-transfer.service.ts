@@ -8,8 +8,8 @@ declare let window;
   providedIn: 'root'
 })
 export class FileTransferService {
-  alert;
-  downloadFileSize = 0;//已经下载的附件的大小
+  toastAlert;
+  downloadFileSize = 0; // 已经下载的附件的大小
   constructor(
     public file: File,
     public fileTransfer: FileTransfer,
@@ -17,72 +17,49 @@ export class FileTransferService {
   ) { }
 
   /**
-  * 检查文件是否存在
-  * @param fileName 文件名 必传
-  * @param filePath 文件路径 必传
-  */
-  fileIsExited(fileName, filePath, callback) {
-    this.file.checkFile(filePath, fileName)
-      .then(
-        () => {
-          callback(true);
-        },
-        () => {
-          callback(false);
-        }
-      )
-      .catch(
-        () => {
-          callback(false);
-        }
-      );
-  }
-  /**
    * 下载附件(下载全部附件的时候下载单个附件)
    * @param url 下载地址
-   * @param name 目标文件夹名字
+   * @param fileId 文件id
    * @param fileName 附件名称
    * @param fileSize 附件大小
    * @param totalFileSize 附件的总大小
-   * @param alert 弹出框
+   * @param downFileNum 附件的总个数
+   * @param toastAlert 弹出框
    */
-  async downFile(url, name, fileName, fileSize, totalFileSize, alert?) {
+  async downFile(url, fileId, fileName, fileSize, totalFileSize, toastAlert, callback) {
     const fileTransfer: FileTransferObject = this.fileTransfer.create();
+    let newName = fileId + fileName;
+    newName = newName.replace(/(\\|\/|\:|\*|\?|\"|\<|\>|\||\ |\-)/g, '_');
 
-    this.fileIsExited(fileName, this.file.externalCacheDirectory + name, async res => {
-      console.log('res', res)
-      if (!res) {
-        fileTransfer.download(url, this.file.externalCacheDirectory + name + fileName, false).then(
-          (entry) => {
-            console.log(entry)
-            this.downloadFileSize += Number(fileSize);
-            this.showProgress(totalFileSize, alert);
+    fileTransfer.download(url, this.file.externalDataDirectory + newName, false).then(
+      (entry) => {
+        this.downloadFileSize += Number(fileSize);
+        this.showProgress(totalFileSize, toastAlert, callback);
 
-          }, (error) => {
-            console.log('1', error);
-          }
-        ).catch(e => {
-          console.log('1', e);
-        });
+      }, (error) => {
+        // alert('1:' + error);
       }
-    })
-
+    ).catch(e => {
+      // alert('1:' + e);
+    });
   }
 
   /**
    * 显示进度提示框
    * @param totalFileSize 所有附件的总的大小
-   * @param alert 弹出框
+   * @param toastAlert 弹出框
+   * @param callback 回调函数
    */
-  async showProgress(totalFileSize, alert) {
-    console.log('2', this.downloadFileSize);
-
+  async showProgress(totalFileSize, toastAlert, callback) {
     let num: any;
     num = Math.floor(this.downloadFileSize / totalFileSize * 100);
     if (num >= 100) {
-      if (alert) {
-        alert.dismiss();
-        alert = null;
+      if (toastAlert) {
+        toastAlert.dismiss();
+        toastAlert = null;
+        if (callback && typeof (callback) === 'function') {
+          callback();
+        }
       }
     } else if (this.downloadFileSize > 0) {
       const progress = document.getElementsByClassName('blue')[0];

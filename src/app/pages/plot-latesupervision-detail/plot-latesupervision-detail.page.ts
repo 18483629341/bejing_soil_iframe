@@ -22,9 +22,9 @@ export class PlotLatesupervisionDetailPage implements OnInit {
   dataFlag: any = false;  // 是否拿到初步调查数据
   arr = [];
   yearList = [];
-  minYear: any ;
-  maxYear: any ;
-  plotId: any ;
+  minYear: any;
+  maxYear: any;
+  plotId: any;
   censusFileArr: any = []; // 监测方案附件列表
   surveyFileArr: any = []; // 监测结果附件列表
   historyEvilFileArr: any = []; // 历史项目列表
@@ -107,16 +107,15 @@ export class PlotLatesupervisionDetailPage implements OnInit {
       this.reqSucFun(event);
     });
 
-    //  如果公示网址对应 无新增项目
-    if (this.laterMonitorDetail.CENSUS_PUBLIC_TYPE === 0) {
-      // 获取历史记录证明材料数组
-      this.configService.getFile({ ids: this.laterMonitorDetail.CENSUS_PUBLIC_FILES, sessionId: this.global.sessionId }, flag, res => {
-        if (res !== 'error') {
-          this.historyEvilFileArr = res;
-        }
-        this.reqSucFun(event);
-      });
-    }
+
+    // 获取历史记录证明材料数组
+    this.configService.getFile({ ids: this.laterMonitorDetail.CENSUS_PUBLIC_FILES, sessionId: this.global.sessionId }, flag, res => {
+      if (res !== 'error') {
+        this.historyEvilFileArr = res;
+      }
+      this.reqSucFun(event);
+    });
+
   }
 
   /**
@@ -139,7 +138,7 @@ export class PlotLatesupervisionDetailPage implements OnInit {
       // 获取后缀名
       const fileSuffix = this.appUpdate.getFileSuffix(item.FILENAME);
       const downUrl = `${this.global.hostUrl}${this.global.downUrl}?fileid=${item.FILEID}&sessionId=${this.global.sessionId}`;
-      this.appUpdate.downFile(downUrl, fileSuffix, item.FILENAME, item.FILESIZE);
+      this.appUpdate.downFile(downUrl, fileSuffix, item.FILEID , item.FILENAME, item.FILESIZE);
     } else {
       this.httpUtils.thsToast('附件暂时无法下载！');
     }
@@ -150,15 +149,14 @@ export class PlotLatesupervisionDetailPage implements OnInit {
    * @param event 事件对象
    */
   ionChange(event) {
-     const arr = event.detail.value.split('-');
-     const nowYear = arr[0];
-     this.configService.getPlotLaterMonitor({ sessionId: this.global.sessionId, id: this.plotId , year: nowYear }, true ,
+    const arr = event.detail.value.split('-');
+    const nowYear = arr[0];
+    this.configService.getPlotLaterMonitor({ sessionId: this.global.sessionId, id: this.plotId, year: nowYear }, true,
       (res) => {
-      // console.log(res);
         if (res !== 'error') {
           this.laterMonitorDetail = res;
         }
-     });
+      });
   }
 
   /**

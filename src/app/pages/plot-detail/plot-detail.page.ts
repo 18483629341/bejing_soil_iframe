@@ -35,16 +35,24 @@ export class PlotDetailPage implements OnInit {
   inspectionDataFlag: any = false;  // 是否拿到有效的督察列表数据
 
   dataFlag: any = true;  // 是否拿到有效的地块数据或督察列表数据
+  needLoadAll = true;
+  headerEndWidth = '70px';
   isCollected = false; // 默认为未收藏
   collectedIndex = -1; //
   plotId = ''; // 一个临时的id
   inspectionLength: any = 0;
   monitorLength: any = 0;
-  allFileList = []; // 所有的附件列表
+
   newSkinName: string; // 获取新的皮肤名称
   skinName: string; // 皮肤名称
   headerCon = ''; // 提示框内容
   reqSuc = 0; // 异步请求成功的数量
+
+  downAllFilePlot = []; // 全部下载的时 存放已经地块信息
+  needDownFileList = []; // 全部下载的时 所有的附件列表
+  needReq = 0; // 全部下载的时 所需ids请求数量
+  reqAllSuc = 0; // 全部下载的时 请求成功ids数量
+  toastAlert: any;
   constructor(
     public configService: ConfigService,
     public router: Router,
@@ -56,7 +64,6 @@ export class PlotDetailPage implements OnInit {
     public activatedRouted: ActivatedRoute
   ) {
     this.activatedRouted.queryParams.subscribe(params => {
-      console.log(params, params.id);
       if (params && params.id) {
         this.plotId = params.id;
       }
@@ -74,6 +81,13 @@ export class PlotDetailPage implements OnInit {
   ionViewWillEnter() {
     // 设置头部皮肤
     this.skinName = localStorage.getItem('skinName') || 'blue';
+    this.downAllFilePlot = JSON.parse(localStorage.getItem('downAllFilePlot')) || [];
+    this.downAllFilePlot.map(item => {
+      if (item.SEEMINFO_ID === this.plotId) {
+        this.needLoadAll = false;
+        this.headerEndWidth = '30px';
+      }
+    });
   }
 
   /**
@@ -83,7 +97,6 @@ export class PlotDetailPage implements OnInit {
    */
   getPlotDetail(plotId, flag = true, event?) {
     this.configService.getPlotDetail({ sessionId: this.global.sessionId, id: plotId }, flag, res => {
-      // console.log(res);
       if (res !== 'error') {
         this.global.plotDetailData = res;
         this.isCollected = res.isCollection === 1 ? true : false;
@@ -101,7 +114,7 @@ export class PlotDetailPage implements OnInit {
         } else {
           this.baseinfoDataFlag = false;
         }
-        // console.log(this.baseInfo,this.baseinfoDataFlag);
+
         this.dataFlag = this.baseinfoDataFlag || this.inspectionDataFlag;
       } else {
         this.baseinfoDataFlag = false;
@@ -132,7 +145,6 @@ export class PlotDetailPage implements OnInit {
         this.baseInfo.regionName = item.REGIONNAME;
       }
     });
-    // console.log(this.baseInfo);
   }
 
   /**
@@ -143,10 +155,9 @@ export class PlotDetailPage implements OnInit {
    */
   getPlotInspection(plotId, flag = true, event?) {
     this.configService.getPlotInspectorList({ sessionId: this.global.sessionId, id: plotId }, flag, res => {
-      console.log(res);
       if (res !== 'error') {
         this.global.plotInspectorList = res;
-        this.inspection = this.global.plotInspectorList;
+        this.inspection = res;
         this.inspectionLength = this.global.plotInspectorList.length;
         if (this.inspectionLength > 0) {
           this.inspectionDataFlag = true;
@@ -199,7 +210,6 @@ export class PlotDetailPage implements OnInit {
   doCollection() {
 
     this.configService.doCollection({ sessionId: this.global.sessionId, seeminfoId: this.plotId }, true, res => {
-      // console.log(res);
       if (res.data !== 'error') {
         if (res.data === 'collection') {
           this.isCollected = true;
@@ -274,7 +284,6 @@ export class PlotDetailPage implements OnInit {
       buttons: [{
         text: '取消',
         handler: () => {
-          // console.log('cancle clicked');
         }
       }, {
         text: '确定',
@@ -291,76 +300,103 @@ export class PlotDetailPage implements OnInit {
    * 下载该地块下的所有附件
    */
   getAllFiles() {
-
+    this.needDownFileList = [];
     // 获取初步调查阶段的附件
     if (this.plot.firstCensusInfo) {
       this.getAttachs(this.plot.firstCensusInfo.CENSUS);
       this.getAttachs(this.plot.firstCensusInfo.SURVEY_REPORT);
       this.getAttachs(this.plot.firstCensusInfo.EVIDENCE_FILE);
+      this.getAttachs(this.plot.firstCensusInfo.CENSUS_PUBLIC_FILES);
     }
 
     // 获取详细调查阶段的附件
     if (this.plot.detailCensusInfo) {
-      this.getAttachs(this.plot.detailCensusInfo.CENSUS_PUBLIC_FILES);
+      this.getAttachs(this.plot.detailCensusInfo.CENSUS);
       this.getAttachs(this.plot.detailCensusInfo.SURVEY_REPORT);
+      this.getAttachs(this.plot.detailCensusInfo.CENSUS_PUBLIC_FILES);
     }
 
     // 获取风险评估阶段的附件
     if (this.plot.riskAssessmentInfo) {
       this.getAttachs(this.plot.riskAssessmentInfo.CENSUS);
-      this.getAttachs(this.plot.riskAssessmentInfo.EVIDENCE_FILE);
+      this.getAttachs(this.plot.riskAssessmentInfo.CENSUS_PUBLIC_FILES);
     }
 
     // 获取风险管控阶段的附件
     if (this.plot.riskControlInfo) {
       this.getAttachs(this.plot.riskControlInfo.CENSUS);
-      this.getAttachs(this.plot.riskControlInfo.SURVEY_REPORT);
+      this.getAttachs(this.plot.riskControlInfo.CENSUS_PUBLIC_FILES);
     }
 
     // 获取治理与修复阶段的附件
     if (this.plot.repairInfo) {
       this.getAttachs(this.plot.repairInfo.CENSUS);
+      this.getAttachs(this.plot.repairInfo.CENSUS_PUBLIC_FILES);
     }
 
     // 获取效果评估阶段的附件
     if (this.plot.effectEvaluateInfo) {
       this.getAttachs(this.plot.effectEvaluateInfo.CENSUS);
       this.getAttachs(this.plot.effectEvaluateInfo.SURVEY_REPORT);
+      this.getAttachs(this.plot.effectEvaluateInfo.EVIDENCE_FILE);
+      this.getAttachs(this.plot.effectEvaluateInfo.CENSUS_PUBLIC_FILES);
     }
 
     // 获取后期监管记录阶段的附件
     if (this.plot.laterMonitorList.length > 0) {
       this.plot.laterMonitorList.forEach((item, index) => {
-        this.getAttachs(item.SURFACE_WATER_VERDICT);
-        this.getAttachs(item.MONITOR_PLAN_FILE);
+        this.getAttachs(item.CENSUS);
+        this.getAttachs(item.SURVEY_REPORT);
+        this.getAttachs(item.CENSUS_PUBLIC_FILES);
+      });
+    }
+
+    // 获取现场监督记录的附件
+    if (this.inspection.length > 0) {
+      this.inspection.forEach((item, index) => {
+        this.getAttachs(item.FILEIDS, 'islive');
       });
     }
 
     setTimeout(async () => {
-      const alert = await this.alertCtrl.create({
+      this.toastAlert = await this.alertCtrl.create({
         message: '<p class="title">正在下载，请稍等...</p><div class="progress"><span class="blue"></span></div><p class="downed">已经下载：0%</p>'
       });
-      alert.present();
 
+      this.toastAlert.present();
       let totalSize = 0;
-      this.allFileList.forEach((item, index) => {
+      this.needDownFileList.forEach((item, index) => {
         totalSize += Number(item.FILESIZE);
       });
-
-      this.allFileList.forEach((item, index) => {
-        const downUrl = this.global.hostUrl + this.global.fileUrl + '?ids=' + item.FILEID + '&sessionId=' + this.global.sessionId;
-        this.fileTransferService.downFile(downUrl, item.FILEID, item.FILENAME, item.FILESIZE, totalSize, alert);
+      this.needDownFileList.forEach((item, index) => {
+        const downUrl = this.global.hostUrl + this.global.downUrl + '?fileid=' + item.FILEID + '&sessionId=' + this.global.sessionId;
+        this.fileTransferService.downFile(downUrl, item.FILEID, item.FILENAME, item.FILESIZE, totalSize, this.toastAlert,
+          () => {
+            if (this.needLoadAll) {
+              this.baseInfo.SEEMINFO_ID = this.plotId;
+              this.downAllFilePlot.push(this.baseInfo);
+              this.needLoadAll = false;
+              localStorage.setItem('downAllFilePlot', JSON.stringify(this.downAllFilePlot));
+              this.httpUtils.thsToast('文件已全部下载到本地存储，可在以下直接打开：内部储存/Android/data/cn.com.ths.BJWRAPP/files/. ,也可在页面中点击某个附件，即可直接打开查看');
+            }
+          });
       });
-
     }, 1000);
+  }
+
+  downAll() {
+
+
   }
 
   /**
    * 下载某一类附件
+   * @params plotDir 该类附件的id（逗号隔开）
+   * @params themeDir 该类附件的id（逗号隔开）
    * @params ids 该类附件的id（逗号隔开）
    */
-  getAttachs(IDS) {
-    if (IDS) {
+  getAttachs(IDS, islive?) {
+    if (IDS)  {
       const params = {
         ids: IDS,
         sessionId: this.global.sessionId
@@ -369,11 +405,40 @@ export class PlotDetailPage implements OnInit {
       this.configService.getFile(params, false, data => {
         if (data !== 'error') {
           if (data.length > 0) {
-            this.allFileList = this.allFileList.concat(data);
+
+            // 如果是现场督察的附件，需要对文件名称处理
+            if (islive === 'islive') {
+              // 遍历数组
+              data.map((item) => {
+                item.FILENAME = decodeURI(item.FILENAME);
+                if (item.FILENAME.indexOf('image%') !== -1 && item.FILENAME.indexOf('.jpg') === -1) {
+                  const arr = item.FILENAME.split('%');
+                  item.FILENAME = arr[0] + arr[1] + '.jpg';
+                } else if (item.FILENAME.indexOf('video%') !== -1 && item.FILENAME.indexOf('.mp4') === -1) {
+                  const arr = item.FILENAME.split('%');
+                  item.FILENAME = arr[0] + arr[1] + '.mp4';
+                }
+              });
+            }
+            // 加入到需下载数组中
+            this.needDownFileList = [...this.needDownFileList, ...data];
           }
         }
       });
     }
+
+  }
+
+  /**
+   * 时间转换
+   * @param time number 时间戳
+   */
+  formatDate(time) {
+    const purDate = new Date(time);
+    const year = purDate.getFullYear();
+    const month = purDate.getMonth() + 1;
+    const date = purDate.getDate();
+    return year + '-' + month + '-' + date + ' ';
   }
 }
 

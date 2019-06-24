@@ -75,14 +75,16 @@ export class Tab2Page {
   }
 
   ngOnInit() {
-    if (this.global.checkFlag) {
-      this.appUpdate.checkVersion();
-      this.global.checkFlag = false;
-    }
     this.getAreaList();
     this.getIndustryList();
     this.getDectionary();
     this.getListSupervise(1, true);
+    setTimeout(async () => {
+      if (this.global.checkFlag) {
+        this.appUpdate.checkVersion();
+        this.global.checkFlag = false;
+      }
+    }, 2000);
   }
 
   ionViewWillEnter() {
@@ -235,7 +237,7 @@ export class Tab2Page {
       if (this.distance > this.global.minLiveDistance) {
         this.httpUtilsService.thsToast('您需在离该地块1km以内，才能进行现场督察编辑！');
       } else {
-        this.router.navigate(['inspection-record']);
+        this.router.navigate(['inspection-record'], { queryParams: { id: SEEMINFO_ID } });
       }
     });
   }
@@ -294,7 +296,7 @@ export class Tab2Page {
    * @param event? 刷新 或 加载事件
    */
   getListSupervise(dataType, flag = true, event?) {
-    // console.log(this.pageCount);
+
     this.configService.getListSupervise({
       sessionId: this.global.sessionId,
       CODE_REGION: this.CODE_REGION,
@@ -303,7 +305,7 @@ export class Tab2Page {
       pageCount: this.pageCount,
       pageSize: '15',
     }, flag, res => {
-      // console.log(res);
+
       if (res && res !== 'error') {
         this.listShowFlag = true;
         this.totalSize = res.total;

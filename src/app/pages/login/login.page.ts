@@ -81,7 +81,6 @@ export class LoginPage implements OnInit {
       return false;
     }
     this.configService.login({ loginName: this.loginInfo.userName, password: this.loginInfo.password }, true, res => {
-      console.log(res);
       if (res !== 'error') {
         if (res.status === '1') {
           localStorage.setItem('user', JSON.stringify({
@@ -126,7 +125,7 @@ export class LoginPage implements OnInit {
     }
   }
 
-  /** 
+  /**
    * 记住用户
    */
   isRememberName() {
@@ -134,8 +133,8 @@ export class LoginPage implements OnInit {
       this.loginInfo.isRemPwd = false;
     }
   }
- 
-  /** 
+
+  /**
    * 记住密码
    */
   isRememberPwd() {

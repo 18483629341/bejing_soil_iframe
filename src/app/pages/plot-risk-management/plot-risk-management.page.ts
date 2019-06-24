@@ -80,17 +80,15 @@ export class PlotRiskManagementPage implements OnInit {
       this.reqSucFun(event);
     });
 
-    // 如果公示网址对应 无新增项目
-    if (this.riskControlInfo.CENSUS_PUBLIC_TYPE === 0) {
-      // 获取历史记录证明材料数组
-      this.configService.getFile({ ids: this.riskControlInfo.CENSUS_PUBLIC_FILES, sessionId: this.global.sessionId }, flag, res => {
-        // console.log(res);
-        if (res !== 'error') {
-          this.historyEvilFileArr = res;
-        }
-        this.reqSucFun(event);
-      });
-    }
+
+    // 获取历史记录证明材料数组
+    this.configService.getFile({ ids: this.riskControlInfo.CENSUS_PUBLIC_FILES, sessionId: this.global.sessionId }, flag, res => {
+      if (res !== 'error') {
+        this.historyEvilFileArr = res;
+      }
+      this.reqSucFun(event);
+    });
+
   }
 
   /**
@@ -113,7 +111,7 @@ export class PlotRiskManagementPage implements OnInit {
       // 获取后缀名
       const fileSuffix = this.appUpdate.getFileSuffix(item.FILENAME);
       const downUrl = `${this.global.hostUrl}${this.global.downUrl}?fileid=${item.FILEID}&sessionId=${this.global.sessionId}`;
-      this.appUpdate.downFile(downUrl, fileSuffix, item.FILENAME, item.FILESIZE);
+      this.appUpdate.downFile(downUrl, fileSuffix, item.FILEID , item.FILENAME, item.FILESIZE);
     } else {
       this.httpUtils.thsToast('附件暂时无法下载！');
     }

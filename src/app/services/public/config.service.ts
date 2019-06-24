@@ -78,11 +78,11 @@ export class ConfigService {
   }
 
   /**
-    * 获取地块详情
-    * @param params  调用方法传过来的参数，根据城市代码查询进行获取
-    * @param showloading 是否显示数据加载框
-    * @param callback 回调函数
-    */
+   * 获取地块详情
+   * @param params  调用方法传过来的参数，根据城市代码查询进行获取
+   * @param showloading 是否显示数据加载框
+   * @param callback 回调函数
+   */
   getPlotDetail(params, showloading, callback) {
     // return this.httpUtils.get('../../../assets/data/plot-detail.json', params, showloading, callback);
     const url = `${this.global.hostUrl}${this.global.plotDetailUrl}?id=${params.id}&sessionId=${params.sessionId}`;
@@ -101,11 +101,11 @@ export class ConfigService {
   }
 
   /**
-  * 获取地块督察记录列表信息
-  * @param params  调用方法传过来的参数，根据城市代码查询进行获取
-  * @param showloading 是否显示数据加载框
-  * @param callback 回调函数
-  */
+   * 获取地块督察记录列表信息
+   * @param params  调用方法传过来的参数，根据城市代码查询进行获取
+   * @param showloading 是否显示数据加载框
+   * @param callback 回调函数
+   */
   getPlotInspectorList(params, showloading, callback) {
     // return this.httpUtils.get('../../../assets/data/inspecter-list.json', params, showloading, callback);
     const url = `${this.global.hostUrl}${this.global.plotInspectorListUrl}?id=${params.id}&sessionId=${params.sessionId}`;
@@ -113,11 +113,11 @@ export class ConfigService {
   }
 
   /**
-  * 获取地块后期监督记录列表信息
-  * @param params  调用方法传过来的参数，根据城市代码查询进行获取
-  * @param showloading 是否显示数据加载框
-  * @param callback 回调函数
-  */
+   * 获取地块后期监督记录列表信息
+   * @param params  调用方法传过来的参数，根据城市代码查询进行获取
+   * @param showloading 是否显示数据加载框
+   * @param callback 回调函数
+   */
   getPlotLaterMonitor(params, showloading, callback) {
     // return this.httpUtils.get('../../../assets/data/later-monitor.json', params, showloading, callback);
     const url = `${this.global.hostUrl}${this.global.plotLaterMonitorUrl}?id=${params.id}&sessionId=${params.sessionId}&year=${params.year}`;

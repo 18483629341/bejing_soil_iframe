@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, NavController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-tab3',
@@ -10,12 +10,12 @@ export class Tab3Page {
 
   skinName: string; // 皮肤名称
   items: any[] = [];
-  constructor(public alertController: AlertController, public nav: NavController, private router: Router, ) {
+  constructor( public nav: NavController, private router: Router, ) {
     // 设置头部皮肤
     this.skinName = localStorage.getItem('skinName') || 'blue';
   }
 
-  ngDoCheck( ) {
+  ngDoCheck() {
     // 设置头部皮肤
     this.skinName = localStorage.getItem('skinName') || 'blue';
   }

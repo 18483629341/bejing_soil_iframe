@@ -82,19 +82,19 @@ export class PlotLiveinspectionDetailPage implements OnInit {
   getAllFileArr(flag = true , event?) {
     // 获取检查调查报告数组
     this.configService.getFile({ ids: this.inspecterDetail.FILEIDS, sessionId: this.global.sessionId }, flag, res => {
-      console.log(res);
       if (res !== 'error') {
         this.censusFileArr = res;
         if ( this.censusFileArr.length > 0 ) {
            for ( const item of this.censusFileArr) {
+
+              // 处理文件名称的异常情况
               item.FILENAME = decodeURI(item.FILENAME);
-              // 如果有image% 给它加上后缀名.jpg
               if (item.FILENAME.indexOf('image%') !== -1 && item.FILENAME.indexOf('.jpg') === -1) {
                 const arr = item.FILENAME.split('%');
                 item.FILENAME = arr[0] + arr[1] + '.jpg';
-              } else if (item.FILENAME.indexOf('video%') !== -1  && item.FILENAME.indexOf('.mp4') === -1) {
+              } else if (item.FILENAME.indexOf('video%') !== -1 && item.FILENAME.indexOf('.mp4') === -1) {
                 const arr = item.FILENAME.split('%');
-                item.FILENAME = arr[0] + arr[1]  + '.mp4';
+                item.FILENAME = arr[0] + arr[1] + '.mp4';
               }
            }
         }
@@ -123,7 +123,7 @@ export class PlotLiveinspectionDetailPage implements OnInit {
       // 获取后缀名
       const fileSuffix = this.appUpdate.getFileSuffix(item.FILENAME);
       const downUrl = `${this.global.hostUrl}${this.global.downUrl}?fileid=${item.FILEID}&sessionId=${this.global.sessionId}`;
-      this.appUpdate.downFile(downUrl, fileSuffix, item.FILENAME, item.FILESIZE);
+      this.appUpdate.downFile(downUrl, fileSuffix, item.FILEID , item.FILENAME, item.FILESIZE);
     } else {
       this.httpUtils.thsToast('附件暂时无法下载！');
     }

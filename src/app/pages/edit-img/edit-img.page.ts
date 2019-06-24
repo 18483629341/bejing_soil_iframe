@@ -32,6 +32,7 @@ export class EditImgPage implements OnInit {
   videoUrl: string; //  用户上传的视频地址(未转换)
   video: string; //  用户上传的视频地址(转换后的)
   showVideoDel = false; // 是否删除视频
+  hasVideoData = true ; //
   isShowPlus = true; //  是否展示加号
   fileUrl: string; //  文件路径
   newSkinName: string; //  获取新的皮肤名称
@@ -92,6 +93,7 @@ export class EditImgPage implements OnInit {
             this.video = `${this.hostUrl}?sessionId=${this.global.sessionId}&fileid=${key.FILEID}`;
             key.path = this.video;
             this.isShowPlus = false;
+            this.hasVideoData = false ;
             this.mediaObjectArr1.unshift(key);
           // 其他文件类型
           } else {
@@ -247,8 +249,10 @@ export class EditImgPage implements OnInit {
 
         const fileImg = this.webView.convertFileSrc(imageData);
         this.imgPath = fileImg;
-        alert(JSON.stringify(this.getFileName(fileImg))); // app储存路径
-        this.mediaObjectArr0.unshift({ data: imageData, path: fileImg, name: this.getFileName(fileImg), showDel: false }); //  页面展示图片数组
+        this.hasVideoData = true ;
+        // alert(JSON.stringify(this.getFileName(fileImg))); // app储存路径
+        this.mediaObjectArr0.unshift(
+          { data: imageData, path: fileImg, name: this.getFileName(fileImg), showDel: false }); //  页面展示图片数组
 
       }, (err) => {
         //  Handle error
@@ -269,10 +273,7 @@ export class EditImgPage implements OnInit {
       (res: MediaFile[]) => {
         this.videoUrl = res[0].fullPath;
         this.video = this.webView.convertFileSrc(res[0].fullPath);
-        alert(JSON.stringify(this.videoUrl)); // app储存路径
-        alert(JSON.stringify(this.getFileName(this.videoUrl)));
-        // this.mediaDataArr1.unshift(this.videoUrl); //  添加到同一个数组
-        this.mediaObjectArr1.unshift({ data: res[0].fullPath, name: this.getFileName(this.videoUrl), path: this.videoUrl });
+        this.mediaObjectArr1 = [{ data: res[0].fullPath, name: this.getFileName(this.videoUrl), path: this.videoUrl }];
         this.isShowPlus = false;
       }, (err: CaptureError) => {
         // console.log(err);
@@ -285,8 +286,6 @@ export class EditImgPage implements OnInit {
   chooseFile() {
     this.fileChooser.open()
       .then(uri => {
-        alert(JSON.stringify(uri)); // app储存路径
-        alert(JSON.stringify(this.getFileName(uri)));
         this.mediaObjectArr2.unshift({ data: uri, name: this.getFileName(uri), showDel: false, path: uri });
       })
       .catch(e => alert(e));
@@ -298,10 +297,13 @@ export class EditImgPage implements OnInit {
    * @param index 所在数组的下标
    */
   goEdit(item, tab, index) {
-    alert(index);
-    this.editIndex = index;
-    this.themeIndex = tab;
-    this.router.navigate(['edit-photo'], { queryParams: { themeIndex: this.themeIndex, imgPath: item.path , name: item.name} });
+    if (item.data) {
+      this.editIndex = index;
+      this.themeIndex = tab;
+      item.showDel = false;
+      this.router.navigate(['edit-photo'], { queryParams: { themeIndex: this.themeIndex, imgPath: item.path , name: item.name} });
+    }
+
   }
 
   /**
@@ -324,15 +326,25 @@ export class EditImgPage implements OnInit {
    * @param tab 执行对象所在的tab标签，取值为 0,2
    * @param index 所在数组的下标
    */
-  delete(tab, index) {
-    alert(JSON.stringify(index));
+  delete(tab, index, item) {
+    // alert(JSON.stringify(index));
     if (tab === 0) {
-      // this.mediaDataArr0.splice(index, 1);
       this.mediaObjectArr0.splice(index, 1);
+      // console.log(this.mediaObjectArr0);
+    } else if (tab === 1) {
+      this.mediaObjectArr1 = [];
+      this.isShowPlus = true ;
+      // console.log(this.mediaObjectArr2);
     } else if (tab === 2) {
-      // this.mediaDataArr2.splice(index, 1);
       this.mediaObjectArr2.splice(index, 1);
+      // console.log(this.mediaObjectArr2);
     }
+    console.log(item.FILEID);
+    if (item.FILEID && this.global.filesID.indexOf(item.FILEID) !== -1) {
+
+      this.global.filesID = this.global.filesID.replace(item.FILEID + ',', '');
+    }
+    console.log(this.global.filesID);
   }
 
   // deleteVedio(){
@@ -346,6 +358,7 @@ export class EditImgPage implements OnInit {
 
     let fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1, fileUrl.length).toLowerCase();
     // 如果有image% 给它加上后缀名.jpg
+     // 处理文件名称的异常情况
     if (fileName.indexOf('image%') !== -1 && fileName.indexOf('.jpg') === -1) {
       const arr = fileName.split('%');
       fileName = arr[0] + arr[1] + '.jpg';

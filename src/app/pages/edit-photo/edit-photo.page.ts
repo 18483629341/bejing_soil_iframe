@@ -17,7 +17,7 @@ export class EditPhotoPage implements OnInit {
     public global: GlobalService,
   ) {
     this.activatedRoute.queryParams.subscribe(params => {
-      this.name = params.name;
+      this.name = decodeURI(params.name);
       this.imgPath = params.imgPath;
       this.imgDate = this.getNowFormatDate();
     });
