@@ -1,0 +1,115 @@
+
+// 添加crosswalk插件打包方式
+ cordova plugin add cordova-plugin-crosswalk-webview
+1、cordova build --release android
+
+2、jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore  /Users/wzy/Library/Favorites/beijingsiluProject/key/ths  /Users/wzy/Library/Favorites/beijingsiluProject/zhongjieneng/platforms/android/build/outputs/apk/android-armv7-release-unsigned.apk ths
+
+3、"/Users/wzy/Library/android/android-sdk-macosx/build-tools/27.0.1/zipalign" -v 4 /Users/wzy/Library/Favorites/beijingsiluproject/zhongjieneng/platforms/android/build/outputs/apk/android-armv7-release-unsigned.apk zhongjienneng.apk
+
+//未添加crosswalk插件打包方法
+
+ 1. cordova build --release android
+
+ 2. jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore  /Users/wzy/Library/Favorites/beijingsiluProject/key/ths  /Users/wzy/Library/Favorites/beijingsiluProject/zhongjieneng/platforms/android/build/outputs/apk/android-armv7-release-unsigned.apk ths
+
+ 3. zipalign -v 4 F:\beijisiluProduct\hubeiAir\platforms\android\build\outputs\apk\android-release-unsigned.apk hubeidatacenter.apk
+
+
+//debug包命令
+ionic cordova build android/ios
+
+
+秘钥密码  solution
+
+发布版本说明：
+ 1.修改config.xml 文件中version="0.0.1" 增加版本
+ 2.修改constants.js中的CURR_VER 每次增0.1  CHECK_VER: "/version.txt",这个version.txt和服务其中的版本控制文件名称一致
+ 3.服务端修改version.txt文件  版本号和最新的apk中 CURR_VER保持一致
+{ "apkName": "fsair.apk",//服务器中的apk安装包
+  "ipaName": "",//不用修改
+  "ver_android": 1.0,//  apk最新版本号 
+  "ver_ios": 1.0//ipa 最新版本号
+}
+
+以下是js/css压缩混淆方法
+############################################################################################
+校验压缩
+1. npm install jshint
+2. npm install async
+3. 创建hooks/before_prepare/02_jshint.js
+4.npm install cordova-uglify
+
+02_jshint.js内容如下：
+
+#!/usr/bin/env node
+var fs = require('fs');
+var path = require('path');
+var jshint = require('jshint').JSHINT;
+var async = require('async');
+
+var foldersToProcess = [
+    'js'
+];
+
+foldersToProcess.forEach(function(folder) {
+    processFiles("www/" + folder);
+});
+
+function processFiles(dir, callback) {
+    var errorCount = 0;
+    fs.readdir(dir, function(err, list) {
+        if (err) {
+            console.log('processFiles err: ' + err);
+            return;
+        }
+        async.eachSeries(list, function(file, innercallback) {
+            file = dir + '/' + file;
+            fs.stat(file, function(err, stat) {
+                if(!stat.isDirectory()) {
+                    if(path.extname(file) === ".js") {
+                        lintFile(file, function(hasError) {
+                            if(hasError) {
+                                errorCount++;
+                            }
+                            innercallback();
+                        });
+                    } else {
+                        innercallback();
+                    }
+                } else {
+                    innercallback();
+                }
+            });
+        }, function(error) {
+            if(errorCount > 0) {
+                process.exit(1);
+            }
+        });
+    });
+}
+
+function lintFile(file, callback) {
+    console.log("Linting " + file);
+    fs.readFile(file, function(err, data) {
+        if(err) {
+            console.log('Error: ' + err);
+            return;
+        }
+        if(jshint(data.toString())) {
+            console.log('File ' + file + ' has no errors.');
+            console.log('-----------------------------------------');
+            callback(false);
+        } else {
+            console.log('Errors in file ' + file);
+            var out = jshint.data(),
+            errors = out.errors;
+            for(var j = 0; j < errors.length; j++) {
+                console.log(errors[j].line + ':' + errors[j].character + ' -> ' + errors[j].reason + ' -> ' +
+errors[j].evidence);
+            }
+            console.log('-----------------------------------------');
+            callback(true);
+        }
+    });
+}
